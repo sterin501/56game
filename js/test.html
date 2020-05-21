@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>WebSocket demo</title>
+        <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+<meta content="utf-8" http-equiv="encoding">
+    </head>
+    <body>
+
+
+
+      <input type="text" id="data" name="data" value=""><br>
+      <input type="submit" id="submitB" value="Submit">
+      <input type="submit" id="submitAsJson" value="submitAsJson">
+      <input type="submit" id="Answer" value="Answer">
+      <select id="mycards" onchange="changeColor()"  disabled></select>
+      <input type="submit" id="play" disabled value="play">
+      <button id="clear" >Clear Output </button>
+
+<br>
+ <br>
+ Json example :  {"user":"P6","room":"room1","action":0}
+ </br>
+
+<br>
+<br>
+<br> Server Output </br>
+
+        <script  charset="utf-8">
+
+
+
+        url = new URL(location.href);
+        var c = url.searchParams.get("SetKey");
+        if (c)
+             document.cookie = "key="+c+";max-age=2592000;"
+        // http://localhost/test.html?SetKey=chrome   : this replace with sqllite function in server & key will send to email
+
+
+       var ws = new WebSocket("ws://127.0.0.1:6789/"+document.cookie);
+
+            var    messages = document.createElement('ul'),
+                data= document.getElementById("data"),
+                submitB=document.getElementById("submitB"),
+                submitAsJson=document.getElementById("submitAsJson");
+                submitAnswer=document.getElementById("Answer");
+                playButton=document.getElementById("play");
+
+
+                  ws.onmessage = function (event) {
+                  var messages = document.getElementsByTagName('ul')[0],
+                    message = document.createElement('li'),
+                    content = document.createTextNode(event.data);
+
+                    message.appendChild(content);
+                    messages.appendChild(message);
+                    console.log(event.data);
+                    var obj = JSON.parse(event.data);
+
+                    if( obj.event=="question")
+                      {
+
+                             console.log("question Asked " + obj.quNo )
+                             submitAsJson.disabled = true;
+                             submitB.disabled = true;
+                             submitAnswer.disabled=false;
+                             var quNo = obj.quNo;
+
+                             submitAnswer.onclick = function (event) {
+                                                    console.log("reply with  "+quNo);
+                                                    JsonOb=JSON.stringify({"AnsNo":quNo,"Answer":data.value,"usr":obj.usr,"t":obj.t});
+                                                    console.log(JsonOb);
+                                                    ws.send(JsonOb);
+                                                    submitAsJson.disabled = false;
+                                                    submitB.disabled = false;
+                                                    data.value="";
+
+                                                                };
+
+                      }
+
+                      if (obj.event =="broadcast")
+                      {
+
+                         console.log("BoradCast")
+                        //  ws.send(JSON.stringify({"event":"keepAlive"}));
+                      }
+
+
+                      if (obj.event =="play")
+                      {
+
+                         submitAsJson.disabled = true;
+                         submitB.disabled = true;
+                         submitAnswer.disabled=true;
+
+
+                         select = document.getElementById('mycards');
+
+                         var length = select.options.length;     // cleading
+                         for (i = length-1; i >= 0; i--)
+                         select.options[i] = null;
+
+
+
+                             var opt = document.createElement('option');
+                             opt.value = "";
+                             opt.innerHTML = "";
+                             select.appendChild(opt);
+
+                         for (var i = 0; i< obj.hand.length; i++){
+                                      var opt = document.createElement('option');
+                                      opt.value = obj.hand[i];
+                                      opt.innerHTML =  obj.hand[i];
+                                      select.appendChild(opt);
+                                      }
+
+                         select.disabled = false;
+                         playButton.disabled = false;
+                         var pid = obj.pid;
+                         playButton.onclick = function (event) {
+                                               // message={"event":"play","card":"","usr":"P1","pid":1,"t":"Team0" }
+                                              console.log("OK button Clikced");
+
+                                              okToPlay=false
+                                               if   (obj.playsofar.length > 0)
+                                                      {   var FirstCard=obj.playsofar[0][0]
+                                                          //console.log("FC "+FirstCard);
+                                                          numberCardFC= obj.hand.filter((card) => card.startsWith(FirstCard));
+                                                          //console.log(numberCardFC);
+                                                          if  (numberCardFC.length ==0)
+                                                                  okToPlay=true
+                                                          else {
+
+                                                                    cardS=data.value[0]
+                                                                    if (cardS == FirstCard)
+                                                                    okToPlay=true
+                                                                    else
+                                                                      alert("Bad play .. ")
+                                                          }
+
+                                                      }  // end of valid play loop
+                                            if (obj.c ==0)
+                                                   okToPlay=true;
+
+                                           if (okToPlay)
+                                            {
+                                                JsonOb=JSON.stringify({"pid":pid,"card":data.value,"usr":obj.usr,"t":obj.t,"c":obj.c});
+                                                console.log(JsonOb);
+                                                ws.send(JsonOb);
+                                                submitAsJson.disabled = false;
+                                                submitB.disabled = false;
+                                                playButton.disabled = true;
+                                                data.value="";
+                                             }
+
+                                                            };
+
+                        // console.log("play")
+                        //  ws.send(JSON.stringify({"event":"keepAlive"}));
+                      }
+
+
+
+            };
+
+
+            submitB.onclick = function (event) {
+                            JsonOb=JSON.stringify({action: data.value})
+                            console.log(JsonOb)
+                            ws.send(JsonOb);
+                        };
+            submitAsJson.onclick =    function (event) {
+                                       if (IsJsonString(data.value))
+                                             ws.send(data.value);
+                                      else{
+                                        alert ("Bad JSON")
+                                      }
+                        };
+
+                        clear.onclick = function (event) {
+                                      // console.log(messages);
+                                      // Nmessage = document.createElement('li');
+                                      // content = document.createTextNode("cleared");
+                                      // //Nmessage.appendChild(content);
+                                      // //messages.replaceChild(Nmessage,messages);
+                                      // messages.replaceChild(Nmessage);
+                                      // Sunu .. I tried .
+                                      console.log("clear")
+                                    };
+
+
+
+            document.body.appendChild(messages);
+
+            function IsJsonString(str) {
+                                          try {
+                                                   JSON.parse(str);
+                                              } catch (e) {
+                                                     return false;
+                                                          }
+                                                   return true;
+                                         }
+
+               function changeColor() {
+                             var mycards = document.getElementById("mycards");
+                             var colorVal = mycards.options[mycards.selectedIndex].value;
+                             document.getElementById("data").value=colorVal;
+
+                                         }
+        </script>
+
+
+    </body>
+</html>
