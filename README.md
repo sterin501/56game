@@ -9,7 +9,11 @@ OnConnect() produces websocket object.
 onMessage() redirect to MangeMeasage class based on responce from client 
 
  {"AnsNo":4,"Answer":"P","usr":"P1","t":"Team0"}'  -- For setting Trump  Responce 
+ 
+ 
  {"pid":pid,"card":data.value,"usr":obj.usr,"t":obj.t} -- For Cards Play 
+ 
+ 
  
  
  manageMessage.py --> Control object from server.py and Send to TrumpHandler Object 
@@ -21,12 +25,21 @@ onMessage() redirect to MangeMeasage class based on responce from client
  
  Events:
  
- "event":"broadcast" --> Sending info to all clients in room 
- "event":"cardSend" --> Sending cards  to specific user
- "event":"question" -->Requesting trump details from one player 
+ "event":"broadcast" --> Sending info to all clients in room     
+ 
+ 
+ 
+ "event":"cardSend" --> Sending cards  to specific user   
+ 
+ 
+ "event":"question" -->Requesting trump details from one player   
+ 
  "event":"TrumpIsSet" --> Sending trump details to all users in room 
+ 
  "event":"cardPlay" --> Sending cards during play in room 
+ 
  "event":"play"   ---> Requesting card from one player 
+ 
  "event":"MatchIsDone" --> Sending end of Match details to users in room 
 
 TrumpHandler.py -->Object to deal with game and socket 
