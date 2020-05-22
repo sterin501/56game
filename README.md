@@ -1,6 +1,6 @@
 # 56game
 
-server.py --> Used to start the server 
+ ** server.py **  --> Used to start the server 
 
 class ChatProtocol :
 
@@ -16,14 +16,14 @@ onMessage() redirect to MangeMeasage class based on responce from client
  
  
  
- manageMessage.py --> Control object from server.py and Send to TrumpHandler Object 
+** manageMessage.py ** --> Control object from server.py and Send to TrumpHandler Object 
  
  All the messages are controlled using listOfQ,listOfC list
  
  status = "DONE" when get responce from clien t
  
  
- Events:
+ ** Events **:
  
  "event":"broadcast" --> Sending info to all clients in room     
  
@@ -44,7 +44,7 @@ onMessage() redirect to MangeMeasage class based on responce from client
 
 TrumpHandler.py -->Object to deal with game and socket 
 
-bot/bot.py --
+** bot/bot.py ** --
 
  Atleast one browser to test the game . All bots are set play "P" all calls and play random cards (with in game logic )
 
@@ -67,7 +67,7 @@ Responce :
    Responce :
 {"pid":6,"card":"DJ","usr":"P___chrome","t":"Team1","c":5} 
 
-js/test.html 
+** js/test.html **
 
 it contains javascript to contorl similar bot logic 
 it need to keep on http doc root 
@@ -77,7 +77,7 @@ it need to keep on http doc root
  
  2. new WebSocket("ws://127.0.0.1:6789/"+document.cookie) , creating websocket 
  
- Atleast one browser to test the game . All bots are set play "P" all calls and play random cards (with in game logic )
+ *Atleast one browser to test the game . All bots are set play "P" all calls and play random cards (with in game logic )*
 
  
  
