@@ -90,7 +90,7 @@ ________________________________________________________________________________
 ./server.py
 
 3. start bot using 
-bot/bot.py  <botName>  <optional roomNo> 
+bot/bot.py  botName  {optional roomNo} 
  default room is 0
 4. Install webserver 
  
