@@ -79,5 +79,24 @@ it need to keep on http doc root
  
  *Atleast one browser to test the game . All bots are set play "P" all calls and play random cards (with in game logic )*
 
+_________________________________________________________________________________________________
+
+**Testing**
+
+1. Install python lib : 
+ pip3 install asyncio autobahn
+ 
+2. start server using
+./server.py
+
+3. start bot using 
+bot/bot.py  <botName>  <optional roomNo> 
+ default room is 0
+4. Install webserver 
+ 
+5. Copy js/test.html to webserver httpRoot directory
+
+6. Set Key to name the browser session
+http://localhost/test.html?SetKey=chromeORwhatever
  
  
