@@ -37,7 +37,7 @@
         // http://localhost/test.html?SetKey=chrome   : this replace with sqllite function in server & key will send to email
 
 
-       var ws = new WebSocket("ws://127.0.0.1:6789/"+document.cookie);
+       var ws = new WebSocket("ws://127.0.0.1:6789/"+document.cookie+"&Room=0");
 
             var    messages = document.createElement('ul'),
                 data= document.getElementById("data"),
