@@ -66,7 +66,7 @@ class rocky(object):
                    self.sendCard(self.TrumpObjects[r])
                    RR=self.TrumpObjects[r].rules
                    #self.TrumpIsSet({"villi":str (RR.villi),"trump":RR.trump,"dude":RR.dude,"dudeTeam":RR.Dudeteam})
-                   payload = json.dumps({"event":"Reconnect","villi":str (RR.villi),'trump': RR.trump, 'dude': RR.dude, 'dudeTeam': RR.Dudeteam}).encode('utf8')
+                   payload = json.dumps({"event":"Reconnect","villi":str (RR.villi),'trump': RR.trump, 'dude': RR.dude, 'dudeTeam': RR.Dudeteam,'hand':playerHand}).encode('utf8')
                    #websocket.sendMessage(payload, False)
                    self.mySendMessage(websocket,payload)
                    for kk in  (self.listOfQ):
