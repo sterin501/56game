@@ -105,3 +105,4 @@ http://localhost/test.html?SetKey=chromeORwhatever
  1. Seat numnber
  2. VillisoFar object in question like like cardsofar
  3. 7 user logic 
+ 4
