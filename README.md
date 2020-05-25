@@ -100,3 +100,8 @@ bot/bot.py  botName  {optional roomNo}
 http://localhost/test.html?SetKey=chromeORwhatever
  
  
+ Need to addd
+ 
+ 1. Seat numnber
+ 2. VillisoFar object in question like like cardsofar
+ 3. 7 user logic 
