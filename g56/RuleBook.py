@@ -12,6 +12,7 @@ class Points(object):
        #Team1=["P1","P3"]
        #Team2=["P2","P4"]
        self.villi=28
+       self.VSF=[]       ## villi so far 
        self.trump="S"
        self.t0Pidi=[]
        self.t1Pidi=[]

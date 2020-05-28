@@ -3,20 +3,17 @@
 
 
 class Player(object):
-    def __init__(self, name,team,bot):
+    def __init__(self, name,team,websocket,seatNo):
         self.name = name
         self.hand = []
-        self.websocket=bot
+        self.websocket=websocket
         self.team=team
+        self.seatNo=(seatNo+1)
 
 
     def doTheDeal(self,hand):
          self.hand=hand
 
-
-    def sayHello(self):
-        print ("Hi! My name is {} and my Socker is  =  {}".format(self.name,self.websocket))
-        return self
     # Display all the cards in the players hand
     def showHand(self):
         return (self.hand)

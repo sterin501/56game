@@ -10,16 +10,13 @@ import random,json
 
 class TrumpHandler(object):
       def __init__(self,RoomIsFull):
-          self.P1=Player(RoomIsFull[0].userID,"Team0",RoomIsFull[0].websocket)
-          self.P2=Player(RoomIsFull[1].userID,"Team1",RoomIsFull[1].websocket)
-          self.P3=Player(RoomIsFull[2].userID,"Team0",RoomIsFull[2].websocket)
-          self.P4=Player(RoomIsFull[3].userID,"Team1",RoomIsFull[3].websocket)
-          self.P5=Player(RoomIsFull[4].userID,"Team0",RoomIsFull[4].websocket)
-          self.P6=Player(RoomIsFull[5].userID,"Team1",RoomIsFull[5].websocket)
+          self.P1=Player(RoomIsFull[0].userID,"Team0",RoomIsFull[0].websocket,RoomIsFull[0].seatNo)
+          self.P2=Player(RoomIsFull[1].userID,"Team1",RoomIsFull[1].websocket,RoomIsFull[1].seatNo)
+          self.P3=Player(RoomIsFull[2].userID,"Team0",RoomIsFull[2].websocket,RoomIsFull[2].seatNo)
+          self.P4=Player(RoomIsFull[3].userID,"Team1",RoomIsFull[3].websocket,RoomIsFull[3].seatNo)
+          self.P5=Player(RoomIsFull[4].userID,"Team0",RoomIsFull[4].websocket,RoomIsFull[4].seatNo)
+          self.P6=Player(RoomIsFull[5].userID,"Team1",RoomIsFull[5].websocket,RoomIsFull[5].seatNo)
           self.tt = Table(self.P1,self.P2,self.P3,self.P4,self.P5,self.P6)
-          self.P1.sayHello()
-          self.P2.sayHello()
-          self.P6.sayHello()
           self.rules=Points()  ## Might need to chagne every game
           self.thisPlay=[]
           print ("Starting Table in Califorina")  ## Will replaced by Room 1

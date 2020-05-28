@@ -9,6 +9,7 @@ from autobahn.asyncio.websocket import (WebSocketServerProtocol,WebSocketServerF
 
 
 logging.basicConfig(level=logging.INFO)
+print ("Creating user object ")
 rocky=rocky()
 
 
@@ -18,10 +19,13 @@ class ChatProtocol(WebSocketServerProtocol):
         try :
 
             st=(request.path.split("/")[1])
+            #print (st)
             key=st.split("&")[0].split("=")[1]
-            room=int (st.split("&")[1].split("=")[1])
+            room=int (st.split("&")[1].split("=")[1]) ## starts with zero only 
+            seat=int (st.split("&")[2].split("=")[1])
+            seat=seat-1                              ## for array
             print (key,room)
-            rocky.register(self,key,room)
+            rocky.register(self,key,room,seat)
 
         except Exception as ex:
                     print (ex)
@@ -77,6 +81,7 @@ class ChatProtocol(WebSocketServerProtocol):
 
 
 if __name__ == "__main__":
+    print ("Listening on 6789")
     factory = WebSocketServerFactory("ws://localhost:6789")
     factory.protocol = ChatProtocol
 

@@ -2,12 +2,13 @@
 import random
 
 class Gamer(object):
-        def __init__(self,userID,key,websocket,room):
+        def __init__(self,userID,key,websocket,room,seatNo):
             self.userID=userID
             self.key=key
             self.websocket=websocket
             self.TrumpObject=""
             self.room=room
+            self.seatNo=seatNo
         def check(self):
             pass
 
@@ -18,7 +19,14 @@ class UserList(object):
         self.UL=[]
         self.keys=[]
         self.ws=[]             ## Contins only active connection
-        self.listOfRooms=[[],[],[],[],[]]  # len ([[]])  ---> 1 : 5 rooms created
+        self.listOfRooms=[]
+        for kk in range(0,5):
+            inner=[]
+            for cc in range(0,6):
+                inner.append(None)
+            self.listOfRooms.append(inner)
+
+        #self.listOfRooms=[[None,None,None,None,None,None],[None,None,None,None,None,None],[None,None,None,None,None,None],[None,None,None,None,None,None],[None,None,None,None,None,None]]  # len ([[]])  ---> 1 : 5 rooms created
 
     def getUserBywebSocket(self,websocket):
         for kk in self.UL:
@@ -36,22 +44,26 @@ class UserList(object):
 
     def removeFromRoom(self,ws):
         try:
+            print(ws)
+            print (self.ws) 
             self.ws.remove(ws)
             print ("removef from list of ws[]")
             roomNO=-6
+            seatNo=-6
+            for kk in self.UL:
+                print (kk.seatNo)
             for kk in self.UL:
               if (kk.websocket == ws ):
                   roomNO=kk.room
+                  seatNo=kk.seatNo
                   break
             roomObject=self.listOfRooms[roomNO]
-            for kk in roomObject:
-                if kk.websocket == ws:
-                   roomObject.remove(kk)
-                   return True
-            return False
+            roomObject[seatNo]=None
+            return True
         except Exception as ex:
                     print (ex)
                     print("Error in Removing the user from room")
+                    return False
 
 
     def getKeyBySocket(self,ws):
@@ -63,8 +75,6 @@ class UserList(object):
     def checkForkey(self,key):  ## will replace with sqllite
         #print (key +"  checking ")
         if key in self.keys:
-            print (" in if")
-            print (self.UL)
             for kk in self.UL:
                 print (kk)
                 if kk.key == key:
@@ -72,23 +82,30 @@ class UserList(object):
         else:
             return False
 
-    def addGameroRomm(self,roomNO,player):
+    def addGameroRomm(self,roomNO,seatNo,player):
         try:
             room=self.listOfRooms[roomNO]
-            room.append(player)
+            room[seatNo]=(player)
             return player
         except Exception as ex:
                     print (ex)
                     print ("Rooom add ")
 
-    def canEnterTheRoom(self,user,roomNO):
+    def canEnterTheRoom(self,roomNO,seatNo):
+            if  seatNo > 6:
+                print ("Invalid seat no")
+                return False
+
             if  roomNO > 4:                         ## Max rooom ,
                 print ("invalid room")
                 return False
-            if  len (self.listOfRooms[roomNO]) < 6:   #kk.append(user)
+            #if  len (self.listOfRooms[roomNO]) < 6:   #kk.append(user)
+            roomObject=self.listOfRooms[roomNO]
+            if roomObject[seatNo] is  None:
+                print("Will add in room ")
                 return True
             else:
-                print ("Room is full")
+                print ("Seat is occupied")
                 return False
 
 
