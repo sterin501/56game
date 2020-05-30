@@ -40,7 +40,19 @@ onMessage() redirect to MangeMeasage class based on responce from client
  
  "event":"play"   ---> Requesting card from one player 
  
- "event":"MatchIsDone" --> Sending end of Match details to users in room 
+ "event":"MatchIsDone" --> Sending end of Match details to users in room
+ 
+ "event":"Reconnect" --> When user reconnets to the game 
+ 
+ Example ::
+ 
+ {'event': 'Reconnect', 'villi': '28', 'trump': 'S', 'dude': 'P1', 'dudeTeam': 'Team0', 'hand': ['CA', 'CJ', 'CQ', 'CQ', 'DA', 'H9', 'HT', 'S9'], 'VSF': ['P', 'P', 'P', 'P', 'P', 'P'], 'playsofar': ['SQ']}
+ 
+ {'event': 'MatchIsDone', 'won': 'Team1', 'base0': 3, 'base1': 7, 'dialoge': 'Team1 won by Defending---- Give me two base', 'Mc': 1}
+
+{'event': 'TrumpIsSet', 'villi': '28', 'trump': 'S', 'dude': 'P1', 'dudeTeam': 'Team0'}
+
+
 
 TrumpHandler.py -->Object to deal with game and socket 
 
@@ -54,18 +66,22 @@ it controlls two events
 1.  "event":"question" -->Requesting trump details from one player 
  
  Request : 
- 
- {'event': 'question', 'question': 'what is your trump?', 'usr': 'P___bot3', 't': 'Team0', 'quNo': 3, 'c': 2}
+
+{'event': 'question', 'question': 'what is your trump?', 'usr': 'P___bot6', 't': 'Team1', 'quNo': 'R05', 'c': 5, 'r': 0, 'SN': 6, 'VSF': ['P', 'P', 'P', 'P', 'P']}
+
 
 Responce :
-{"AnsNo": 3, "Answer": "P", "usr": "P___bot3", "t": "Team0"}
+'{"AnsNo": "R00", "Answer": "P", "usr": "P___bot1", "t": "Team0"}'
+
 
 2. 'event': 'play' --> Requesting card from one player 
    Request : 
-{'event': 'play', 'hand': ['C9', 'CK', 'D9', 'DK', 'HK', 'SJ', 'SK', 'ST'], 'usr': 'P___bot1', 'pid': 1, 't': 'Team0', 'playsofar': [], 'c': 0}
+{'event': 'play', 'hand': ['C9', 'CK', 'CQ', 'DJ', 'HJ', 'HJ', 'HQ', 'SK'], 'usr': 'P___bot6', 'pid': 'R06', 't': 'Team1', 'playsofar': ['SA', 'SJ', 'SQ', 'S9', 'SA'], 'c': 5, 'r': 0, 'SN': 6}
+
 
    Responce :
-{"pid":6,"card":"DJ","usr":"P___chrome","t":"Team1","c":5} 
+{"pid": "R06", "card": "SK", "usr": "P___bot6", "t": "Team1"}'
+
 
 **js/test.html**
 
@@ -75,10 +91,13 @@ it need to keep on http doc root
 1. Need to set key to understand by server 
    http://localhost/test.html?SetKey=chromeORwhatever
  
- 2. new WebSocket("ws://127.0.0.1:6789/"+document.cookie) , creating websocket 
+ 2. new WebSocket("ws://127.0.0.1:6789/"+document.cookie+"&Room=0&seatNo=2") , creating websocket 
+ 
+ websocket connection should this order key m  Room and SeatNo
  
  *Atleast one browser to test the game . All bots are set play "P" all calls and play random cards (with in game logic )*
 
+ 
 _________________________________________________________________________________________________
 
 **Testing**
@@ -90,7 +109,8 @@ ________________________________________________________________________________
 ./server.py
 
 3. start bot using 
-bot/bot.py  botName  {optional roomNo} 
+ ./bot.py  "ws://127.0.0.1:6789/key=bot1&Room=0&seatN0=6"
+
  default room is 0
 4. Install webserver 
  
@@ -100,9 +120,4 @@ bot/bot.py  botName  {optional roomNo}
 http://localhost/test.html?SetKey=chromeORwhatever
  
  
- Need to addd
  
- 1. Seat numnber
- 2. VillisoFar object in question like like cardsofar
- 3. 7 user logic 
- 4
