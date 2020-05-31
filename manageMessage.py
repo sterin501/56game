@@ -73,7 +73,7 @@ class rocky(object):
                    RR=self.TrumpObjects[r].rules
 
                    #self.TrumpIsSet({"villi":str (RR.villi),"trump":RR.trump,"dude":RR.dude,"dudeTeam":RR.Dudeteam})
-                   payload = json.dumps({"event":"Reconnect","villi":str (RR.villi),'trump': RR.trump, 'dude': RR.dude, 'dudeTeam': RR.Dudeteam,'hand':playerHand,'VSF':RR.VSF,"playsofar":P0.thisPlay}).encode('utf8')
+                   payload = json.dumps({"event":"Reconnect","villi":str (RR.villi),'trump': RR.trump, 'dude': RR.dude, 'dudeTeam': RR.Dudeteam,'hand':playerHand,'VSF':RR.VSF,"playsofar":P0.thisPlayForSunu}).encode('utf8')
                    #websocket.sendMessage(payload, False)
                    self.mySendMessage(websocket,payload)
                    for kk in  (self.listOfQ):
@@ -183,7 +183,7 @@ class rocky(object):
                                       self.sendCard(th)
                                       quNO="R"+str(r)+str(0)
                                       P0=th.tt.orderofPlay[0]
-                                      villiSoFar=[]
+                                      villiSoFar=[{"S"+str(P0.seatNo):""}]
                                       message={"event":"question","question":"what is your trump?","usr":P0.name,"SN":P0.seatNo,"t":"Team0","quNo":quNO,"c":0,"r":r,"VSF":villiSoFar}
                                       self.askQustion(message,P0)
 
@@ -214,13 +214,15 @@ class rocky(object):
                             lastCard=self.getCardOfRequest(pid)
                             print(lastCard)
                             r=lastCard["r"]
+                            seat="S"+str(lastCard["SN"])
                             RR=self.TrumpObjects[r].rules
                             TT=self.TrumpObjects[r].tt
+                            self.TrumpObjects[r].thisPlayForSunu.append({seat:lastCard["card"]})
                             self.TrumpObjects[r].thisPlay.append(lastCard["card"])
                             PlaySoFar=self.TrumpObjects[r].thisPlay
                             c=lastCard["c"]                  ## --> Order of Index
                             TT.orderofPlay[c].removeCard(lastCard["card"])
-                            self.playSoFar({"msg":TT.orderofPlay[c].name+ "  played  "+ lastCard['card'], "playsofar":PlaySoFar},self.TrumpObjects[r])
+                            self.playSoFar({"msg":TT.orderofPlay[c].name+ "  played  "+ lastCard['card'], "playsofar":self.TrumpObjects[r].thisPlayForSunu},self.TrumpObjects[r])
                             if len(PlaySoFar) == 6:
                                 print ("Will check who got it ")
                                 print (PlaySoFar)
@@ -234,6 +236,7 @@ class rocky(object):
                                 print (newC)
                                 print (team)
                                 self.TrumpObjects[r].thisPlay=[]
+                                self.TrumpObjects[r].thisPlayForSunu=[]
                                 if team == "Team0":
                                              RR.t0Pidi.append(PlaySoFar)
                                 else:
@@ -250,14 +253,14 @@ class rocky(object):
 
                             pid=lastCard["pid"][:2]+ str (int (lastCard["pid"][2:]) +1)
                             TTO=TT.orderofPlay[(c+1)%6]
-                            message={"event":"play","hand":TTO.showHand(),"usr":TTO.name,"pid":pid,"t":TTO.team,"playsofar":PlaySoFar,"c":(c+1)%6,"r":r,"SN":TTO.seatNo}
+                            message={"event":"play","hand":TTO.showHand(),"usr":TTO.name,"pid":pid,"t":TTO.team,"playsofar":self.TrumpObjects[r].thisPlayForSunu,"c":(c+1)%6,"r":r,"SN":TTO.seatNo}
                             self.askCard(message,TTO)
 
 
     def   startNextMatch(self,r):
           RR=self.TrumpObjects[r].rules
           TT=self.TrumpObjects[r].tt
-          TT.VSF=[]
+          TT.VSF=[{}]
           TT.setNextGame()
           TT.getOrderOfPlayers()
           self.TrumpObjects[r].doTheDeal()
@@ -320,7 +323,8 @@ class rocky(object):
                                       RR=self.TrumpObjects[r].rules
                                       TT=self.TrumpObjects[r].tt
                                       c=lastVilli["c"]
-                                      RR.VSF.append(lastVilli["ans"])
+                                      seat="S"+str (lastVilli["SN"])
+                                      RR.VSF.append({seat:lastVilli["ans"]})
                                       print (RR.VSF)
                                       self.boradCast(TT.orderofPlay[c].name + "  called   " + lastVilli["ans"],gamers)
 

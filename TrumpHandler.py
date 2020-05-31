@@ -19,6 +19,7 @@ class TrumpHandler(object):
           self.tt = Table(self.P1,self.P2,self.P3,self.P4,self.P5,self.P6)
           self.rules=Points()  ## Might need to chagne every game
           self.thisPlay=[]
+          self.thisPlayForSunu=[] ## This is for javascript logic 
           print ("Starting Table in Califorina")  ## Will replaced by Room 1
 
 

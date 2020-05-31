@@ -34,8 +34,11 @@ class MyClientProtocol(WebSocketClientProtocol):
             time.sleep(1)
             ## {"pid":pid,"card":data.value,"usr":obj.usr,"t":obj.t}
             card=""
-            if  len (object['playsofar']) > 0:
-                FirstCard=object['playsofar'][0][0]
+            print (object['playsofar'])
+            if   len (object['playsofar']) > 0:  ## Checking empty dictonry
+
+                for kk in object['playsofar'][0]:
+                    FirstCard=object['playsofar'][0][kk]
                 res = [idx for idx in object['hand'] if idx.startswith(FirstCard)]
                 if len (res) > 0:
                     card= random.choice(res)
