@@ -287,7 +287,7 @@ class rocky(object):
                                         message={"won":"Team1","base0":tt.t0base,"base1":tt.t1base,"dialoge":dialoge,"Mc":tt.gameCount}
                                         self.MatchIsDone(message,tt.orderofPlay)
                                         return True
-                                    if (56-rules.villi) <=t0P:
+                                    if (56-rules.villi) <t0P:
                                         dialoge= ("Team0 won by Defending---- Give me two base")
                                         tt.t1base=tt.t1base-2
                                         tt.t0base=tt.t0base+2
@@ -302,7 +302,7 @@ class rocky(object):
                                         message={"won":"Team0","base0":tt.t0base,"base1":tt.t1base,"dialoge":dialoge,"Mc":tt.gameCount}
                                         self.MatchIsDone(message,tt.orderofPlay)
                                         return True
-                                    if (56-rules.villi) <=t1P:
+                                    if (56-rules.villi) <t1P:
                                         dialoge= ("Team1 won by Defending---- Give me two base")
                                         tt.t1base=tt.t1base+2
                                         tt.t0base=tt.t0base-2

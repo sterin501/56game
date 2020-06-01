@@ -1,6 +1,6 @@
 #!/bin/python3
 import asyncio
-import json,random
+import json,random,time
 import sys
 
 from autobahn.asyncio.websocket import WebSocketClientProtocol, WebSocketClientFactory
@@ -27,13 +27,18 @@ class MyClientProtocol(WebSocketClientProtocol):
         print (object)
         if (object['event'] == "question"):
             payload = json.dumps({"AnsNo":object["quNo"],"Answer":"P","usr":object["usr"],"t":object["t"]}).encode('utf8')
+            time.sleep(1)
             self.sendMessage(payload)
             ## {"AnsNo":quNo,"Answer":data.value,"usr":obj.usr,"t":obj.t}
         if (object['event'] == "play"):
+            time.sleep(1)
             ## {"pid":pid,"card":data.value,"usr":obj.usr,"t":obj.t}
             card=""
-            if  len (object['playsofar']) > 0:
-                FirstCard=object['playsofar'][0][0]
+            print (object['playsofar'])
+            if   len (object['playsofar']) > 0:  ## Checking empty dictonry
+
+                for kk in object['playsofar'][0]:
+                    FirstCard=object['playsofar'][0][kk]
                 res = [idx for idx in object['hand'] if idx.startswith(FirstCard)]
                 if len (res) > 0:
                     card= random.choice(res)
@@ -54,7 +59,13 @@ class MyClientProtocol(WebSocketClientProtocol):
 
 
 if __name__ == '__main__':
-    factory = WebSocketClientFactory("ws://3.17.191.219:6789/key="+sys.argv[1]+"&Room=0")
+    print (sys.argv)
+    if len (sys.argv) == 2:
+        factory = WebSocketClientFactory(sys.argv[1])
+    else:
+        print ('pass the url like "ws://3.17.191.219:6789/key=bot1&Room=0&seatN0=2"               it should pass in qute' )
+        quit()
+
     factory.protocol = MyClientProtocol
     loop = asyncio.get_event_loop()
     async def main():
@@ -65,3 +76,5 @@ if __name__ == '__main__':
         await proto.done
     loop.run_until_complete(main())
     loop.close()
+
+## ./aws_bot.py "ws://3.17.191.219:6789/key=bot1&Room=0&seatN0=1"
