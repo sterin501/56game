@@ -26,7 +26,8 @@ onMessage() redirect to MangeMeasage class based on responce from client
  **Events**:
  
  "event":"broadcast" --> Sending info to all clients in room     
- 
+
+"event":"seatinfo" --> Seat number with player info 
  
  
  "event":"cardSend" --> Sending cards  to specific user   
@@ -40,7 +41,7 @@ onMessage() redirect to MangeMeasage class based on responce from client
  
  "event":"play"   ---> Requesting card from one player 
  
- "event":"MatchIsDone" --> Sending end of Match details to users in room
+ "event":"MatchIsDone" --> Sending end of Match details to users in room & base points 
  
  "event":"Reconnect" --> When user reconnets to the game 
  
