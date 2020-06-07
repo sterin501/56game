@@ -9,14 +9,13 @@ class Points(object):
        #Nine=2
        #A=1
        #T=1
-       #Team1=["P1","P3"]
-       #Team2=["P2","P4"]
        self.villi=28
-       self.VSF=[]       ## villi so far 
+       self.VSF=[]       ## villi so far
        self.trump="S"
        self.t0Pidi=[]
        self.t1Pidi=[]
        self.dude="P1"
+       self.dudeSeatNo=""
        self.skipped=set()
        self.orderOfCard=["7","8","Q","K","T","A","9","J"]
        self.t1GetPoint=True

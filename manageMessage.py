@@ -76,6 +76,7 @@ class rocky(object):
                    payload = json.dumps({"event":"Reconnect","villi":str (RR.villi),'trump': RR.trump, 'dude': RR.dude, 'dudeTeam': RR.Dudeteam,'hand':playerHand,'VSF':RR.VSF,"playsofar":P0.thisPlayForSunu}).encode('utf8')
                    #websocket.sendMessage(payload, False)
                    self.mySendMessage(websocket,payload)
+                   self.roomInfo(roomUsers['gamersInRomm'])
                    for kk in  (self.listOfQ):
                        if kk['usr']==gamer.userID:
                            message={"event":"question","question":"what is your trump?","usr":kk["usr"],"t":kk["t"],"quNo":kk["quNo"],"c":kk["c"],"r":kk["r"],"SN":kk["SN"],"VSF":kk["VSF"]}
@@ -124,6 +125,21 @@ class rocky(object):
                                  self.mySendMessage(c.websocket,payload)
 
 
+    def  roomInfo(self,gamers):
+         d={}
+         for kk in gamers:
+             if kk is None:
+                 continue
+             d["SN"+str(kk.seatNo+1)]=kk.userID
+
+         for kk in gamers:
+             if kk is None:
+                continue
+             payload = json.dumps({"event":"seatInfo","message":d}).encode('utf8')
+             if kk.websocket:
+                self.mySendMessage(kk.websocket,payload)
+
+
 
     def playSoFar(self,message,th):                            ## This will change as per Room Logic
 
@@ -163,14 +179,12 @@ class rocky(object):
     def canWeStart(self,websocket):
                                   roomUsers=(self.USERS.getRoomDetails(websocket))
                                   print (roomUsers)
+                                  self.roomInfo(roomUsers['gamersInRomm'])
                                   if not roomUsers:
                                       print ("ERROR:2002 Issue while registring room and users__")
                                       websocket.sendMessage("{'message':'Can't find room '}".encode('utf8'), False)
-
-
-
-                                  if not roomUsers:
                                       return False
+
                                   r=roomUsers['room']
                                   if not None in  roomUsers['gamersInRomm']:  ## Need to change to Room logic .
 
@@ -282,31 +296,28 @@ class rocky(object):
                                 if rules.t1GetPoint:
                                     if rules.villi <=t1P:
                                         dialoge=("Team1 won  Villichu Jayichu so Just one base")
-                                        tt.t1base=tt.t1base+1
-                                        tt.t0base=tt.t0base-1
-                                        message={"won":"Team1","base0":tt.t0base,"base1":tt.t1base,"dialoge":dialoge,"Mc":tt.gameCount}
+                                        tt.t1VillichuWon(rules.villi,rules.dudeSeatNo )
+                                        message={"won":"Team1","base0":tt.t0base,"base1":tt.t1base,"dialoge":dialoge,"Mc":tt.gameCount,"KunuguSeat":tt.listOfKunugu}
                                         self.MatchIsDone(message,tt.orderofPlay)
+
                                         return True
                                     if (56-rules.villi) <t0P:
                                         dialoge= ("Team0 won by Defending---- Give me two base")
-                                        tt.t1base=tt.t1base-2
-                                        tt.t0base=tt.t0base+2
-                                        message={"won":"Team0","base0":tt.t0base,"base1":tt.t1base,"dialoge":dialoge,"Mc":tt.gameCount}
+                                        tt.t1VillichuLoss(rules.villi)
+                                        message={"won":"Team0","base0":tt.t0base,"base1":tt.t1base,"dialoge":dialoge,"Mc":tt.gameCount,"KunuguSeat":tt.listOfKunugu}
                                         self.MatchIsDone(message,tt.orderofPlay)
                                         return True
                                 else:
                                     if rules.villi <=t0P:
                                         dialoge= ("Team0 won Villichu Jayichu so Just one base ")
-                                        tt.t0base=tt.t0base+1
-                                        tt.t1base=tt.t1base-1
-                                        message={"won":"Team0","base0":tt.t0base,"base1":tt.t1base,"dialoge":dialoge,"Mc":tt.gameCount}
+                                        tt.t0VillichuWon(rules.villi,rules.dudeSeatNo)
+                                        message={"won":"Team0","base0":tt.t0base,"base1":tt.t1base,"dialoge":dialoge,"Mc":tt.gameCount,"KunuguSeat":tt.listOfKunugu}
                                         self.MatchIsDone(message,tt.orderofPlay)
                                         return True
                                     if (56-rules.villi) <t1P:
                                         dialoge= ("Team1 won by Defending---- Give me two base")
-                                        tt.t1base=tt.t1base+2
-                                        tt.t0base=tt.t0base-2
-                                        message={"won":"Team1","base0":tt.t0base,"base1":tt.t1base,"dialoge":dialoge,"Mc":tt.gameCount}
+                                        tt.t0VillichuLoss(rules.villi)
+                                        message={"won":"Team1","base0":tt.t0base,"base1":tt.t1base,"dialoge":dialoge,"Mc":tt.gameCount,"KunuguSeat":tt.listOfKunugu}
                                         self.MatchIsDone(message,tt.orderofPlay)
                                         return True
                                 return False
@@ -349,6 +360,7 @@ class rocky(object):
                                           RR.villi=int (lastVilli["ans"][1:])
                                           RR.trump=lastVilli["ans"][0]
                                           RR.dude=lastVilli["usr"]
+                                          RR.dudeSeatNo=lastVilli["SN"]
                                           RR.Dudeteam=lastVilli["t"]
                                       quNo=lastVilli["quNo"][:2]+ str (int (lastVilli["quNo"][2:]) +1)
                                       TTO=TT.orderofPlay[(c+1)%6]
@@ -366,7 +378,7 @@ class rocky(object):
 
 
     def MatchIsDone(self,message,gamers):
-        payload = json.dumps({"event":"MatchIsDone","won":message["won"],"base0":message["base0"],"base1":message["base1"],"dialoge":message["dialoge"],"Mc":message["Mc"]}).encode('utf8')
+        payload = json.dumps({"event":"MatchIsDone","won":message["won"],"base0":message["base0"],"base1":message["base1"],"dialoge":message["dialoge"],"Mc":message["Mc"],"KunuguSeat":message["KunuguSeat"]}).encode('utf8')
         for c in gamers:
                                                      if c==None:
                                                            continue
