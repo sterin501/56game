@@ -266,7 +266,7 @@ class rocky(object):
                                              RR.t1Pidi.append(PlaySoFar)
                                 TT.opener=newC
                                 TT.getOrderOfPlayers()
-                                self.heGotPidi({"msg":"SN"+str (TT.orderofPlay[(c+1)%6].seatNo)},self.TrumpObjects[r])
+                                self.heGotPidi({"msg":"S"+str (TT.orderofPlay[(c+1)%6].seatNo)},self.TrumpObjects[r])
 
                                 PlaySoFar=[]  ### To prevent 6 cards in second play
                                 if self.didHeWon(RR,TT):
