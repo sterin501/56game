@@ -149,6 +149,15 @@ class rocky(object):
                                  continue
                               if c.websocket:
                                 self.mySendMessage(c.websocket,payload)
+    def heGotPidi(self,message,th):                            ## This will change as per Room Logic
+
+                         payload = json.dumps({"event":"HeGotPidi","message":message["msg"]}).encode('utf8')
+                         for c in th.tt.orderofPlay:
+                                                          if c == None:
+                                                             continue
+                                                          if c.websocket:
+                                                            self.mySendMessage(c.websocket,payload)
+
 
     def  sendCard(self,th):                            ## This will change as per Room Logic
                          #payload = json.dumps({"event":"broadcast","message":message}).encode('utf8')
@@ -257,6 +266,8 @@ class rocky(object):
                                              RR.t1Pidi.append(PlaySoFar)
                                 TT.opener=newC
                                 TT.getOrderOfPlayers()
+                                self.heGotPidi({"msg":"SN"+str (TT.orderofPlay[(c+1)%6].seatNo)},self.TrumpObjects[r])
+
                                 PlaySoFar=[]  ### To prevent 6 cards in second play
                                 if self.didHeWon(RR,TT):
                                     print ("won")
