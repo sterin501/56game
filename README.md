@@ -41,6 +41,8 @@ onMessage() redirect to MangeMeasage class based on responce from client
  
  "event":"play"   ---> Requesting card from one player 
  
+ "event":"HeGotPidi" ----> At the end of card play , send info abt who got the pidi
+ 
  "event":"MatchIsDone" --> Sending end of Match details to users in room & base points 
  
  "event":"Reconnect" --> When user reconnets to the game 
