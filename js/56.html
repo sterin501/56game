@@ -75,8 +75,12 @@
                 }
                 else {
                     viliToShow = convertToSign(vili.substring(0, 1)) + vili.substring(1);
+
                 }
-                // viliToShow = convertToSign(vili.substring(0, 1)) + vili.substring(1);
+
+                if (viliToShow=='undefined')
+                      viliToShow=""   // avoid undefined while loading first time 
+
                 $('span[name="' + seatNo + '"]')[0]
                     .innerHTML = $('span[name="' + seatNo + '"]')[0]
                         .innerHTML + ' ' + '<span class =\"card-text badge badge-danger\">' + viliToShow + '</span>';
@@ -293,7 +297,7 @@
 
     }
 
-    function playEvent(){
+    function playEvent(data){
 
       if (data.playsofar && data.playsofar.length == 0) {
           $('div[id="foldSection"]').show();
@@ -446,7 +450,7 @@
                         </div>
                         <div class="row">
                             <span class="card-text badge badge-success">
-                                Game : <span class="" id="gameCount"></span>
+                                Game  : <span class="" id="gameCount"></span>
                             </span>
                         </div>
                     </div>

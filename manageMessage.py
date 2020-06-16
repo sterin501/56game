@@ -73,29 +73,34 @@ class rocky(object):
                    RR=self.TrumpObjects[r].rules
 
                    #self.TrumpIsSet({"villi":str (RR.villi),"trump":RR.trump,"dude":RR.dude,"dudeTeam":RR.Dudeteam})
-                   payload = json.dumps({"event":"Reconnect","villi":str (RR.villi),'trump': RR.trump, 'dude': RR.dude, 'dudeTeam': RR.Dudeteam,'hand':playerHand,'VSF':RR.VSF,"playsofar":P0.thisPlayForSunu}).encode('utf8')
-                   #websocket.sendMessage(payload, False)
-                   self.mySendMessage(websocket,payload)
-                   #self.roomInfo(roomUsers['gamersInRomm'])
+                                      #self.roomInfo(roomUsers['gamersInRomm'])
+                   reconnectMessage={"villi":str (RR.villi),'trump': RR.trump, 'dude': RR.dude, 'dudeTeam': RR.Dudeteam,'hand':playerHand,'VSF':RR.VSF,"playsofar":P0.thisPlayForSunu}
+
                    for kk in  (self.listOfQ):
                        if kk['usr']==gamer.userID:
                            message={"event":"question","usr":kk["usr"],"t":kk["t"],"quNo":kk["quNo"],"c":kk["c"],"r":kk["r"],"SN":kk["SN"],"VSF":kk["VSF"],"loopStart":kk["loopStart"]}
                            self.listOfQ.remove(kk)
+                           message.update(reconnectMessage)
                            self.askQustion(message,gamer)
+                           pending="Q"
                            return True
 
                    for kk in  (self.listOfC):
                                if kk['usr']==gamer.userID:
                                    message={"event":"play","hand":playerHand,"usr":kk["usr"],"pid":kk["pid"],"t":kk["t"],"playsofar":kk["playsofar"],"c":kk["c"],"r":kk["r"],"SN":kk["SN"]}
                                    self.listOfC.remove(kk)
+                                   message.update(reconnectMessage)
                                    self.askCard(message,gamer)
+                                   pending="P"
                                    return True
+
+                   reconnectMessage.update({"event":"Reconnect"})
+                   payload = json.dumps(reconnectMessage).encode('utf8')
+                   self.mySendMessage(websocket,payload)
 
 
                else:
                    print ("ERROR:2033 BAD error ")
-
-
                return True
          else:
             False
@@ -186,7 +191,7 @@ class rocky(object):
                             payload = json.dumps(message).encode('utf8')
                             #client.websocket.sendMessage(payload,False)
                             self.mySendMessage(client.websocket,payload)
-                            self.listOfQ.append({"quNo":message["quNo"],"status":"Asked","ans":"","usr":message["usr"],"t":message["t"],"c":message["c"],"r":message["r"],"SN":message["SN"],"VSF":message["VSF"]})
+                            self.listOfQ.append({"quNo":message["quNo"],"status":"Asked","ans":"","usr":message["usr"],"t":message["t"],"c":message["c"],"r":message["r"],"SN":message["SN"],"VSF":message["VSF"],"loopStart":message["loopStart"]})
                             print ("Question1 Asked")
 
     def askCard(self,message,client):
@@ -216,7 +221,7 @@ class rocky(object):
                                       self.sendCard(th)
                                       quNO="R"+str(r)+str(0)
                                       P0=th.tt.orderofPlay[0]
-                                      villiSoFar=[{"S"+str(P0.seatNo):""}]
+                                      villiSoFar=[{"S"+str(P0.seatNo):" "}]
                                       message={"event":"question","usr":P0.name,"SN":P0.seatNo,"t":"Team0","quNo":quNO,"c":0,"r":r,"VSF":villiSoFar,"loopStart":28}
                                       self.askQustion(message,P0)
 
