@@ -221,7 +221,7 @@ class rocky(object):
                                       self.sendCard(th)
                                       quNO="R"+str(r)+str(0)
                                       P0=th.tt.orderofPlay[0]
-                                      villiSoFar=[{"S"+str(P0.seatNo):" "}]
+                                      villiSoFar=[{"S"+str(P0.seatNo):""}]
                                       message={"event":"question","usr":P0.name,"SN":P0.seatNo,"t":"Team0","quNo":quNO,"c":0,"r":r,"VSF":villiSoFar,"loopStart":28}
                                       self.askQustion(message,P0)
 
