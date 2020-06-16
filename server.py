@@ -21,11 +21,12 @@ class ChatProtocol(WebSocketServerProtocol):
             st=(request.path.split("/")[1])
             #print (st)
             key=st.split("&")[0].split("=")[1]
-            room=int (st.split("&")[1].split("=")[1]) ## starts with zero only 
+            room=int (st.split("&")[1].split("=")[1]) ## starts with zero only
             seat=int (st.split("&")[2].split("=")[1])
             seat=seat-1                              ## for array
             print (key,room)
             rocky.register(self,key,room,seat)
+            print (self.http_headers)
 
         except Exception as ex:
                     print (ex)
@@ -45,7 +46,7 @@ class ChatProtocol(WebSocketServerProtocol):
     def onMessage(self, payload, is_binary):
         print (payload)
         object=json.loads(payload)
-        print (rocky.listOfQ)
+        # (rocky.listOfQ)
         ##  {"pid":pid,"card":data.value,"usr":obj.usr,"t":obj.t}  for Card Play
         ##  {"AnsNo":4,"Answer":"P","usr":"P1","t":"Team0"}'       for Villi Logic
         if  'AnsNo' in object:

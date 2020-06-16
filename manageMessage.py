@@ -69,24 +69,23 @@ class rocky(object):
                        if (kk.name)==gamer.userID:
                            kk.websocket=websocket
                            playerHand=kk.showHand()
-                   self.sendCard(P0)
+                   #self.sendCard(P0)
                    RR=self.TrumpObjects[r].rules
 
                    #self.TrumpIsSet({"villi":str (RR.villi),"trump":RR.trump,"dude":RR.dude,"dudeTeam":RR.Dudeteam})
                    payload = json.dumps({"event":"Reconnect","villi":str (RR.villi),'trump': RR.trump, 'dude': RR.dude, 'dudeTeam': RR.Dudeteam,'hand':playerHand,'VSF':RR.VSF,"playsofar":P0.thisPlayForSunu}).encode('utf8')
                    #websocket.sendMessage(payload, False)
                    self.mySendMessage(websocket,payload)
-                   self.roomInfo(roomUsers['gamersInRomm'])
+                   #self.roomInfo(roomUsers['gamersInRomm'])
                    for kk in  (self.listOfQ):
                        if kk['usr']==gamer.userID:
-                           message={"event":"question","question":"what is your trump?","usr":kk["usr"],"t":kk["t"],"quNo":kk["quNo"],"c":kk["c"],"r":kk["r"],"SN":kk["SN"],"VSF":kk["VSF"]}
+                           message={"event":"question","usr":kk["usr"],"t":kk["t"],"quNo":kk["quNo"],"c":kk["c"],"r":kk["r"],"SN":kk["SN"],"VSF":kk["VSF"],"loopStart":kk["loopStart"]}
                            self.listOfQ.remove(kk)
                            self.askQustion(message,gamer)
                            return True
 
                    for kk in  (self.listOfC):
                                if kk['usr']==gamer.userID:
-                                   #message={"event":"question","question":"what is your trump?","usr":kk["usr"],"t":kk["t"],"quNo":kk["quNo"],"c":kk["c"]}
                                    message={"event":"play","hand":playerHand,"usr":kk["usr"],"pid":kk["pid"],"t":kk["t"],"playsofar":kk["playsofar"],"c":kk["c"],"r":kk["r"],"SN":kk["SN"]}
                                    self.listOfC.remove(kk)
                                    self.askCard(message,gamer)
@@ -149,6 +148,18 @@ class rocky(object):
                                  continue
                               if c.websocket:
                                 self.mySendMessage(c.websocket,payload)
+
+    def heCalled(self,message,gamers):                            ## This will change as per Room Logic
+
+                            payload = json.dumps({"event":"HeCalled","seat":message["seat"],"Villi":message["Villi"],"VSF":message["VSF"]}).encode('utf8')
+                            for c in gamers:
+                                                          if c == None:
+                                                             continue
+                                                          if c.websocket:
+                                                            self.mySendMessage(c.websocket,payload)
+
+
+
     def heGotPidi(self,message,th):                            ## This will change as per Room Logic
 
                          payload = json.dumps({"event":"HeGotPidi","message":message["msg"]}).encode('utf8')
@@ -198,16 +209,15 @@ class rocky(object):
                                   if not None in  roomUsers['gamersInRomm']:  ## Need to change to Room logic .
 
                                       th=TrumpHandler.TrumpHandler(roomUsers['gamersInRomm'])
-                                      st=th.publicTextBeforeEveryMatch()+"  ....   ....  "
                                       th.doTheDeal()
                                       th.tt.getOrderOfPlayers()
                                       self.TrumpObjects[r]=th
-                                      self.boradCast ({"event":"broadcast","message":st},roomUsers['gamersInRomm'])
+                                      self.MatchIsDone ({"won":"","base0":5,"base1":5,"dialoge":"","Mc":0,"KunuguSeat":[]},roomUsers['gamersInRomm'])
                                       self.sendCard(th)
                                       quNO="R"+str(r)+str(0)
                                       P0=th.tt.orderofPlay[0]
                                       villiSoFar=[{"S"+str(P0.seatNo):""}]
-                                      message={"event":"question","question":"what is your trump?","usr":P0.name,"SN":P0.seatNo,"t":"Team0","quNo":quNO,"c":0,"r":r,"VSF":villiSoFar}
+                                      message={"event":"question","usr":P0.name,"SN":P0.seatNo,"t":"Team0","quNo":quNO,"c":0,"r":r,"VSF":villiSoFar,"loopStart":28}
                                       self.askQustion(message,P0)
 
                                   else:
@@ -292,7 +302,7 @@ class rocky(object):
           self.sendCard(self.TrumpObjects[r])
           quNO="R"+str(r)+str(0)
           P0=TT.orderofPlay[0]
-          message={"event":"question","question":"what is your trump?","usr":P0.name,"t":P0.team,"SN":P0.seatNo,"quNo":quNO,"c":0,"r":r,"VSF":[]}
+          message={"event":"question","usr":P0.name,"t":P0.team,"SN":P0.seatNo,"quNo":quNO,"c":0,"r":r,"VSF":[],"loopStart":28}
           self.askQustion(message,self.TrumpObjects[r].tt.orderofPlay[0])
 
 
@@ -348,7 +358,8 @@ class rocky(object):
                                       seat="S"+str (lastVilli["SN"])
                                       RR.VSF.append({seat:lastVilli["ans"]})
                                       print (RR.VSF)
-                                      self.boradCast(TT.orderofPlay[c].name + "  called   " + lastVilli["ans"],gamers)
+                                      message={"seat":seat,"Villi":lastVilli["ans"],"VSF":RR.VSF}
+                                      self.heCalled(message,gamers)
 
                                       if lastVilli["ans"] == "P":
                                            if len (RR.skipped) ==5:  ## Need to change for 6
@@ -375,7 +386,7 @@ class rocky(object):
                                           RR.Dudeteam=lastVilli["t"]
                                       quNo=lastVilli["quNo"][:2]+ str (int (lastVilli["quNo"][2:]) +1)
                                       TTO=TT.orderofPlay[(c+1)%6]
-                                      message={"event":"question","question":"what is your trump?","usr":TTO.name,"t":TTO.team,"quNo":quNo,"c":(c+1)%6,"r":r,"SN":TTO.seatNo,"VSF":RR.VSF}
+                                      message={"event":"question","usr":TTO.name,"t":TTO.team,"quNo":quNo,"c":(c+1)%6,"r":r,"SN":TTO.seatNo,"VSF":RR.VSF,"loopStart":RR.villi+1}
                                       self.askQustion(message,TTO)
 
     def TrumpIsSet(self,message,gamers):                            ## This will change as per Room Logic
