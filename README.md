@@ -27,13 +27,16 @@ onMessage() redirect to MangeMeasage class based on responce from client
  
  "event":"broadcast" --> Sending info to all clients in room     
 
-"event":"seatinfo" --> Seat number with player info 
- 
- 
+ "event":"seatinfo" --> Seat number with player info 
+
+ 'event': 'spinner'  --> Location of spinning ball in UI 
+
  "event":"cardSend" --> Sending cards  to specific user   
  
  
  "event":"question" -->Requesting trump details from one player   
+ 
+  'event': 'HeCalled' --> Every every bid 
  
  "event":"TrumpIsSet" --> Sending trump details to all users in room 
  
@@ -43,9 +46,18 @@ onMessage() redirect to MangeMeasage class based on responce from client
  
  "event":"HeGotPidi" ----> At the end of card play , send info abt who got the pidi
  
+ 'event':'fold' ---> Fold button to get the cards to player . it send during at the end of winning play
+ 
  "event":"MatchIsDone" --> Sending end of Match details to users in room & base points 
  
  "event":"Reconnect" --> When user reconnets to the game 
+ 
+
+ 
+
+
+ 
+ 
  
  Example ::
  
