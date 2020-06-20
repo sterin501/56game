@@ -14,6 +14,7 @@ class rocky(object):
     def __init__(self):
         self.listOfQ=[]
         self.listOfC=[]
+        self.listOfF=[]
         self.USERS=UserList()
         self.TrumpObjects={}
 
@@ -74,7 +75,10 @@ class rocky(object):
 
                    #self.TrumpIsSet({"villi":str (RR.villi),"trump":RR.trump,"dude":RR.dude,"dudeTeam":RR.Dudeteam})
                                       #self.roomInfo(roomUsers['gamersInRomm'])
-                   reconnectMessage={"villi":str (RR.villi),'trump': RR.trump, 'dude': RR.dude, 'dudeTeam': RR.Dudeteam,'hand':playerHand,'VSF':RR.VSF,"playsofar":P0.thisPlayForSunu}
+                   if RR.TrumpSet:
+                       reconnectMessage={"villi":str (RR.villi),'trump': RR.trump, 'dude': RR.dude, 'dudeTeam': RR.Dudeteam,'hand':playerHand,'VSF':[],"playsofar":P0.thisPlayForSunu}
+                   else:
+                      reconnectMessage={"villi":str (RR.villi),'trump': RR.trump, 'dude': RR.dude, 'dudeTeam': RR.Dudeteam,'hand':playerHand,'VSF':RR.VSF,"playsofar":P0.thisPlayForSunu}
 
                    for kk in  (self.listOfQ):
                        if kk['usr']==gamer.userID:
@@ -82,7 +86,6 @@ class rocky(object):
                            self.listOfQ.remove(kk)
                            message.update(reconnectMessage)
                            self.askQustion(message,gamer)
-                           pending="Q"
                            return True
 
                    for kk in  (self.listOfC):
@@ -91,8 +94,15 @@ class rocky(object):
                                    self.listOfC.remove(kk)
                                    message.update(reconnectMessage)
                                    self.askCard(message,gamer)
-                                   pending="P"
                                    return True
+                   for kk in (self.listOfF):
+                                 if kk['usr']==gamer.userID:
+                                     message={"event":"fold","hand":playerHand,"usr":kk["usr"],"fid":kk["fid"],"r":kk["r"],"SN":kk["SN"]}
+                                     self.listOfF.remove(kk)
+                                     message.update(reconnectMessage)
+                                     self.askFold(message,gamer)
+                                     return True
+
 
                    reconnectMessage.update({"event":"Reconnect"})
                    payload = json.dumps(reconnectMessage).encode('utf8')
@@ -147,7 +157,7 @@ class rocky(object):
 
     def playSoFar(self,message,th):                            ## This will change as per Room Logic
 
-                         payload = json.dumps({"event":"cardPlay","message":message["msg"],"playsofar":message["playsofar"]}).encode('utf8')
+                         payload = json.dumps({"event":"cardPlay","playsofar":message["playsofar"]}).encode('utf8')
                          for c in th.tt.orderofPlay:
                               if c == None:
                                  continue
@@ -165,13 +175,15 @@ class rocky(object):
 
 
 
-    def heGotPidi(self,message,th):                            ## This will change as per Room Logic
+    def heGotPidi(self,gamers,skip):                            ## This will change as per Room Logic
 
-                         payload = json.dumps({"event":"HeGotPidi","message":message["msg"]}).encode('utf8')
-                         for c in th.tt.orderofPlay:
+
+                         for c in gamers:
                                                           if c == None:
                                                              continue
+
                                                           if c.websocket:
+                                                            payload = json.dumps({"event":"HeGotPidi","who":(skip.seatNo),"my":(c.seatNo),"spinner":(skip.seatNo+6-c.seatNo)%6}).encode('utf8')
                                                             self.mySendMessage(c.websocket,payload)
 
 
@@ -201,6 +213,15 @@ class rocky(object):
                             self.listOfC.append({"pid":message["pid"],'playsofar':message['playsofar'],"status":"Asked","card":"","usr":message["usr"],"t":message["t"],"c":message["c"],"r":message["r"],"SN":message["SN"]})
                             print ("Card  Asked")
 
+    def askFold(self,message,client):
+                    payload = json.dumps(message).encode('utf8')
+                    self.mySendMessage(client.websocket,payload)
+                    self.listOfF.append({"fid":message["fid"],"status":"Asked","usr":message["usr"],"r":message["r"],"SN":message["SN"]})
+                    print ("Card  Asked")
+
+
+
+
     def canWeStart(self,websocket):
                                   roomUsers=(self.USERS.getRoomDetails(websocket))
                                   print (roomUsers)
@@ -224,6 +245,7 @@ class rocky(object):
                                       villiSoFar=[{"S"+str(P0.seatNo):""}]
                                       message={"event":"question","usr":P0.name,"SN":P0.seatNo,"t":"Team0","quNo":quNO,"c":0,"r":r,"VSF":villiSoFar,"loopStart":28}
                                       self.askQustion(message,P0)
+                                      self.whoIsSpinner(th.tt.orderofPlay,P0)
 
                                   else:
 
@@ -260,7 +282,7 @@ class rocky(object):
                             PlaySoFar=self.TrumpObjects[r].thisPlay
                             c=lastCard["c"]                  ## --> Order of Index
                             TT.orderofPlay[c].removeCard(lastCard["card"])
-                            self.playSoFar({"msg":TT.orderofPlay[c].name+ "  played  "+ lastCard['card'], "playsofar":self.TrumpObjects[r].thisPlayForSunu},self.TrumpObjects[r])
+                            self.playSoFar({"playsofar":self.TrumpObjects[r].thisPlayForSunu},self.TrumpObjects[r])
                             if len(PlaySoFar) == 6:
                                 print ("Will check who got it ")
                                 print (PlaySoFar)
@@ -281,35 +303,44 @@ class rocky(object):
                                              RR.t1Pidi.append(PlaySoFar)
                                 TT.opener=newC
                                 TT.getOrderOfPlayers()
-                                self.heGotPidi({"msg":"S"+str (TT.orderofPlay[(c+1)%6].seatNo)},self.TrumpObjects[r])
+                                self.heGotPidi(TT.orderofPlay,TT.orderofPlay[(c+1)%6]) ## Need to send my seat also & dummy one . it should sending after win or not
 
                                 PlaySoFar=[]  ### To prevent 6 cards in second play
+                                TTO=TT.orderofPlay[(c+1)%6]
                                 if self.didHeWon(RR,TT):
-                                    print ("won")
-                                    self.startNextMatch(r)
+                                    print ("match is over ")
+                                    TTO=TT.orderofPlay[(c+1)%6]
+                                    #{"fid":message["fid"],"status":"Asked","usr":message["usr"],"r":message["r"],"SN":message["SN"]}
+                                    message={"event":"fold","usr":TTO.name,"fid":lastCard["pid"][:2],"t":TTO.team,"r":r,"SN":TTO.seatNo}
+                                    self.askFold(message,TTO)
+                                    self.startNextMatch(r,False)
                                     return True
 
 
-
-                            pid=lastCard["pid"][:2]+ str (int (lastCard["pid"][2:]) +1)
                             TTO=TT.orderofPlay[(c+1)%6]
+                            pid=lastCard["pid"][:2]+ str (int (lastCard["pid"][2:]) +1)
                             message={"event":"play","hand":TTO.showHand(),"usr":TTO.name,"pid":pid,"t":TTO.team,"playsofar":self.TrumpObjects[r].thisPlayForSunu,"c":(c+1)%6,"r":r,"SN":TTO.seatNo}
                             self.askCard(message,TTO)
+                            self.whoIsSpinner(TT.orderofPlay,TTO)
 
 
-    def   startNextMatch(self,r):
-          RR=self.TrumpObjects[r].rules
-          TT=self.TrumpObjects[r].tt
-          TT.VSF=[{}]
-          TT.setNextGame()
-          TT.getOrderOfPlayers()
-          self.TrumpObjects[r].doTheDeal()
-          self.sendCard(self.TrumpObjects[r])
-          quNO="R"+str(r)+str(0)
-          P0=TT.orderofPlay[0]
-          message={"event":"question","usr":P0.name,"t":P0.team,"SN":P0.seatNo,"quNo":quNO,"c":0,"r":r,"VSF":[],"loopStart":28}
-          self.askQustion(message,self.TrumpObjects[r].tt.orderofPlay[0])
-
+    def   startNextMatch(self,r,okFromUI):
+          if okFromUI:
+           RR=self.TrumpObjects[r].rules
+           TT=self.TrumpObjects[r].tt
+           TT.VSF=[{}]
+           RR.TrumpSet=False
+           TT.setNextGame()
+           TT.getOrderOfPlayers()
+           self.TrumpObjects[r].doTheDeal()
+           self.sendCard(self.TrumpObjects[r])
+           quNO="R"+str(r)+str(0)
+           P0=TT.orderofPlay[0]
+           message={"event":"question","usr":P0.name,"t":P0.team,"SN":P0.seatNo,"quNo":quNO,"c":0,"r":r,"VSF":[],"loopStart":28}
+           self.askQustion(message,self.TrumpObjects[r].tt.orderofPlay[0])
+           self.whoIsSpinner(self.TrumpObjects[r].tt.orderofPlay,self.TrumpObjects[r].tt.orderofPlay[0])
+          else:
+             print ("Need to wait for ok from UI ")
 
 
 
@@ -367,20 +398,23 @@ class rocky(object):
                                       self.heCalled(message,gamers)
 
                                       if lastVilli["ans"] == "P":
-                                           if len (RR.skipped) ==5:  ## Need to change for 6
+                                           RR.skipped.add(lastVilli["usr"])
+                                           if len (RR.skipped) ==6:  ## Need to change for 6
                                                   print (RR.villi)
+                                                  RR.TrumpSet=True
                                                   self.TrumpIsSet({"villi":str (RR.villi),"trump":RR.trump,"dude":RR.dude,"dudeTeam":RR.Dudeteam},TT.orderofPlay)
                                                   if RR.Dudeteam=="Team1":
                                                       RR.t1GetPoint=True
                                                   else:
                                                       RR.t1GetPoint=False
                                                   pid="R"+str(r)+str(1)
-                                                  self.sendCard(self.TrumpObjects[r])
+                                                  ##self.sendCard(self.TrumpObjects[r])   ## Not need
                                                   message={"event":"play","hand":TT.orderofPlay[0].showHand(),"usr":TT.orderofPlay[0].name,"pid":pid,"t":"Team0","playsofar":[],"c":0,"r":r,"SN":TT.orderofPlay[0].seatNo}
                                                   self.askCard(message,TT.orderofPlay[0])
+                                                  self.whoIsSpinner(TT.orderofPlay,TT.orderofPlay[0])
                                                   return True
-                                           else:
-                                                RR.skipped.add(lastVilli["usr"])
+                                           
+
 
                                       else:
 
@@ -393,6 +427,22 @@ class rocky(object):
                                       TTO=TT.orderofPlay[(c+1)%6]
                                       message={"event":"question","usr":TTO.name,"t":TTO.team,"quNo":quNo,"c":(c+1)%6,"r":r,"SN":TTO.seatNo,"VSF":RR.VSF,"loopStart":RR.villi+1}
                                       self.askQustion(message,TTO)
+                                      self.whoIsSpinner(TT.orderofPlay,TTO)
+
+
+    def whoIsSpinner(self,gamers,skip):
+        #    message={"event":"spinner","spinner":skip.seatNo}
+
+            for c in gamers:
+                                                  if c==None:
+                                                        continue
+                                                  if c.seatNo==skip.seatNo:
+                                                      continue
+                                                  if c.websocket:
+                                                    # message.update({"myseat":c.seatNo})  skip.seatNo  ( skip.seatNo+6-c.seatNo)%6
+                                                     payload = json.dumps({"event":"spinner","spinner":(skip.seatNo+6-c.seatNo)%6}).encode('utf8')
+                                                     self.mySendMessage(c.websocket,payload)
+
 
     def TrumpIsSet(self,message,gamers):                            ## This will change as per Room Logic
 

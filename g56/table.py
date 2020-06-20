@@ -31,7 +31,7 @@ class Table(object):
                self.t0base=self.t0base-2
            else:
                self.t1base=self.t1base+1
-               self.t0base=self.tobase-1
+               self.t0base=self.t0base-1
 
            self.checkForKunuk()
            if seatNo in self.listOfKunugu:
@@ -46,7 +46,7 @@ class Table(object):
                           self.t0base=self.t0base+3
                       else:
                           self.t1base=self.t1base-2
-                          self.t0base=self.tobase+2
+                          self.t0base=self.t0base+2
                       self.checkForKunuk()
 
 
@@ -59,7 +59,7 @@ class Table(object):
                                                 self.t0base=self.t0base+2
                                             else:
                                                 self.t1base=self.t1base-1
-                                                self.t0base=self.tobase+1
+                                                self.t0base=self.t0base+1
                                             self.checkForKunuk()
                                             if seatNo in self.listOfKunugu:
                                                 self.listOfKunugu.remove(seatNo)
@@ -74,7 +74,7 @@ class Table(object):
                                                                                             self.t0base=self.t0base-3
                                                                                         else:
                                                                                             self.t1base=self.t1base+2
-                                                                                            self.t0base=self.tobase-2
+                                                                                            self.t0base=self.t0base-2
                                                                                         self.checkForKunuk()
 
 

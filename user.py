@@ -8,7 +8,7 @@ class Gamer(object):
             self.websocket=websocket
             self.TrumpObject=""
             self.room=room
-            self.seatNo=seatNo
+            self.seatNo=seatNo ### This seat same for UI . But for array in gamers list ,less than 1 .
         def check(self):
             pass
 
@@ -45,7 +45,7 @@ class UserList(object):
     def removeFromRoom(self,ws):
         try:
             print(ws)
-            print (self.ws) 
+            print (self.ws)
             self.ws.remove(ws)
             print ("removef from list of ws[]")
             roomNO=-6

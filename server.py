@@ -67,6 +67,14 @@ class ChatProtocol(WebSocketServerProtocol):
                     kk['status'] = "DONE"
                     kk['card'] = object['card']
                     rocky.managePlay(pid)
+        elif 'fid' in object:
+            fid=object['fid']
+            for kk in rocky.listOfF:
+                if kk['fid'] == fid:
+                    print ("fold in server.py")
+                    kk['status'] ="DONE"
+                    rocky.listOfF.remove(kk)
+                    rocky.startNextMatch(kk["r"],True)
 
 
         #print (listOfQ)

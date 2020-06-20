@@ -21,7 +21,11 @@
     var webSocket;
     var hand;
     var uuid = createUUID();
-    var data;
+    var globalData = {};
+    var questionData = {};
+    var playData = {};
+    var folderButtonStatus=false;
+    var foldData={};
     console.log(uuid);
     if (!document.cookie) {
         document.cookie = "key=" + uuid + ";max-age=2592000;"
@@ -36,27 +40,21 @@
         var cardsContent = "";
         if (data.hand) {
             $.each(data.hand, function (index, value) {
-                //alert(index + ": " + value);
                 cardsContent += "<img id='card1' class='card' src='cards/" + value + ".svg' name=" + value + " onclick=selectCard(this)>";
-                //$("#card" + (index + 1)).attr("src", "cards/" + value + ".svg");
-                //$("#card" + (index + 1)).attr("name", value);
-
-
             });
         }
         if (cardsContent) {
             $("#activeHand")[0].innerHTML = cardsContent;
         }
 
-
         if (data.villi) {
-            $("#trumpSection")[0].innerHTML = "Villi: "+data.dudeTeam+" "+data.villi + convertToSign(data.trump);
+            $("#trumpSection")[0].innerHTML = "Villi: " + data.dudeTeam + " " + data.villi + convertToSign(data.trump);
         }
 
         if (data.playsofar && data.playsofar.length != 0) {
             showOtherCards(data.playsofar);
         }
-        if (data.VSF) {
+        if (data.VSF && (!globalData.playsofar || globalData.playsofar.length == 0) ) {
             showVili(data.VSF);
         }
 
@@ -71,21 +69,34 @@
                 let viliToShow;
 
                 if (vili == 'P') {
-                    viliToShow = 'P';
+                    viliToShow = 'Pass';
                 }
                 else {
                     viliToShow = convertToSign(vili.substring(0, 1)) + vili.substring(1);
+                }
+                if (j == VSF.length - 1) {
+                    //spinner
+                    // resetSpinner();
+                    // let seatNumberIndex = parseInt(seatNo.substring(1));
+
+                    // $('div[name="S' + getSeatNumber(seatNumberIndex, 1) + '"]').show();
 
                 }
-
-                if (viliToShow=='undefined')
-                      viliToShow=""   // avoid undefined while loading first time 
+                // viliToShow = convertToSign(vili.substring(0, 1)) + vili.substring(1);
+                if (viliToShow =='undefined')
+                          viliToShow=''
 
                 $('span[name="' + seatNo + '"]')[0]
                     .innerHTML = $('span[name="' + seatNo + '"]')[0]
                         .innerHTML + ' ' + '<span class =\"card-text badge badge-danger\">' + viliToShow + '</span>';
             }
 
+        }
+    }
+    function resetSpinner() {
+        //spinner
+        for (var i = 1; i < 7; i++) {
+            $('div[name="S' + i + '"]').hide();
         }
     }
     function resetVSF() {
@@ -109,41 +120,45 @@
         }
     }
     function passBid() {
-        if (data.VSF.length == 0) {
+        if (globalData.VSF.length == 0) {
             alert("Fist compulsory bid!!!");
             return;
         }
-        if (data.VSF.length == 1) {
-            let bidValue = Object.values(data.VSF[0])[0].substring(1);
+        if (globalData.VSF.length == 1) {
+            let bidValue = Object.values(globalData.VSF[0])[0].substring(1);
             if (bidValue == '') {
                 alert("Fist compulsory bid!!!");
                 return;
             }
         }
-        //alert($("#bidSign").val())
-        //alert($("#bidValue").val())
-        data.AnsNo = data.quNo;
-        data.Answer = 'P';
-        webSocket.send(JSON.stringify(data));
+        //let date = {};
+        questionData.AnsNo = questionData.quNo;
+        questionData.Answer = 'P';
+        webSocket.send(JSON.stringify(questionData));
         $("#bidSection").hide();
+        resetSpinner();
+
     }
     function sendBid() {
         var bidSign = $("#bidSign").val();
         var bidValue = $("#bidValue").val();
 
-        //alert($("#bidSign").val())
-        //alert($("#bidValue").val())
-        data.AnsNo = data.quNo;
-        data.Answer = bidSign + bidValue;
-        webSocket.send(JSON.stringify(data));
+        if (!validateBid(bidSign, bidValue)) {
+            return;
+        }
+        //let data = {};
+        questionData.AnsNo = questionData.quNo;
+        questionData.Answer = bidSign + bidValue;
+        webSocket.send(JSON.stringify(questionData));
         $("#bidSection").hide();
+        resetSpinner();
     }
     function validateBid(bidSign, bidValue) {
-        if (data.VSF.length > 0) {
-            let vsfLength = data.VSF.length;
+        if (globalData.VSF.length > 0) {
+            let vsfLength = globalData.VSF.length;
             let lastBidValue = '';
             while (lastBidValue == '' && vsfLength > 0) {
-                let lastBid = data.VSF[vsfLength - 1];
+                let lastBid = globalData.VSF[vsfLength - 1];
                 lastBidValue = Object.values(lastBid)[0].substring(1);
                 vsfLength--;
             }
@@ -165,6 +180,8 @@
         $("#playedCardS0").attr("name", "S" + seatNo);
         $("#viliPlayerS0").attr("name", "S" + seatNo);
         $("#spinnerS0").attr("name", "S" + seatNo);
+        $("#foldButton").hide();
+        console.log(folderButtonStatus);
 
 
 
@@ -208,27 +225,63 @@
         document.cookie = seatNo;
         webSocket = new WebSocket("ws://127.0.0.1:6789/key=" + seatNo + "&Room=0&seatNo=" + seatNo);
         webSocket.onmessage = function (message) {
-            //console.log("here ");
             console.log(message);
             if (message.data) {
-                $('div[id="foldSection"]').hide();
-                data = JSON.parse(message.data);
-
-
+                //$('div[id="foldSection"]').hide();
+                let data = JSON.parse(message.data);
+                globalData.playsofar = data.playsofar;
+                globalData.VSF = data.VSF;
+                globalData.hand = data.hand;
                 if (data.event == 'question') {
                     resetPlayedCards();
+                    questionData = data;
                     questionEvent(data);
+                    resetSpinner();
+                  //  console.log("questio  "+ data.SN)
+                   $("#spinnerS0").show();
+
 
                 }
+                if (data.VSF) {
+                    globalData.VSF = data.VSF;
+                }
+                refreshHand(data);
+                //$("#toastMessage")[0].innerHTML = data.message;
+                //$("#myToast").toast('show');
 
                 if (data.event == 'play') {
+                    globalData.playsofar = data.playsofar;
+                    globalData.VSF = data.VSF;
+                    globalData.hand = data.hand;
+                    playData = data;
+                    if (data.playsofar && data.playsofar.length == 0) {
+                        //$('div[id="foldSection"]').show();
+                    }
+                    resetSpinner();
+                    $("#spinnerS0").show();
+                    console.log(folderButtonStatus);
+                    if (folderButtonStatus)
+                      {   console.log("click on fold ");}
+                    else
+                     {  $("#playButton").attr("disabled", false); }
 
-                           playEvent(data);
+
                 }
                 if (data.event == 'MatchIsDone') {
                     $("#team0")[0].innerHTML = data.base0;
                     $("#team1")[0].innerHTML = data.base1;
-                    $('#gameCount')[0].innerHTML=data.Mc;
+                    $('#gameCount')[0].innerHTML = data.Mc;
+                    $('div[id="foldSection"]').show();
+
+
+
+                }
+
+                if (data.event=='cardSend'){
+
+                  // console.log("card send ");
+                  if (data.hand.length ==8){
+
                     $("#playedCardS1").attr("src", "cards/RED_BACK.svg");
                     $("#playedCardS2").attr("src", "cards/RED_BACK.svg");
                     $("#playedCardS3").attr("src", "cards/RED_BACK.svg");
@@ -237,75 +290,95 @@
                     $("#playedCardS6").attr("src", "cards/RED_BACK.svg");
                     $("#playedCardS0").attr("src", "cards/RED_BACK.svg");
                     $("#trumpSection")[0].innerHTML = "Biding: ";
-
+                  }
 
                 }
                 if (data.event == 'HeGotPidi') {
-                    $('div[name="' + data.message + '"]').show();
+
+                  //  $('div[name="' + data.message + '"]').show();
+                  resetSpinner();
+                  $("#spinnerS"+data.spinner).show();
+                  if (data.who == data.my)
+                        {  console.log("fold")
+                           $("#foldButton").show();
+                           folderButtonStatus=true;
+
+                       }
                 }
                 if (data.event == 'TrumpIsSet') {
-                            $("#viliPlayerS1").html("");
-                            $("#viliPlayerS2").html("");
-                            $("#viliPlayerS3").html("");
-                            $("#viliPlayerS4").html("");
-                            $("#viliPlayerS5").html("");
-                            $("#viliPlayerS6").html("");
-                            $("#viliPlayerS0").html("");
+                    $("#viliPlayerS1").html("");
+                    $("#viliPlayerS2").html("");
+                    $("#viliPlayerS3").html("");
+                    $("#viliPlayerS4").html("");
+                    $("#viliPlayerS5").html("");
+                    $("#viliPlayerS6").html("");
+                    $("#viliPlayerS0").html("");
 
                 }
                 if (data.event == 'HeCalled') {
-                            $('#viliPlayer' + data.seat).html(data.Villi);
-                            if (data.Villi !="P")
-                              {
-                                   $("#trumpSection")[0].innerHTML = "Biding: " + convertToSign(data.Villi.substring(0, 1)) + data.Villi.substring(1);
+                    if (data.Villi != "P") {
+                        $("#trumpSection")[0].innerHTML = "Biding: " + convertToSign(data.Villi.substring(0, 1)) + data.Villi.substring(1);
 
-                              }
+                    }
                 }
 
+                if (data.event == 'spinner')
+                {        resetSpinner();
+                        // console.log("Seat No  "+ data.spinner);
+                      //   $("#spinnerS"+((data.spinner+6-data.myseat)%6).toString()).show();
+                      $("#spinnerS"+data.spinner).show();
 
-                               refreshHand(data);
+                } // spinner
 
-            } // end of event list
+                if (data.event == 'fold')
+                {        console.log("Real fold");
+                         $("#foldButton").show();
+                         folderButtonStatus=true;
+                         foldData=data;
 
-        }
+                } // spinner
+
+
+            }  // end of event
+            $("#playingTable").show();
+
+        } // end of call back
 
 
         $("#playingTable").show();
 
-    }
+    } // end of go table html function
     $(document).ready(function () {
 
     });
 
+    function questionEvent(data) {
 
-    function questionEvent(data){
+        var higest = (data.loopStart);
+        var contents;
+        for (i = higest; i < 57; i++) {
+            if (i == 28) {
+                contents += "<option selected value=\"" + i + "\">" + i + "</option>";
 
-      var higest=(data.loopStart);
-      var contents;
-      for (i = higest; i < 57; i++) {
-          if (i == 28) {
-              contents += "<option selected value=\"" + i + "\">" + i + "</option>";
-
-          } else {
-              contents += "<option value=\"" + i + "\">" + i + "</option>";
-          }
-      }
-      $("#bidValue")[0].innerHTML = contents;
-      $("#bidSection").show();
-      //$("#playSection").hide();
-      $("#playButton").attr("disabled", true);
-
-    }
-
-    function playEvent(data){
-
-      if (data.playsofar && data.playsofar.length == 0) {
-          $('div[id="foldSection"]').show();
-      }
-      $("#playButton").attr("disabled", false);
+            } else {
+                contents += "<option value=\"" + i + "\">" + i + "</option>";
+            }
+        }
+        $("#bidValue")[0].innerHTML = contents;
+        $("#bidSection").show();
+        //$("#playSection").hide();
+        $("#playButton").attr("disabled", true);
 
     }
 
+    function playEvent() {
+
+        if (data.playsofar && data.playsofar.length == 0) {
+            // $('div[id="foldSection"]').show();
+        }
+        $("#playButton").attr("disabled", false);
+
+    }
     function selectCard(card) {
         $(".card").removeClass("selectedCard");
         $(card).addClass("selectedCard");
@@ -317,18 +390,19 @@
         if (!validPlay) {
             return;
         }
-        data.card = selectedCard;
+        playData.card = selectedCard;
         //alert(data.card);
-        webSocket.send(JSON.stringify(data));
+        webSocket.send(JSON.stringify(playData));
 
         $(".selectedCard").remove();
         //$("#playSection").hide();
+
         $("#playButton").attr("disabled", true);
     }
     function validatePlay(card) {
-        if (data.playsofar) {
-            if (data.playsofar.length > 0) {
-                var firstCard = Object.values(data.playsofar[0])[0];
+        if (globalData.playsofar) {
+            if (globalData.playsofar.length > 0) {
+                var firstCard = Object.values(globalData.playsofar[0])[0];
                 if (card.substring(0, 1) != firstCard.substring(0, 1)) {
                     if (ifSignPresent(firstCard)) {
                         alert("Invalid play!!")
@@ -340,18 +414,16 @@
         return true;
     }
     function ifSignPresent(firstCard) {
-        for (var i = 0; i < data.hand.length; i++) {
-            if (data.hand[i].substring(0, 1) == firstCard.substring(0, 1)) {
+        for (var i = 0; i < globalData.hand.length; i++) {
+            if (globalData.hand[i].substring(0, 1) == firstCard.substring(0, 1)) {
                 return true;
             }
         }
     }
     function resetPlayedCards() {
         for (i = 0; i < 6; i++) {
-            //seatIndex--;
             $("#playedCardS" + i).attr("src", "cards/RED_BACK.svg");
         }
-        //$("#playedActiveCard").attr("src", "cards/RED_BACK.svg");
     }
 
     function showOtherCards(otherCards) {
@@ -363,19 +435,31 @@
                 .attr("src", "cards/" + otherCards[i][Object.keys(otherCards[i])[0]] + ".svg");
         }
 
-        //spinner
-        for (var i = 0; i < 6; i++) {
-            $('div[name="S' + i + '"]').hide();
-        }
-        if (otherCards.length > 0 && otherCards.length !=6) {
-            var lastPlayed = Object.keys(otherCards[otherCards.length - 1])[0];
-            var nextPlay = "S" + (parseInt(lastPlayed.substring(1), 10) + 1) % 6;
-            $('div[name="' + nextPlay + '"]').show();
-        }
+        // //spinner---logic
+        // for (var i = 1; i < 7; i++) {
+        //     $('div[name="S' + i + '"]').hide();
+        // }
+        // if (otherCards.length > 0 && otherCards.length != 6) {
+        //     var lastPlayed = Object.keys(otherCards[otherCards.length - 1])[0];
+        //     var nextPlay = "S" + (parseInt(lastPlayed.substring(1), 10) + 1) % 6;
+        //     $('div[name="' + nextPlay + '"]').show();
+        // }
 
     }
     function fold() {
-        showOtherCards(data.playsofar);
+        //showOtherCards(data.playsofar);
+        console.log("inside the fold");
+        $("#playButton").attr("disabled", false);
+        $("#foldButton").hide();
+        folderButtonStatus=false;
+        if (foldData.fid){
+          foldData.FR="P";
+          webSocket.send(JSON.stringify(foldData));
+
+        }
+
+
+
     }
 </script>
 
@@ -450,7 +534,7 @@
                         </div>
                         <div class="row">
                             <span class="card-text badge badge-success">
-                                Game  : <span class="" id="gameCount"></span>
+                                Game : <span class="" id="gameCount"></span>
                             </span>
                         </div>
                     </div>
@@ -538,9 +622,16 @@
 
                     </div>
                     <div class="col-sm-2">
-                        <div class="row" id="foldSection">
-                            <!-- <button type="button" class="btn btn-primary" onclick="fold()">Fold</button> -->
+                        <div class="row">
+                            <div class="col-sm-1"></div>
+                            <div class="col" id="foldSection">
+                                <button type="button" class="btn btn-primary" id="foldButton" onclick="fold()">Fold</button>
+                           </div>
+                            <div class="col-sm-1"></div>
                         </div>
+                        <!-- <div class="row" id="foldSection">
+                             <button type="button" class="btn btn-primary" onclick="fold()">Fold</button>
+                        </div> -->
                     </div>
                     <div class="col-sm-3">
 
@@ -640,7 +731,7 @@
 
 
                     </div>
-                    <div class="col-sm-9 col-lg-9">
+                    <div class="col-sm-10 col-lg-10">
                         <div class="row">
                             <div class="col-3">
                             </div>
@@ -660,10 +751,10 @@
                             <div class="btn-group" id="bidSection" style="display: none;">
                                 <!-- <div id="bidSection"> -->
                                 <select class="browser-default custom-select selectpicker" id="bidSign">
-                                    <option value="S" selected> ♠ Spade</option>
-                                    <option value="C">♣ Club</option>
-                                    <option value="D">♦ Diamond</option>
-                                    <option value="H">♥ Heart</option>
+                                    <option value="S" style="font-size: 1.5rem;" selected>♠</option>
+                                    <option value="C" style="font-size: 1.5rem;">♣</option>
+                                    <option value="D" style="font-size: 1.5rem;">♦</option>
+                                    <option value="H" style="font-size: 1.5rem;">♥</option>
 
                                 </select>
 
@@ -707,6 +798,19 @@
             </div>
 
             <div class="col-sm-12 col-lg-3">
+                <!-- <div class="toast" data-autohide="false" role="alert" aria-live="assertive" aria-atomic="true"
+                    id="myToast">
+                    <div class="toast-header">
+                       <img src="..." class="rounded mr-2" alt="...">
+                <strong class="mr-auto">Info</strong>
+                <small></small>
+                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="toast-body" id="toastMessage">
+            </div>
+        </div> -->
             </div>
 
 

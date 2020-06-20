@@ -16,6 +16,7 @@ class Points(object):
        self.t1Pidi=[]
        self.dude="P1"
        self.dudeSeatNo=""
+       self.TrumpSet=False
        self.skipped=set()
        self.orderOfCard=["7","8","Q","K","T","A","9","J"]
        self.t1GetPoint=True
