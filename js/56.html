@@ -24,8 +24,8 @@
     var globalData = {};
     var questionData = {};
     var playData = {};
-    var folderButtonStatus=false;
-    var foldData={};
+    var folderButtonStatus = false;
+    var foldData = {};
     console.log(uuid);
     if (!document.cookie) {
         document.cookie = "key=" + uuid + ";max-age=2592000;"
@@ -54,7 +54,7 @@
         if (data.playsofar && data.playsofar.length != 0) {
             showOtherCards(data.playsofar);
         }
-        if (data.VSF && (!globalData.playsofar || globalData.playsofar.length == 0) ) {
+        if (data.VSF && (!globalData.playsofar || globalData.playsofar.length == 0)) {
             showVili(data.VSF);
         }
 
@@ -74,21 +74,20 @@
                 else {
                     viliToShow = convertToSign(vili.substring(0, 1)) + vili.substring(1);
                 }
-                if (j == VSF.length - 1) {
-                    //spinner
-                    // resetSpinner();
-                    // let seatNumberIndex = parseInt(seatNo.substring(1));
 
-                    // $('div[name="S' + getSeatNumber(seatNumberIndex, 1) + '"]').show();
-
+                if (viliToShow == 'undefined') {
+                    viliToShow = '';
                 }
-                // viliToShow = convertToSign(vili.substring(0, 1)) + vili.substring(1);
-                if (viliToShow =='undefined')
-                          viliToShow=''
-
-                $('span[name="' + seatNo + '"]')[0]
-                    .innerHTML = $('span[name="' + seatNo + '"]')[0]
-                        .innerHTML + ' ' + '<span class =\"card-text badge badge-danger\">' + viliToShow + '</span>';
+                if (viliToShow.substring(0, 1) == '♥' || viliToShow.substring(0, 1) == '♦') {
+                    $('span[name="' + seatNo + '"]')[0]
+                        .innerHTML = $('span[name="' + seatNo + '"]')[0]
+                            .innerHTML + ' ' + '<span class =\"card-text badge badge-light\" style = \"color:red; padding:0; font-size:100%\">' + viliToShow + '</span>';
+                }
+                else {
+                    $('span[name="' + seatNo + '"]')[0]
+                        .innerHTML = $('span[name="' + seatNo + '"]')[0]
+                            .innerHTML + ' ' + '<span class =\"card-text badge badge-light\" style = \"color:black; padding:0; font-size:100%\">' + viliToShow + '</span>';
+                }
             }
 
         }
@@ -237,8 +236,8 @@
                     questionData = data;
                     questionEvent(data);
                     resetSpinner();
-                  //  console.log("questio  "+ data.SN)
-                   $("#spinnerS0").show();
+                    //  console.log("questio  "+ data.SN)
+                    $("#spinnerS0").show();
 
 
                 }
@@ -260,10 +259,8 @@
                     resetSpinner();
                     $("#spinnerS0").show();
                     console.log(folderButtonStatus);
-                    if (folderButtonStatus)
-                      {   console.log("click on fold ");}
-                    else
-                     {  $("#playButton").attr("disabled", false); }
+                    if (folderButtonStatus) { console.log("click on fold "); }
+                    else { $("#playButton").attr("disabled", false); }
 
 
                 }
@@ -277,33 +274,33 @@
 
                 }
 
-                if (data.event=='cardSend'){
+                if (data.event == 'cardSend') {
 
-                  // console.log("card send ");
-                  if (data.hand.length ==8){
+                    // console.log("card send ");
+                    if (data.hand.length == 8) {
 
-                    $("#playedCardS1").attr("src", "cards/RED_BACK.svg");
-                    $("#playedCardS2").attr("src", "cards/RED_BACK.svg");
-                    $("#playedCardS3").attr("src", "cards/RED_BACK.svg");
-                    $("#playedCardS4").attr("src", "cards/RED_BACK.svg");
-                    $("#playedCardS5").attr("src", "cards/RED_BACK.svg");
-                    $("#playedCardS6").attr("src", "cards/RED_BACK.svg");
-                    $("#playedCardS0").attr("src", "cards/RED_BACK.svg");
-                    $("#trumpSection")[0].innerHTML = "Biding: ";
-                  }
+                        $("#playedCardS1").attr("src", "cards/RED_BACK.svg");
+                        $("#playedCardS2").attr("src", "cards/RED_BACK.svg");
+                        $("#playedCardS3").attr("src", "cards/RED_BACK.svg");
+                        $("#playedCardS4").attr("src", "cards/RED_BACK.svg");
+                        $("#playedCardS5").attr("src", "cards/RED_BACK.svg");
+                        $("#playedCardS6").attr("src", "cards/RED_BACK.svg");
+                        $("#playedCardS0").attr("src", "cards/RED_BACK.svg");
+                        $("#trumpSection")[0].innerHTML = "Biding: ";
+                    }
 
                 }
                 if (data.event == 'HeGotPidi') {
 
-                  //  $('div[name="' + data.message + '"]').show();
-                  resetSpinner();
-                  $("#spinnerS"+data.spinner).show();
-                  if (data.who == data.my)
-                        {  console.log("fold")
-                           $("#foldButton").show();
-                           folderButtonStatus=true;
+                    //  $('div[name="' + data.message + '"]').show();
+                    resetSpinner();
+                    $("#spinnerS" + data.spinner).show();
+                    if (data.who == data.my) {
+                        console.log("fold")
+                        $("#foldButton").show();
+                        folderButtonStatus = true;
 
-                       }
+                    }
                 }
                 if (data.event == 'TrumpIsSet') {
                     $("#viliPlayerS1").html("");
@@ -322,19 +319,19 @@
                     }
                 }
 
-                if (data.event == 'spinner')
-                {        resetSpinner();
-                        // console.log("Seat No  "+ data.spinner);
-                      //   $("#spinnerS"+((data.spinner+6-data.myseat)%6).toString()).show();
-                      $("#spinnerS"+data.spinner).show();
+                if (data.event == 'spinner') {
+                    resetSpinner();
+                    // console.log("Seat No  "+ data.spinner);
+                    //   $("#spinnerS"+((data.spinner+6-data.myseat)%6).toString()).show();
+                    $("#spinnerS" + data.spinner).show();
 
                 } // spinner
 
-                if (data.event == 'fold')
-                {        console.log("Real fold");
-                         $("#foldButton").show();
-                         folderButtonStatus=true;
-                         foldData=data;
+                if (data.event == 'fold') {
+                    console.log("Real fold");
+                    $("#foldButton").show();
+                    folderButtonStatus = true;
+                    foldData = data;
 
                 } // spinner
 
@@ -451,10 +448,10 @@
         console.log("inside the fold");
         $("#playButton").attr("disabled", false);
         $("#foldButton").hide();
-        folderButtonStatus=false;
-        if (foldData.fid){
-          foldData.FR="P";
-          webSocket.send(JSON.stringify(foldData));
+        folderButtonStatus = false;
+        if (foldData.fid) {
+            foldData.FR = "P";
+            webSocket.send(JSON.stringify(foldData));
 
         }
 
@@ -625,8 +622,9 @@
                         <div class="row">
                             <div class="col-sm-1"></div>
                             <div class="col" id="foldSection">
-                                <button type="button" class="btn btn-primary" id="foldButton" onclick="fold()">Fold</button>
-                           </div>
+                                <button type="button" class="btn btn-primary" id="foldButton"
+                                    onclick="fold()">Fold</button>
+                            </div>
                             <div class="col-sm-1"></div>
                         </div>
                         <!-- <div class="row" id="foldSection">
@@ -752,7 +750,7 @@
                                 <!-- <div id="bidSection"> -->
                                 <select class="browser-default custom-select selectpicker" id="bidSign">
                                     <option value="S" style="font-size: 1.5rem;" selected>♠</option>
-                                    <option value="C" style="font-size: 1.5rem;">♣</option>
+                                    <option value="C" style="font-size: 1.5rem; color: red;">♣</option>
                                     <option value="D" style="font-size: 1.5rem;">♦</option>
                                     <option value="H" style="font-size: 1.5rem;">♥</option>
 
