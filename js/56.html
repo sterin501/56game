@@ -25,7 +25,7 @@
         }
     });
     var user;
-    function goToSeatSelection() {
+    function goToTables() {
         user = $("#user").val();
         $("#loginSection").hide();
         $('#tableSection').load('table.html');
@@ -45,19 +45,19 @@
 
 </script>
 
-<div class="container-fluid">
+<div class="container-fluid" style="background-image: url(../images/backgorund.jpg); height: 100%; opacity: 1;">
     <div class="container1" id="loginSection">
         <div class="form-group">
-            <label for="exampleFormControlInput1">Username</label>
+            <label for="exampleFormControlInput1" style="color:white">Username</label>
             <input type="text" class="form-control" id="user" placeholder="Username">
         </div>
         <div class="form-group">
-            <label for="exampleFormControlInput1">Password</label>
+            <label for="exampleFormControlInput1" style="color:white">Password</label>
             <input type="password" class="form-control" id="user" placeholder="enthu venelum enter cheitho">
         </div>
-        <button type="submit" class="btn btn-primary" onclick="goToSeatSelection()">Sign in</button>
+        <button type="submit" class="btn btn-primary" onclick="goToTables()">Sign in</button>
     </div>
-    <div class="container1" id="tableSection">
+    <div class="container1" id="tableSection" style="opacity: 1;">
 
     </div>
 

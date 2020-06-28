@@ -40,7 +40,7 @@ img.card {
 	display: inline-block; 
 }
 .hhand img.card { 
-	padding-top: 10px;
+	padding-top: 0px;
 }
 .hhand.active-hand img.card:hover { 
 	padding-top: 0px;
@@ -126,4 +126,8 @@ img.card {
 .fan img.card { 
 	position: absolute;
 	width: 90px;
+}
+
+.playingTable{
+	opacity: 1;
 }
