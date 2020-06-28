@@ -7,6 +7,7 @@ img.card {
 	vertical-align: initial;
 	box-sizing: initial;
 	display: inline;
+	background-color: transparent;
 }
 }
 
@@ -44,12 +45,15 @@ img.card {
 }
 .hhand.active-hand img.card:hover { 
 	padding-top: 0px;
-	padding-bottom: 10px;
+	padding-bottom: 0px;
 }
 
 .hhand.active-hand img.card.selectedCard { 
 	padding-top: 0px;
-	padding-bottom: 10px;
+	padding-bottom: 00px;
+	border-bottom: 20px;
+	border-bottom-style: solid;
+	border-bottom-color: transparent;
 }
 
 
