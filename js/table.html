@@ -34,7 +34,7 @@
         var cardsContent = "";
         if (data.hand) {
             $.each(data.hand, function (index, value) {
-                cardsContent += "<img id='card1' class='card' src='cards/" + value + ".jpg' name=" + value + " onclick=selectCard(this)>";
+                cardsContent += "<img id='card1' class='card' src='cards/" + value + ".svg' name=" + value + " onclick=selectCard(this)>";
             });
         }
         if (cardsContent) {
@@ -425,7 +425,7 @@
 
         for (i = otherCards.length - 1; i > -1; i--) {
             $('img[name="' + Object.keys(otherCards[i])[0] + '"]')
-                .attr("src", "cards/" + otherCards[i][Object.keys(otherCards[i])[0]] + ".jpg");
+                .attr("src", "cards/" + otherCards[i][Object.keys(otherCards[i])[0]] + ".svg");
         }
 
         // //spinner---logic
