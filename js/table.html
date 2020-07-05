@@ -105,11 +105,13 @@
         if (signChar == 'S') {
             return '♠';
         } else if (signChar == 'D') {
-            return '♦';
+            return '♦️';
         } else if (signChar == 'C') {
             return '♣';
         } else if (signChar == 'H') {
-            return '♥';
+            return '♥️';
+        } else {
+            return '🚫';
         }
     }
     function passBid() {
@@ -281,7 +283,7 @@
                         $("#playedCardS5").attr("src", "cards/RED_BACK.jpg");
                         $("#playedCardS6").attr("src", "cards/RED_BACK.jpg");
                         $("#playedCardS0").attr("src", "cards/RED_BACK.jpg");
-                        $("#trumpSection")[0].innerHTML = "Biding: ";
+                        $("#trumpSection")[0].innerHTML = "Bid: ";
                     }
 
                 }
@@ -309,7 +311,7 @@
                 }
                 if (data.event == 'HeCalled') {
                     if (data.Villi != "P") {
-                        $("#trumpSection")[0].innerHTML = "Biding: " + convertToSign(data.Villi.substring(0, 1)) + data.Villi.substring(1);
+                        $("#trumpSection")[0].innerHTML = "Bid: " + convertToSign(data.Villi.substring(0, 1)) + data.Villi.substring(1);
 
                     }
                 }
@@ -546,14 +548,14 @@
                     </div>
                     <div class="row rounded">
                         <span class="card-text badge badge-warning">
-                            Team0 :
+                            Team 1 :
                             <span class="" id="team0"></span></span>
 
                     </div>
 
                     <div class="row">
                         <span class="card-text badge badge-warning">
-                            Team1 : <span class="" id="team1"></span>
+                            Team 2 : <span class="" id="team1"></span>
                         </span>
                     </div>
                     <div class="row">
@@ -774,7 +776,7 @@
                     <div class="row text-center">
                         <div class="btn-group" id="bidSection" style="display: none;">
                             <!-- <div id="bidSection"> -->
-
+                            <input type="image" class="inactive" value="N" src="cards/rsz_na.png" id="nt"/>
                             <input type="image" class="active" value="S" src="cards/spade.png" id="spade"/>
                             <input type="image" class="inactive" value="D" src="cards/diamond.png" id="diamond"/>
                             <input type="image" class="inactive" value="C" src="cards/clubs.png" id="club"/>
