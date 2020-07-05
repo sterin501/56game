@@ -20,6 +20,8 @@ img.card {
 		vertical-align: initial;
 		box-sizing: initial;
 		display: inline;
+		background-color: transparent;
+
 	}
 	}
 
@@ -41,10 +43,10 @@ img.card {
 	display: inline-block; 
 }
 .hhand img.card { 
-	padding-top: 0px;
+	padding-top: 20px;
 }
 .hhand.active-hand img.card:hover { 
-	padding-top: 0px;
+	padding-top: 20px;
 	padding-bottom: 0px;
 }
 

@@ -16,33 +16,10 @@
 <link rel="stylesheet" type="text/css" href="css/cards.css" />
 
 <script src="js/cards.js" type="text/javascript"></script>
+<script src="js/app.js" type="text/javascript"></script>
 
-<script charset="utf-8" lang="Javascript">
-    jQuery(document).ready(function ($) {
-        if (typeof $ == 'undefined') {
-            var $ = jQuery;
-        }
-    });
-    var user;
-    function goToTables() {
-        user = $("#user").val();
-        $("#loginSection").hide();
-        $('#tableSection').load('table.html');
-        //$("#tableSection").show();
-        // var bidValue = $("#bidValue").val();
 
-        // if (!validateBid(bidSign, bidValue)) {
-        //     return;
-        // }
-        // //let data = {};
-        // questionData.AnsNo = questionData.quNo;
-        // questionData.Answer = bidSign + bidValue;
-        // webSocket.send(JSON.stringify(questionData));
-        // $("#bidSection").hide();
-        // resetSpinner();
-    }
 
-</script>
 
 <div class="container-fluid" style="background-image: url(../images/backgorund.jpg); height: 100%; opacity: 1;">
     <div class="container1" id="loginSection">
