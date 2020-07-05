@@ -11,6 +11,7 @@
 
 
 
+
 <div class="container1" id="seatSelection">
 
 
@@ -63,15 +64,15 @@
                     <div class="row" style="height: 20px;">
                     </div>
                     <div class="row rounded">
-                        <span class="card-text badge badge-warning" style="color:black;">
-                            Black :
+                        <span class="card-text badge badge-warning">
+                            Team 1 :
                             <span class="" id="team0"></span></span>
 
                     </div>
 
                     <div class="row">
-                        <span class="card-text badge badge-warning" style="color:red;">
-                            Red : <span class="" id="team1"></span>
+                        <span class="card-text badge badge-warning">
+                            Team 2 : <span class="" id="team1"></span>
                         </span>
                     </div>
                     <div class="row">
@@ -289,23 +290,23 @@
                         </div>
 
                     </div>
-                    <div class="row">
-                        <div class="col-8 col-sm-7">
-                            <div id="bidSection" class="btn-group" style="display: none;">
+                    <div class="row text-center">
+                        <div class="btn-group" id="bidSection" style="display: none;">
+                            <!-- <div id="bidSection"> -->
+                            <input type="image" class="inactive" value="N" src="cards/rsz_na.png" id="nt"/>
+                            <input type="image" class="active" value="S" src="cards/spade.png" id="spade"/>
+                            <input type="image" class="inactive" value="D" src="cards/diamond.png" id="diamond"/>
+                            <input type="image" class="inactive" value="C" src="cards/clubs.png" id="club"/>
+                            <input type="image" class="inactive" value="H" src="cards/heart.png"id="heart"/>
+                            <input type="image" class="inactive" value="N" src="cards/rsz_na.png" id="nt"/>
+                            <select class="browser-default custom-select" id="bidValue">
 
-                                <input type="image" class="active" value="S" src="cards/spade.png" id="spade" />
-                                <input type="image" class="inactive" value="D" src="cards/diamond.png" id="diamond" />
-                                <input type="image" class="inactive" value="C" src="cards/clubs.png" id="club" />
-                                <input type="image" class="inactive" value="H" src="cards/heart.png" id="heart" />
-                                <select class="browser-default custom-select" id="bidValue" style="width: 29%;">
-
-                                </select>
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-primary" id="button1"
-                                        onclick="sendBid()">Bid</button>
-                                    <button type="button" class="btn btn-primary" id="button1"
-                                        onclick="passBid()">Pass</button>
-                                </div>
+                            </select>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-primary" id="button1"
+                                    onclick="sendBid()">Bid</button>
+                                <button type="button" class="btn btn-primary" id="button1"
+                                    onclick="passBid()">Pass</button>
                             </div>
                         </div>
 

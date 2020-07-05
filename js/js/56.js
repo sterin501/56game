@@ -97,6 +97,8 @@ function convertToSign(signChar) {
         return '♣';
     } else if (signChar == 'H') {
         return '♥';
+    } else {
+        return '🚫';
     }
 }
 function passBid() {
@@ -305,7 +307,7 @@ function goToSeat(roomNo, seatNo) {
                     $("#playedCardS5").attr("src", "cards/RED_BACK.jpg");
                     $("#playedCardS6").attr("src", "cards/RED_BACK.jpg");
                     $("#playedCardS0").attr("src", "cards/RED_BACK.jpg");
-                    $("#trumpSection")[0].innerHTML = "Biding: ";
+                    $("#trumpSection")[0].innerHTML = "Bid : ";
                 }
 
             }
@@ -333,7 +335,7 @@ function goToSeat(roomNo, seatNo) {
             }
             if (data.event == 'HeCalled') {
                 if (data.Villi != "P") {
-                    $("#trumpSection")[0].innerHTML = "Biding: " + convertToSign(data.Villi.substring(0, 1)) + data.Villi.substring(1);
+                    $("#trumpSection")[0].innerHTML = "Bid : " + convertToSign(data.Villi.substring(0, 1)) + data.Villi.substring(1);
 
                 }
             }
