@@ -133,9 +133,8 @@
 
     }
     function sendBid() {
-        var bidSign = $("#bidSign").val();
+        var bidSign = $(".active").val();
         var bidValue = $("#bidValue").val();
-
         if (!validateBid(bidSign, bidValue)) {
             return;
         }
@@ -465,6 +464,13 @@
         $("#seatSelection")[0].innerHTML = contents;
     }
 
+    $('input[type=image]').click(function() {
+        $('input[type=image]').removeClass('active');
+        $('input[type=image]').addClass('inactive');
+        $(this).removeClass('inactive');
+        $(this).addClass('active');
+    });
+
 </script>
 
 
@@ -749,14 +755,11 @@
                     <div class="row text-center">
                         <div class="btn-group" id="bidSection" style="display: none;">
                             <!-- <div id="bidSection"> -->
-                            <select class="browser-default custom-select selectpicker" id="bidSign">
-                                <option value="S" style="font-size: 1.5rem;" selected>♠</option>
-                                <option value="C" style="font-size: 1.5rem; color: red;">♣</option>
-                                <option value="D" style="font-size: 1.5rem;">♦</option>
-                                <option value="H" style="font-size: 1.5rem;">♥</option>
 
-                            </select>
-
+                            <input type="image" class="active" value="S" src="cards/spade.png"/>
+                            <input type="image" class="inactive" value="D" src="cards/diamond.png"/>
+                            <input type="image" class="inactive" value="C" src="cards/clubs.png"/>
+                            <input type="image" class="inactive" value="H" src="cards/heart.png"/>
                             <select class="browser-default custom-select" id="bidValue">
 
                             </select>
