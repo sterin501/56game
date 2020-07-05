@@ -371,10 +371,29 @@
         $("#playButton").attr("disabled", false);
 
     }
+
     function selectCard(card) {
         $(".card").removeClass("selectedCard");
         $(card).addClass("selectedCard");
+        let name = ($(card).attr("name"));
+        if (name.startsWith("H")) {
+            selectSuit($("#heart"));
+        } else if (name.startsWith("C")) {
+            selectSuit($("#club"));
+        } else if (name.startsWith("D")) {
+            selectSuit($("#diamond"));
+        } else {
+            selectSuit($("#spade"));
+        }
     }
+
+    function selectSuit(suit) {
+        $('input[type=image]').removeClass('active');
+        $('input[type=image]').addClass('inactive');
+        suit.removeClass('inactive');
+        suit.addClass('active');
+    }
+
     function play() {
         $("#playedActiveCard").attr("src", $(".selectedCard").attr("src"));
         var selectedCard = $(".selectedCard").attr("name");
@@ -756,10 +775,10 @@
                         <div class="btn-group" id="bidSection" style="display: none;">
                             <!-- <div id="bidSection"> -->
 
-                            <input type="image" class="active" value="S" src="cards/spade.png"/>
-                            <input type="image" class="inactive" value="D" src="cards/diamond.png"/>
-                            <input type="image" class="inactive" value="C" src="cards/clubs.png"/>
-                            <input type="image" class="inactive" value="H" src="cards/heart.png"/>
+                            <input type="image" class="active" value="S" src="cards/spade.png" id="spade"/>
+                            <input type="image" class="inactive" value="D" src="cards/diamond.png" id="diamond"/>
+                            <input type="image" class="inactive" value="C" src="cards/clubs.png" id="club"/>
+                            <input type="image" class="inactive" value="H" src="cards/heart.png"id="heart"/>
                             <select class="browser-default custom-select" id="bidValue">
 
                             </select>
