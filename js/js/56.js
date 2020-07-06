@@ -62,17 +62,25 @@ function showVili(VSF) {
             }
 
             if (viliToShow == 'undefined') {
-                viliToShow = '';
+                viliToShow = ''; 
             }
             if (viliToShow.substring(0, 1) == '♥' || viliToShow.substring(0, 1) == '♦') {
                 $('span[name="' + seatNo + '"]')[0]
                     .innerHTML = $('span[name="' + seatNo + '"]')[0]
-                        .innerHTML + ' ' + '<span class =\"card-text badge badge-light\" style = \"color:red; padding:0; font-size:100%\">' + viliToShow + '</span>';
+                        .innerHTML + ' ' + '<span class =\"card-text badge badge-light\" style = \"border-radius: 0rem ;background-color: yellow;color:red; padding:0; font-size:100%\">' + viliToShow + '</span>';
+            } else if (viliToShow.substring(0, 1) == '♠' || viliToShow.substring(0, 1) == '♣') {
+                $('span[name="' + seatNo + '"]')[0]
+                    .innerHTML = $('span[name="' + seatNo + '"]')[0]
+                        .innerHTML + ' ' + '<span class =\"card-text badge badge-light\" style = \"border-radius: 0rem ;background-color: yellow;color:black; padding:0; font-size:100%\">' + viliToShow + '</span>';
+            } else if (viliToShow == 'Pass' ) {
+                $('span[name="' + seatNo + '"]')[0]
+                    .innerHTML = $('span[name="' + seatNo + '"]')[0]
+                        .innerHTML + ' ' + '<span class =\"card-text badge badge-light\" style = \"border-radius: 0rem ;background-color: yellow;color:black; padding:0; font-size:100%\">' + viliToShow + '</span>';
             }
             else {
                 $('span[name="' + seatNo + '"]')[0]
                     .innerHTML = $('span[name="' + seatNo + '"]')[0]
-                        .innerHTML + ' ' + '<span class =\"card-text badge badge-light\" style = \"color:black; padding:0; font-size:100%\">' + viliToShow + '</span>';
+                        .innerHTML + ' ' + '<span class =\"card-text badge badge-light\" style = \"border-radius: 0rem ;background-color: yellow;color:black; padding:0; font-size:100%\">' + viliToShow + '</span>';
             }
         }
 
