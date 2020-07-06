@@ -7,6 +7,7 @@ var questionData = {};
 var playData = {};
 var folderButtonStatus = false;
 var foldData = {};
+var user;
 console.log(uuid);
 if (!document.cookie) {
     document.cookie = "key=" + uuid + ";max-age=2592000;"
@@ -29,7 +30,11 @@ function refreshHand(data) {
     }
 
     if (data.villi) {
-        $("#trumpSection")[0].innerHTML = "Bid : " + data.dudeTeam + " " + data.villi + convertToSign(data.trump);
+        let team = 'Red';
+        if (data.dudeTeam == 'Team0') {
+            team = "Black"
+        }
+        $("#trumpSection")[0].innerHTML = "Bid : " + team + " " + data.villi + convertToSign(data.trump);
     }
 
     if (data.playsofar && data.playsofar.length != 0) {
@@ -366,9 +371,7 @@ function goToSeat(roomNo, seatNo) {
     $("#playingTable").show();
 
 } // end of go table html function
-$(document).ready(function () {
 
-});
 
 function questionEvent(data) {
 
@@ -471,17 +474,6 @@ function showOtherCards(otherCards) {
         $('img[name="' + Object.keys(otherCards[i])[0] + '"]')
             .attr("src", "cards/" + otherCards[i][Object.keys(otherCards[i])[0]] + ".svg");
     }
-
-    // //spinner---logic
-    // for (var i = 1; i < 7; i++) {
-    //     $('div[name="S' + i + '"]').hide();
-    // }
-    // if (otherCards.length > 0 && otherCards.length != 6) {
-    //     var lastPlayed = Object.keys(otherCards[otherCards.length - 1])[0];
-    //     var nextPlay = "S" + (parseInt(lastPlayed.substring(1), 10) + 1) % 6;
-    //     $('div[name="' + nextPlay + '"]').show();
-    // }
-
 }
 function fold() {
     //showOtherCards(data.playsofar);
@@ -495,23 +487,37 @@ function fold() {
 
     }
 }
-
-{
-    let tableCount = 5;
-    var contents = '';
-    for (var i = 1; i <= tableCount; i++) {
-        contents += '<div style="color:white"> Room ' + i;
-        for (var j = 1; j <= 6; j++) {
-            contents += '<button type="button" class="btn btn-primary" onclick="goToSeat(' + i + ',' + j + ')\">' + j + '</button>';
-        }
-        contents += ' </div>';
+jQuery(document).ready(function ($) {
+    if (typeof $ == 'undefined') {
+        var $ = jQuery;
     }
-    $("#seatSelection")[0].innerHTML = contents;
-}
-
-$('input[type=image]').click(function () {
-    $('input[type=image]').removeClass('active');
-    $('input[type=image]').addClass('inactive');
-    $(this).removeClass('inactive');
-    $(this).addClass('active');
+    {
+        let tableCount = 5;
+        var contents = '';
+        for (var i = 1; i <= tableCount; i++) {
+            contents += '<div style="color:white"> Room ' + i;
+            for (var j = 1; j <= 6; j++) {
+                contents += '<button type="button" class="btn btn-primary" onclick="goToSeat(' + i + ',' + j + ')\">' + j + '</button>';
+            }
+            contents += ' </div>';
+        }
+        $("#seatSelection")[0].innerHTML = contents;
+    }
+    console.log(document.location.href);
+    var queryString = document.location.href.split('?');
+    var vars = queryString[1].split('&');
+    var params = {};
+    for (var i = 0; i < vars.length; i++) {
+        var pair = vars[i].split('=');
+        params[pair[0]] = decodeURIComponent(pair[1]);
+    }
+    user = params["user"];
+    $('input[type=image]').click(function () {
+        $('input[type=image]').removeClass('active');
+        $('input[type=image]').addClass('inactive');
+        $(this).removeClass('inactive');
+        $(this).addClass('active');
+    });
 });
+
+
