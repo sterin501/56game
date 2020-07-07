@@ -4,36 +4,60 @@ import logging
 import json
 
 from manageMessage import rocky
+from lobbyLogic import lobbyManager
 from autobahn.asyncio.websocket import (WebSocketServerProtocol, WebSocketServerFactory)
 
 logging.basicConfig(level=logging.INFO)
 print("Creating user object ")
 rocky = rocky()
+Lb=lobbyManager(rocky)
 
 
 class ChatProtocol(WebSocketServerProtocol):
     def onConnect(self, request):
         try:
 
-            st = (request.path.split("/")[1])
-            # print (st)
-            key = st.split("&")[0].split("=")[1]
-            room = int(st.split("&")[1].split("=")[1])  ## starts with zero only
-            seat = int(st.split("&")[2].split("=")[1])
-            seat = seat - 1  ## for array
-            print(key, room)
-            rocky.register(self, key, room, seat)
-            print(self.http_headers)
+            #st = (request.path.split("/")[1])
+            st = self.http_request_uri.split("?")[0]
+            print (st)
+            if st == "/game":
+              #key = st.split("&")[0].split("=")[1]
+              key=self.http_request_params['id'][0]
+              room = int(self.http_request_params['Room'][0])  ## starts with zero only
+              seat = int(self.http_request_params['SeatNo'][0])
+              seat = seat - 1  ## for array
+              room = room - 1  ## for array .
+              print(key, room)
+              if rocky.register(self, key, room, seat):
+                  Lb.sendRoomDetails()
+
+            elif  st == "/lobby":
+                print ("Lobbbbyy")
+                key=self.http_request_params['id']
+                Lb.lobbyRegister(self,key)
+
+
+
 
         except Exception as ex:
             print(ex)
             print("An exception occurred, will not be registered ")
 
     def onOpen(self):
-        if rocky.IsthereTrumpSession(websocket=self):
+        #print(self.http_headers)
+        #print (self.http_request_uri)
+        #print (self.http_request_params)
+        st = self.http_request_uri.split("?")[0]
+        print (st)
+        if st == "/game":
+          if rocky.IsthereTrumpSession(websocket=self):
             print(" Reconect ")
-        else:
+          else:
             rocky.canWeStart(websocket=self)
+        elif  st == "/lobby":
+            key=self.http_request_params['id']
+            Lb.lobbyMessage(websocket=self)
+
 
     def onMessage(self, payload, is_binary):
         try:
@@ -75,7 +99,15 @@ class ChatProtocol(WebSocketServerProtocol):
 
     def onClose(self, was_clean, code, reason):
         print("closed")
-        rocky.USERS.removeFromRoom(self)
+        st = self.http_request_uri.split("?")[0]
+        if st == "/game":
+           if   rocky.USERS.removeFromRoom(self):
+                Lb.sendRoomDetails()
+
+        elif st =="/lobby":
+            Lb.lobbyUnregister(self)
+
+
         # rocky.USERS.ws.remove(self)                ## Removed from active Websockets
 
 

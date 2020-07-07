@@ -140,16 +140,14 @@ img.card {
 ul li { display:block; float:left; }
 
 .active {
-	background: transparent;
+	background:white;
 	padding-top: 8px;
 	padding-bottom: 8px;
-	border: solid;
-	height: 35px;
+	border: #1e7e34;
 }
 .inactive {
 	padding-top: 8px;
 	padding-bottom: 8px;
 	border: #1e7e34;
-	height: 35px;
 }
 

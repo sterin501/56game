@@ -22,7 +22,7 @@ function refreshHand(data) {
     var cardsContent = "";
     if (data.hand) {
         $.each(data.hand, function (index, value) {
-            cardsContent += "<img id='card1' class='card' src='cards/" + value + ".svg' name=" + value + " onclick=selectCard(this)>";
+            cardsContent += "<img id='card1' class='card' src='static/cards/" + value + ".svg' name=" + value + " onclick=selectCard(this)>";
         });
     }
     if (cardsContent) {
@@ -62,7 +62,7 @@ function showVili(VSF) {
             }
 
             if (viliToShow == 'undefined') {
-                viliToShow = ''; 
+                viliToShow = '';
             }
             if (viliToShow.substring(0, 1) == '♥' || viliToShow.substring(0, 1) == '♦') {
                 $('span[name="' + seatNo + '"]')[0]
@@ -253,10 +253,14 @@ function goToSeat(roomNo, seatNo) {
 
 
     $("#seatSelection").hide();
-    document.cookie = seatNo;
-    webSocket = new WebSocket("ws://" + window.location.hostname + ":6789"
-        + "/key=" + seatNo + "&Room=" + roomNo + "&seatNo=" + seatNo
-        + "&user=" + user);
+    //document.cookie = seatNo;
+    console.log(document.cookie);
+    webSocket = new WebSocket("ws://" + window.location.hostname + ":6789/game?"
+        +document.cookie+ "&Room=" + roomNo + "&SeatNo=" + seatNo
+    );
+
+    console.log(webSocket);
+
     webSocket.onmessage = function (message) {
         console.log(message);
         if (message.data) {
@@ -313,13 +317,13 @@ function goToSeat(roomNo, seatNo) {
                 // console.log("card send ");
                 if (data.hand.length == 8) {
 
-                    $("#playedCardS1").attr("src", "cards/RED_BACK.jpg");
-                    $("#playedCardS2").attr("src", "cards/RED_BACK.jpg");
-                    $("#playedCardS3").attr("src", "cards/RED_BACK.jpg");
-                    $("#playedCardS4").attr("src", "cards/RED_BACK.jpg");
-                    $("#playedCardS5").attr("src", "cards/RED_BACK.jpg");
-                    $("#playedCardS6").attr("src", "cards/RED_BACK.jpg");
-                    $("#playedCardS0").attr("src", "cards/RED_BACK.jpg");
+                    $("#playedCardS1").attr("src", "static/cards/RED_BACK.jpg");
+                    $("#playedCardS2").attr("src", "static/cards/RED_BACK.jpg");
+                    $("#playedCardS3").attr("src", "static/cards/RED_BACK.jpg");
+                    $("#playedCardS4").attr("src", "static/cards/RED_BACK.jpg");
+                    $("#playedCardS5").attr("src", "static/cards/RED_BACK.jpg");
+                    $("#playedCardS6").attr("src", "static/cards/RED_BACK.jpg");
+                    $("#playedCardS0").attr("src", "static/cards/RED_BACK.jpg");
                     $("#trumpSection")[0].innerHTML = "Bid : ";
                 }
 
@@ -470,7 +474,7 @@ function ifSignPresent(firstCard) {
 }
 function resetPlayedCards() {
     for (i = 0; i < 6; i++) {
-        $("#playedCardS" + i).attr("src", "cards/RED_BACK.jpg");
+        $("#playedCardS" + i).attr("src", "static/cards/RED_BACK.jpg");    // for flask 
     }
 }
 
@@ -480,7 +484,7 @@ function showOtherCards(otherCards) {
 
     for (i = otherCards.length - 1; i > -1; i--) {
         $('img[name="' + Object.keys(otherCards[i])[0] + '"]')
-            .attr("src", "cards/" + otherCards[i][Object.keys(otherCards[i])[0]] + ".svg");
+            .attr("src", "static/cards/" + otherCards[i][Object.keys(otherCards[i])[0]] + ".svg");   // for flask
     }
 }
 function fold() {
@@ -496,21 +500,6 @@ function fold() {
     }
 }
 jQuery(document).ready(function ($) {
-    if (typeof $ == 'undefined') {
-        var $ = jQuery;
-    }
-    {
-        let tableCount = 5;
-        var contents = '';
-        for (var i = 1; i <= tableCount; i++) {
-            contents += '<div style="color:white"> Room ' + i;
-            for (var j = 1; j <= 6; j++) {
-                contents += '<button type="button" class="btn btn-primary" onclick="goToSeat(' + i + ',' + j + ')\">' + j + '</button>';
-            }
-            contents += ' </div>';
-        }
-        $("#seatSelection")[0].innerHTML = contents;
-    }
     console.log(document.location.href);
     var queryString = document.location.href.split('?');
     var vars = queryString[1].split('&');
@@ -520,6 +509,9 @@ jQuery(document).ready(function ($) {
         params[pair[0]] = decodeURIComponent(pair[1]);
     }
     user = params["user"];
+    room = params["Room"];
+    seat = params["SeatNo"];                 //http://127.0.0.1:5000/table?user=joe&Room=1&SeatNo=1
+    goToSeat(room,seat);
     $('input[type=image]').click(function () {
         $('input[type=image]').removeClass('active');
         $('input[type=image]').addClass('inactive');
@@ -527,5 +519,3 @@ jQuery(document).ready(function ($) {
         $(this).addClass('active');
     });
 });
-
-

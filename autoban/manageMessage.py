@@ -33,14 +33,17 @@ class rocky(object):
                 gamerObject.websocket = websocket
                 self.USERS.addGameroRomm(room, seatNo, gamerObject)
                 self.USERS.ws.append(websocket)
+                return True
 
 
         else:
-            username = (
-                        "P" + "___" + key)  ##  This will change to sqllite Actitivy in USerList Object  ## str( random.randint(9,7568)
-            gamerObject = Gamer(username, key, websocket, room, seatNo)
+            #username = ("P" + "___" + key)  ##  This will change to sqllite Actitivy in USerList Object  ## str( random.randint(9,7568)
+
+            gamerObject = Gamer(key, key, websocket, room, seatNo) ## Will imporve the secuirty later , by checking for key and get email 
             self.USERS.addtoList(gamerObject)
             self.USERS.addGameroRomm(room, seatNo, gamerObject)
+            return True
+
 
     def IsthereTrumpSession(self, websocket):
         try:
