@@ -3,7 +3,7 @@ var user;
 
 jQuery(document).ready(function ($) {
   var contents = '';
-  console.log(document.cookie);
+  user = document.cookie.split('=')[1];
   if (document.cookie.startsWith("id=")) {
     console.log("id found .. it will create web sorcket ")
     webSocket = new WebSocket("ws://" + window.location.hostname + ":6789/lobby?" + document.cookie);
@@ -34,18 +34,7 @@ jQuery(document).ready(function ($) {
       }
     }
 
-  } // end of on message
-
-
-  // let tableCount = 5;
-  // var contents = '';
-  // for (var i = 1; i <= tableCount; i++) {
-  //   contents += '<div style="color:white"> Room ' + i;
-  //   for (var j = 1; j <= 6; j++) {
-  //     contents += '<button type="button" class="btn btn-primary" onclick="goToSeat(' + i + ',' + j + ')\">' + j + '</button>';
-  //   }
-  //   contents += ' </div>';
-  // }
+  } 
 
 });
 
