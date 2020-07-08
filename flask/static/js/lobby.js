@@ -19,26 +19,38 @@ jQuery(document).ready(function ($) {
       console.log(data.roomDetails);
       if (data.roomDetails) {
         var roomArray = Object.keys(data.roomDetails);
+        var contents="";
 
         roomArray.forEach((roomNo, i) => {
           var seatArr = data.roomDetails[roomNo];
           contents += '<div style="color:white">' + roomNo;
           for (var j = 1; j <= 6; j++) {
-            contents += '<button type="button" class="btn btn-primary" onclick="goToSeat(' + (i+1) + ',' + j + ')\">' + j + '</button>';
+      //      console.log(data.roomDetails[roomNo][j-1]);
+            text= data.roomDetails[roomNo][j-1];
+
+            if (text == "Empty")
+            {
+               contents += '<button type="button"  class="btn btn-primary" onclick="goToSeat(' + (i+1) + ',' + j + ')\">' + text + '</button>';
+            }
+
+            else{
+                contents += '<button type="button" disabled  class="btn btn-primary" onclick="goToSeat(' + (i+1) + ',' + j + ')\">' + text + '</button>';
+            }
+
           }
           contents += ' </div>';
 
         });
+
         $("#seatSelection")[0].innerHTML = contents;
 
       }
     }
 
-  } 
+  }
 
 });
 
 function goToSeat(roomNo, seatNo) {
-  document.location.href = document.location.href.replace("lobby", "table") + "?user=" + user + '&roomNo='
-    + roomNo + '&seatNo=' + seatNo;
+  document.location.href = document.location.href.replace("lobby", "table") + "?roomNo=" + roomNo + "&seatNo=" + seatNo;
 }
