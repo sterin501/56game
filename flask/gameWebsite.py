@@ -113,6 +113,10 @@ def logout():
            session.pop(key)
        return redirect('/')
 
+@app.route('/ok')
+def redirectForPoonachi():
+           return redirect('http://ec2-3-128-89-158.us-east-2.compute.amazonaws.com/login')
+
 
 
 def inserttoID(id,email,name):
