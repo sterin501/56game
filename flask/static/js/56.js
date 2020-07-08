@@ -8,6 +8,8 @@ var playData = {};
 var folderButtonStatus = false;
 var foldData = {};
 var user;
+var roomNo;
+var seatNo;
 console.log(uuid);
 if (!document.cookie) {
     document.cookie = "key=" + uuid + ";max-age=2592000;"
@@ -509,9 +511,9 @@ jQuery(document).ready(function ($) {
         params[pair[0]] = decodeURIComponent(pair[1]);
     }
     user = params["user"];
-    room = params["Room"];
-    seat = params["SeatNo"];                 //http://127.0.0.1:5000/table?user=joe&Room=1&SeatNo=1
-    goToSeat(room,seat);
+    roomNo = params["roomNo"];
+    seatNo = params["seatNo"];                 //http://127.0.0.1:5000/table?user=joe&roomNo=1&seatNo=1
+    goToSeat(roomNo,seatNo);
     $('input[type=image]').click(function () {
         $('input[type=image]').removeClass('active');
         $('input[type=image]').addClass('inactive');
