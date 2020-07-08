@@ -4,7 +4,7 @@ from flask import Flask, redirect, url_for, session , render_template , make_res
 from datetime import datetime,timedelta
 from authlib.integrations.flask_client import OAuth
 from configparser import ConfigParser
-import sqlite3
+import sqlite3,os
 
 # decorator for routes that should be accessible only by logged in users
 from auth_decorator import login_required
@@ -14,7 +14,8 @@ from auth_decorator import login_required
 
 
 configur = ConfigParser()
-configur.read('../config/config.ini')
+#configur.read('../config/config.ini')
+configur.read(os.path.join(os.path.dirname(__file__), '../config', 'config.ini'))
 
 app = Flask(__name__)
 app.secret_key =configur.get('APP','APP_SECRET_KEY')
@@ -67,7 +68,7 @@ def hello_world():
    # return res
 
 
-@app.route('/table')              ## for secuirty we can add login_required later 
+@app.route('/table')              ## for secuirty we can add login_required later
 def mytable():
       id = request.cookies.get('id')
       if id:
@@ -115,14 +116,14 @@ def logout():
 
 
 def inserttoID(id,email,name):
-    conn = sqlite3.connect('../config/mygame.db')
+    conn = sqlite3.connect(os.path.join(os.path.dirname(__file__), '../config', 'mygame.db'))
     conn.execute("INSERT OR IGNORE INTO ids (id,email,name) values ("+id+",'"+email+"','"+name+"');")
     conn.commit()
     print ("insert is fine ")
     conn.close()
 
 def searchforID(id):
-    conn = sqlite3.connect('../config/mygame.db')
+    conn = sqlite3.connect(os.path.join(os.path.dirname(__file__), '../config', 'mygame.db'))
     cursor = conn.execute("SELECT  email from ids where id="+id+";")
     email=cursor.fetchone()[0]
     #print(cursor.fetchone())
