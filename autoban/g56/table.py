@@ -15,6 +15,7 @@ class Table(object):
         self.opener = 0
         self.orderofPlay = [self.P1, self.P2, self.P3, self.P4, self.P5, self.P6]
         self.listOfKunugu = []
+        self.KunugSetAt=-1
 
     def getPlayerName(self,P):
         #print ( self.__dict__[P].name)
@@ -35,6 +36,14 @@ class Table(object):
         else:
             self.t1base = self.t1base + 1
             self.t0base = self.t0base - 1
+
+        if self.KunugSetAt+1==self.gameCount:
+            print ("Used in first chance Team1, so removing all ")
+            self.listOfKunugu.remove(self.P2.seatNo)
+            self.listOfKunugu.remove(self.P4.seatNo)
+            self.listOfKunugu.remove(self.P6.seatNo)
+            return True
+
 
         self.checkForKunuk()
         if seatNo in self.listOfKunugu:
@@ -62,6 +71,15 @@ class Table(object):
         else:
             self.t1base = self.t1base - 1
             self.t0base = self.t0base + 1
+
+        if self.KunugSetAt+1==self.gameCount:
+                print ("Used in first chance Team0, so removing all ")
+                self.listOfKunugu.remove(self.P1.seatNo)
+                self.listOfKunugu.remove(self.P3.seatNo)
+                self.listOfKunugu.remove(self.P5.seatNo)
+                return True
+
+
         self.checkForKunuk()
         if seatNo in self.listOfKunugu:
             self.listOfKunugu.remove(seatNo)
@@ -84,6 +102,7 @@ class Table(object):
             print(self.gameCount)
             self.t1base = 5
             self.t0base = 5
+            self.KunugSetAt=self.gameCount
             self.listOfKunugu.append(self.P2.seatNo)
             self.listOfKunugu.append(self.P4.seatNo)
             self.listOfKunugu.append(self.P6.seatNo)
@@ -93,6 +112,7 @@ class Table(object):
             print(self.gameCount)
             self.t1base = 5
             self.t0base = 5
+            self.KunugSetAt=self.gameCount
             self.listOfKunugu.append(self.P1.seatNo)
             self.listOfKunugu.append(self.P3.seatNo)
             self.listOfKunugu.append(self.P5.seatNo)
