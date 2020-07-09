@@ -39,7 +39,7 @@ class rocky(object):
         else:
             #username = ("P" + "___" + key)  ##  This will change to sqllite Actitivy in USerList Object  ## str( random.randint(9,7568)
 
-            gamerObject = Gamer(key, key, websocket, room, seatNo) ## Will imporve the secuirty later , by checking for key and get email 
+            gamerObject = Gamer(key, key, websocket, room, seatNo) ## Will imporve the secuirty later , by checking for key and get email
             self.USERS.addtoList(gamerObject)
             self.USERS.addGameroRomm(room, seatNo, gamerObject)
             return True
@@ -67,17 +67,20 @@ class rocky(object):
                             playerHand = kk.showHand()
                     # self.sendCard(P0)
                     RR = self.TrumpObjects[r].rules
-
+                    d = {}
+                    for we  in range(1,7):
+                        P=P0.tt.getPlayerName("P"+str(we))
+                        d["SN" + str(we)] = P
                     # self.TrumpIsSet({"villi":str (RR.villi),"trump":RR.trump,"dude":RR.dude,"dudeTeam":RR.Dudeteam})
                     # self.roomInfo(roomUsers['gamersInRomm'])
                     if RR.TrumpSet:
                         reconnectMessage = {"villi": str(RR.villi), 'trump': RR.trump, 'dude': RR.dude,
                                             'dudeTeam': RR.Dudeteam, 'hand': playerHand, 'VSF': [],
-                                            "playsofar": P0.thisPlayForSunu}
+                                            "playsofar": P0.thisPlayForSunu,"names":d}
                     else:
                         reconnectMessage = {"villi": str(RR.villi), 'trump': RR.trump, 'dude': RR.dude,
                                             'dudeTeam': RR.Dudeteam, 'hand': playerHand, 'VSF': RR.VSF,
-                                            "playsofar": P0.thisPlayForSunu}
+                                            "playsofar": P0.thisPlayForSunu,"names":d}
 
                     for kk in (self.listOfQ):
                         if kk['usr'] == gamer.userID:
@@ -149,7 +152,7 @@ class rocky(object):
         for kk in gamers:
             if kk is None:
                 continue
-            payload = json.dumps({"event": "seatInfo", "message": d}).encode('utf8')
+            payload = json.dumps({"event": "seatInfo", "names": d}).encode('utf8')
             if kk.websocket:
                 self.mySendMessage(kk.websocket, payload)
 

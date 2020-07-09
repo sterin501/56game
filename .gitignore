@@ -1,2 +1,4 @@
 __pycache__/
 g56/__pycache__/
+config/config.ini
+config/mygame.db

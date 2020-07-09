@@ -16,6 +16,10 @@ class Table(object):
         self.orderofPlay = [self.P1, self.P2, self.P3, self.P4, self.P5, self.P6]
         self.listOfKunugu = []
 
+    def getPlayerName(self,P):
+        #print ( self.__dict__[P].name)
+        return (self.__dict__[P].name)
+
     def setNextGame(self):
         self.gameCount = self.gameCount + 1
         self.opener = (self.gameCount - 1) % 6
