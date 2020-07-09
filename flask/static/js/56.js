@@ -10,6 +10,7 @@ var foldData = {};
 var user;
 var roomNo;
 var seatNo;
+var names;
 console.log(uuid);
 if (!document.cookie) {
     document.cookie = "key=" + uuid + ";max-age=2592000;"
@@ -46,6 +47,21 @@ function refreshHand(data) {
         showVili(data.VSF);
     }
 
+    if(data.names){
+        populateNames(data.names);
+    }
+
+
+}
+
+function populateNames(names) {
+    $('span[name="N1"]')[0].innerHTML = names["SN1"];
+    $('span[name="N2"]')[0].innerHTML = names["SN2"];
+    $('span[name="N3"]')[0].innerHTML = names["SN3"];
+    $('span[name="N4"]')[0].innerHTML = names["SN4"];
+    $('span[name="N5"]')[0].innerHTML = names["SN5"];
+    $('span[name="N6"]')[0].innerHTML = names["SN6"];
+
 
 }
 function showVili(VSF) {
@@ -74,7 +90,7 @@ function showVili(VSF) {
                 $('span[name="' + seatNo + '"]')[0]
                     .innerHTML = $('span[name="' + seatNo + '"]')[0]
                         .innerHTML + ' ' + '<span class =\"card-text badge badge-light\" style = \"border-radius: 0rem ;background-color: yellow;color:black; padding:0; font-size:100%\">' + viliToShow + '</span>';
-            } else if (viliToShow == 'Pass' ) {
+            } else if (viliToShow == 'Pass') {
                 $('span[name="' + seatNo + '"]')[0]
                     .innerHTML = $('span[name="' + seatNo + '"]')[0]
                         .innerHTML + ' ' + '<span class =\"card-text badge badge-light\" style = \"border-radius: 0rem ;background-color: yellow;color:black; padding:0; font-size:100%\">' + viliToShow + '</span>';
@@ -173,6 +189,7 @@ function goToSeat(roomNo, seatNo) {
     //$('#toast').toast('show');
     seatNumber = parseInt(seatNo, 10);
     $("#activePlayer0")[0].innerHTML = "" + seatNo;
+    $("#activePlayerName0").attr("name", "N" + seatNo);
     $("#playedCardS0").attr("name", "S" + seatNo);
     if (seatNumber % 2 == 0) {
         $("#playedCardS0").attr("style", "border:2px solid red");
@@ -189,6 +206,8 @@ function goToSeat(roomNo, seatNo) {
 
     let derivedSeatNumber = getSeatNumber(seatNumber, 1);
     $("#activePlayer1")[0].innerHTML = "" + derivedSeatNumber;
+    $("#activePlayerName1").attr("name", "N" + derivedSeatNumber);
+
     $("#playedCardS1").attr("name", "S" + derivedSeatNumber);
     if (derivedSeatNumber % 2 == 0) {
         $("#playedCardS1").attr("style", "border:2px solid red");
@@ -202,6 +221,8 @@ function goToSeat(roomNo, seatNo) {
 
     derivedSeatNumber = getSeatNumber(seatNumber, 2);
     $("#activePlayer2")[0].innerHTML = "" + derivedSeatNumber;
+    $("#activePlayerName2").attr("name", "N" + derivedSeatNumber);
+
     $("#playedCardS2").attr("name", "S" + derivedSeatNumber);
     if (derivedSeatNumber % 2 == 0) {
         $("#playedCardS2").attr("style", "border:2px solid red");
@@ -215,6 +236,8 @@ function goToSeat(roomNo, seatNo) {
 
     derivedSeatNumber = getSeatNumber(seatNumber, 3);
     $("#activePlayer3")[0].innerHTML = "" + derivedSeatNumber;
+    $("#activePlayerName3").attr("name", "N" + derivedSeatNumber);
+
     $("#playedCardS3").attr("name", "S" + derivedSeatNumber);
     if (derivedSeatNumber % 2 == 0) {
         $("#playedCardS3").attr("style", "border:2px solid red");
@@ -228,6 +251,8 @@ function goToSeat(roomNo, seatNo) {
 
     derivedSeatNumber = getSeatNumber(seatNumber, 4);
     $("#activePlayer4")[0].innerHTML = "" + derivedSeatNumber;
+    $("#activePlayerName4").attr("name", "N" + derivedSeatNumber);
+
     $("#playedCardS4").attr("name", "S" + derivedSeatNumber);
     if (derivedSeatNumber % 2 == 0) {
         $("#playedCardS4").attr("style", "border:2px solid red");
@@ -241,6 +266,8 @@ function goToSeat(roomNo, seatNo) {
 
     derivedSeatNumber = getSeatNumber(seatNumber, 5);
     $("#activePlayer5")[0].innerHTML = "" + derivedSeatNumber;
+    $("#activePlayerName5").attr("name", "N" + derivedSeatNumber);
+
     $("#playedCardS5").attr("name", "S" + derivedSeatNumber);
     if (derivedSeatNumber % 2 == 0) {
         $("#playedCardS5").attr("style", "border:2px solid red");
@@ -258,7 +285,7 @@ function goToSeat(roomNo, seatNo) {
     //document.cookie = seatNo;
     console.log(document.cookie);
     webSocket = new WebSocket("ws://" + window.location.hostname + ":6789/game?"
-        +document.cookie+ "&Room=" + roomNo + "&SeatNo=" + seatNo
+        + document.cookie + "&Room=" + roomNo + "&SeatNo=" + seatNo
     );
 
     console.log(webSocket);
@@ -289,13 +316,12 @@ function goToSeat(roomNo, seatNo) {
             //$("#myToast").toast('show');
 
             if (data.event == 'play') {
+                globalData.names = data.names;
                 globalData.playsofar = data.playsofar;
                 globalData.VSF = data.VSF;
                 globalData.hand = data.hand;
                 playData = data;
-                if (data.playsofar && data.playsofar.length == 0) {
-                    //$('div[id="foldSection"]').show();
-                }
+               
                 resetSpinner();
                 $("#spinnerS0").show();
                 console.log(folderButtonStatus);
@@ -513,7 +539,7 @@ jQuery(document).ready(function ($) {
     user = params["user"];
     roomNo = params["roomNo"];
     seatNo = params["seatNo"];                 //http://127.0.0.1:5000/table?user=joe&roomNo=1&seatNo=1
-    goToSeat(roomNo,seatNo);
+    goToSeat(roomNo, seatNo);
     $('input[type=image]').click(function () {
         $('input[type=image]').removeClass('active');
         $('input[type=image]').addClass('inactive');
