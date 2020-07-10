@@ -34,8 +34,10 @@ function refreshHand(data) {
 
     if (data.villi) {
         let team = 'Red';
+        $("#trumpSection")[0].style.color="red";
         if (data.dudeTeam == 'Team0') {
             team = "Black"
+            $(  "#trumpSection")[0].style.color="black";
         }
         $("#trumpSection")[0].innerHTML = "Bid : " + team + " " + data.villi + convertToSign(data.trump);
     }
@@ -48,11 +50,46 @@ function refreshHand(data) {
     }
 
     if(data.names){
-        populateNames(data.names);
-    }
+        if (data.KunuguSeat){
+
+
+              populateNames(kunuguLogic(data.names,data.KunuguSeat));
+
+        }
+        else{
+
+            populateNames(data.names);
+        }
+
+    }  // end of name check
 
 
 }
+
+function kunuguLogic(myNames,KunuguSeat){
+    //console.log(KunuguSeat);
+
+                              if (typeof KunuguSeat ===  "undefined")
+                                     return myNames;
+                for (var i = 0; i <KunuguSeat.length; i++) {
+      //            console.log("____________");
+                            if (KunuguSeat[i] == 1)
+                                    myNames["SN1"] = myNames["SN1"] +"M"; // Need to replace with actual kunugu
+                            else if     (KunuguSeat[i] == 2)
+                                    myNames["SN2"] = myNames["SN2"] +"__";
+                            else if     (KunuguSeat[i] == 3)
+                                    myNames["SN3"] = myNames["SN3"] +"__";
+                            else if     (KunuguSeat[i] == 4)
+                                    myNames["SN4"] = myNames["SN4"] +"__";
+                            else if     (KunuguSeat[i] == 5)
+                                    myNames["SN5"] = myNames["SN5"] +"__";
+                            else if     (KunuguSeat[i] == 6)
+                                   myNames["SN6"] = myNames["SN6"] +"__";
+                }
+              //  console.log(myNames);
+                    return (myNames);
+}
+
 
 function populateNames(names) {
     $('span[name="N1"]')[0].innerHTML = names["SN1"];
@@ -61,6 +98,14 @@ function populateNames(names) {
     $('span[name="N4"]')[0].innerHTML = names["SN4"];
     $('span[name="N5"]')[0].innerHTML = names["SN5"];
     $('span[name="N6"]')[0].innerHTML = names["SN6"];
+    // backgorund color
+     $('span[name="N1"]')[0].style.backgroundColor="black";
+     $('span[name="N2"]')[0].style.backgroundColor="red";
+     $('span[name="N3"]')[0].style.backgroundColor="black";
+     $('span[name="N4"]')[0].style.backgroundColor="red";
+     $('span[name="N5"]')[0].style.backgroundColor="black";
+     $('span[name="N6"]')[0].style.backgroundColor="red";
+     globalData.names=names;
 
 
 }
@@ -121,13 +166,14 @@ function resetVSF() {
 }
 function convertToSign(signChar) {
     if (signChar == 'S') {
-        return '♠';
+        return     '<span style="color: black;">♠</span>'
     } else if (signChar == 'D') {
-        return '♦';
+      //  return '♦';
+    return     '<span style="color: red;">♦</span>';
     } else if (signChar == 'C') {
-        return '♣';
+                return     '<span style="color: black;">♣</span>'
     } else if (signChar == 'H') {
-        return '♥';
+      return     '<span style="color: red;">♥</span>'
     } else {
         return '🚫';
     }
@@ -316,18 +362,24 @@ function goToSeat(roomNo, seatNo) {
             //$("#myToast").toast('show');
 
             if (data.event == 'play') {
-                globalData.names = data.names;
                 globalData.playsofar = data.playsofar;
                 globalData.VSF = data.VSF;
                 globalData.hand = data.hand;
                 playData = data;
-               
+
                 resetSpinner();
                 $("#spinnerS0").show();
-                console.log(folderButtonStatus);
+                //console.log(folderButtonStatus);
                 if (folderButtonStatus) { console.log("click on fold "); }
                 else { $("#playButton").attr("disabled", false); }
 
+
+                 if (data.base0){
+                   $("#team0")[0].innerHTML = data.base0;
+                   $("#team1")[0].innerHTML = data.base1;
+                   $('#gameCount')[0].innerHTML = data.Mc;
+
+                 }   // this when reconnect during action item
 
             }
             if (data.event == 'MatchIsDone') {
@@ -335,8 +387,10 @@ function goToSeat(roomNo, seatNo) {
                 $("#team1")[0].innerHTML = data.base1;
                 $('#gameCount')[0].innerHTML = data.Mc;
                 $('div[id="foldSection"]').show();
-
-
+                      //myNames=globalData.names;
+                      console.log(globalData.names);
+                      myNames=kunuguLogic(globalData.names,data.KunuguSeat);
+                      populateNames(myNames);
 
             }
 
@@ -380,7 +434,17 @@ function goToSeat(roomNo, seatNo) {
             }
             if (data.event == 'HeCalled') {
                 if (data.Villi != "P") {
-                    $("#trumpSection")[0].innerHTML = "Bid : " + convertToSign(data.Villi.substring(0, 1)) + data.Villi.substring(1);
+                    //console.log(data.dude);
+                  //  console.log(data.dudeTeam);
+                    $("#trumpSection")[0].innerHTML = "Bidding : " + convertToSign(data.Villi.substring(0, 1)) + data.Villi.substring(1) + "  by "+data.dude;
+
+                    if (data.dudeTeam == 'Team1')
+                    {
+                          $("#trumpSection")[0].style.color="red";
+                    }
+                    else{
+                                  $("#trumpSection")[0].style.color="black";  // coloring stuff added by st
+                    }
 
                 }
             }
@@ -399,7 +463,15 @@ function goToSeat(roomNo, seatNo) {
                 folderButtonStatus = true;
                 foldData = data;
 
-            } // spinner
+            } // fold
+
+            if (data.event == 'Reconnect') {
+            //  console.log("Reconnect");
+              $("#team0")[0].innerHTML = data.base0;
+              $("#team1")[0].innerHTML = data.base1;
+              $('#gameCount')[0].innerHTML = data.Mc;
+
+            } // end of Reconnect
 
 
         }  // end of event
@@ -429,6 +501,13 @@ function questionEvent(data) {
     $("#bidSection").show();
     //$("#playSection").hide();
     $("#playButton").attr("disabled", true);
+
+    if (data.base0){
+      $("#team0")[0].innerHTML = data.base0;
+      $("#team1")[0].innerHTML = data.base1;
+      $('#gameCount')[0].innerHTML = data.Mc;
+
+    }  // Reconect during question event
 
 }
 
@@ -502,7 +581,7 @@ function ifSignPresent(firstCard) {
 }
 function resetPlayedCards() {
     for (i = 0; i < 6; i++) {
-        $("#playedCardS" + i).attr("src", "static/cards/RED_BACK.jpg");    // for flask 
+        $("#playedCardS" + i).attr("src", "static/cards/RED_BACK.jpg");    // for flask
     }
 }
 

@@ -76,11 +76,11 @@ class rocky(object):
                     if RR.TrumpSet:
                         reconnectMessage = {"villi": str(RR.villi), 'trump': RR.trump, 'dude': RR.dude,
                                             'dudeTeam': RR.Dudeteam, 'hand': playerHand, 'VSF': [],
-                                            "playsofar": P0.thisPlayForSunu,"names":d}
+                                            "playsofar": P0.thisPlayForSunu,"names":d,"base0":P0.tt.t0base,"base1":P0.tt.t1base,"Mc":P0.tt.gameCount,"KunuguSeat":P0.tt.listOfKunugu}
                     else:
                         reconnectMessage = {"villi": str(RR.villi), 'trump': RR.trump, 'dude': RR.dude,
                                             'dudeTeam': RR.Dudeteam, 'hand': playerHand, 'VSF': RR.VSF,
-                                            "playsofar": P0.thisPlayForSunu,"names":d}
+                                            "playsofar": P0.thisPlayForSunu,"names":d,"base0":P0.tt.t0base,"base1":P0.tt.t1base,"Mc":P0.tt.gameCount,"KunuguSeat":P0.tt.listOfKunugu}
 
                     for kk in (self.listOfQ):
                         if kk['usr'] == gamer.userID:
@@ -144,10 +144,13 @@ class rocky(object):
 
     def roomInfo(self, gamers):
         d = {}
+        seatNo=0
         for kk in gamers:
+            seatNo=seatNo+1
             if kk is None:
+                d["SN" + str(seatNo)] = "Empty"   ## Sending  Empty to avoid undefined
                 continue
-            d["SN" + str(kk.seatNo + 1)] = kk.userID
+            d["SN" + str(seatNo)] = kk.userID
 
         for kk in gamers:
             if kk is None:
@@ -168,7 +171,7 @@ class rocky(object):
     def heCalled(self, message, gamers):  ## This will change as per Room Logic
 
         payload = json.dumps(
-            {"event": "HeCalled", "seat": message["seat"], "Villi": message["Villi"], "VSF": message["VSF"]}).encode(
+            {"event": "HeCalled", "seat": message["seat"], "Villi": message["Villi"], "VSF": message["VSF"],"dude":message["dude"],"dudeTeam":message["dudeTeam"]}).encode(
             'utf8')
         for c in gamers:
             if c == None:
@@ -395,8 +398,6 @@ class rocky(object):
         seat = "S" + str(lastVilli["SN"])
         RR.VSF.append({seat: lastVilli["ans"]})
         print(RR.VSF)
-        message = {"seat": seat, "Villi": lastVilli["ans"], "VSF": RR.VSF}
-        self.heCalled(message, gamers)
         if lastVilli["ans"] == "P":
             RR.skipped.add(lastVilli["usr"])
             if len(RR.skipped) == 6:  ## Need to change for 6
@@ -421,6 +422,8 @@ class rocky(object):
             RR.dude = lastVilli["usr"]
             RR.dudeSeatNo = lastVilli["SN"]
             RR.Dudeteam = lastVilli["t"]
+        message = {"seat": seat, "Villi": lastVilli["ans"], "VSF": RR.VSF,"dude": RR.dude, "dudeTeam": RR.Dudeteam}
+        self.heCalled(message, gamers)
         quNo = lastVilli["quNo"][:2] + str(int(lastVilli["quNo"][2:]) + 1)
         TTO = TT.orderofPlay[(c + 1) % 6]
         message = {"event": "question", "usr": TTO.name, "t": TTO.team, "quNo": quNo, "c": (c + 1) % 6, "r": r,
