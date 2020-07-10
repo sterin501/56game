@@ -367,7 +367,7 @@ function goToSeat(roomNo, seatNo) {
                       //myNames=globalData.names;
                       console.log(globalData.names);
                       //myNames=kunuguLogic(globalData.names,data.KunuguSeat);
-                      populateNames(myNames, data.KunuguSeat);
+                      populateNames(globalData.names, data.KunuguSeat);
 
             }
 
