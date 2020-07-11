@@ -34,10 +34,10 @@ function refreshHand(data) {
 
     if (data.villi) {
         let team = 'Red';
-        $("#trumpSection")[0].style.color="red";
+        $("#trumpSection")[0].style.color = "red";
         if (data.dudeTeam == 'Team0') {
             team = "Black"
-            $(  "#trumpSection")[0].style.color="black";
+            $("#trumpSection")[0].style.color = "black";
         }
         $("#trumpSection")[0].innerHTML = "Bid : " + team + " " + data.villi + convertToSign(data.trump);
     }
@@ -49,14 +49,14 @@ function refreshHand(data) {
         showVili(data.VSF);
     }
 
-    if(data.names){
-        if (data.KunuguSeat){
+    if (data.names) {
+        if (data.KunuguSeat) {
 
 
-              populateNames(kunuguLogic(data.names,data.KunuguSeat));
+            populateNames(kunuguLogic(data.names, data.KunuguSeat));
 
         }
-        else{
+        else {
 
             populateNames(data.names);
         }
@@ -66,36 +66,35 @@ function refreshHand(data) {
 
 }
 
-function kunuguLogic(myNames,KunuguSeat){
+function kunuguLogic(myNames, KunuguSeat) {
     //console.log(KunuguSeat);
 
-                              if (typeof KunuguSeat ===  "undefined")
-                                     return myNames;
-                // Removing current one to extra 🃏
+    if (typeof KunuguSeat === "undefined")
+        return myNames;
+    // Removing current one to extra 🃏
 
-                for (var j=1;j<7;j++)
-                {
-                           myNames["SN"+j]=myNames["SN"+j].replace("☔","");   // ☔ ,
-                         console.log(myNames["SN"+j]);
-                }
+    for (var j = 1; j < 7; j++) {
+        myNames["SN" + j] = myNames["SN" + j].replace("☔", "");   // ☔ ,
+        console.log(myNames["SN" + j]);
+    }
 
 
-                for (var i = 0; i <KunuguSeat.length; i++) {
-                              if (KunuguSeat[i] == 1)
-                                    myNames["SN1"] = myNames["SN1"] +"☔"; // Need to replace with actual kunugu
-                            else if     (KunuguSeat[i] == 2)
-                                    myNames["SN2"] = myNames["SN2"] +"☔";
-                            else if     (KunuguSeat[i] == 3)
-                                    myNames["SN3"] = myNames["SN3"] +"☔";
-                            else if     (KunuguSeat[i] == 4)
-                                    myNames["SN4"] = myNames["SN4"] +"☔";
-                            else if     (KunuguSeat[i] == 5)
-                                    myNames["SN5"] = myNames["SN5"] +"☔";
-                            else if     (KunuguSeat[i] == 6)
-                                   myNames["SN6"] = myNames["SN6"] +"☔";
-                }
-              //  console.log(myNames);
-                    return (myNames);
+    for (var i = 0; i < KunuguSeat.length; i++) {
+        if (KunuguSeat[i] == 1)
+            myNames["SN1"] = myNames["SN1"] + "☔"; // Need to replace with actual kunugu
+        else if (KunuguSeat[i] == 2)
+            myNames["SN2"] = myNames["SN2"] + "☔";
+        else if (KunuguSeat[i] == 3)
+            myNames["SN3"] = myNames["SN3"] + "☔";
+        else if (KunuguSeat[i] == 4)
+            myNames["SN4"] = myNames["SN4"] + "☔";
+        else if (KunuguSeat[i] == 5)
+            myNames["SN5"] = myNames["SN5"] + "☔";
+        else if (KunuguSeat[i] == 6)
+            myNames["SN6"] = myNames["SN6"] + "☔";
+    }
+    //  console.log(myNames);
+    return (myNames);
 }
 
 
@@ -107,13 +106,13 @@ function populateNames(names) {
     $('span[name="N5"]')[0].innerHTML = names["SN5"];
     $('span[name="N6"]')[0].innerHTML = names["SN6"];
     // backgorund color
-     $('span[name="N1"]')[0].style.backgroundColor="black";
-     $('span[name="N2"]')[0].style.backgroundColor="red";
-     $('span[name="N3"]')[0].style.backgroundColor="black";
-     $('span[name="N4"]')[0].style.backgroundColor="red";
-     $('span[name="N5"]')[0].style.backgroundColor="black";
-     $('span[name="N6"]')[0].style.backgroundColor="red";
-     globalData.names=names;
+    $('span[name="N1"]')[0].style.backgroundColor = "black";
+    $('span[name="N2"]')[0].style.backgroundColor = "red";
+    $('span[name="N3"]')[0].style.backgroundColor = "black";
+    $('span[name="N4"]')[0].style.backgroundColor = "red";
+    $('span[name="N5"]')[0].style.backgroundColor = "black";
+    $('span[name="N6"]')[0].style.backgroundColor = "red";
+    globalData.names = names;
 
 
 }
@@ -174,14 +173,14 @@ function resetVSF() {
 }
 function convertToSign(signChar) {
     if (signChar == 'S') {
-        return     '<span style="color: black;">♠</span>'
+        return '<span style="color: black;">♠</span>'
     } else if (signChar == 'D') {
-      //  return '♦';
-    return     '<span style="color: red;">♦</span>';
+        //  return '♦';
+        return '<span style="color: red;">♦</span>';
     } else if (signChar == 'C') {
-                return     '<span style="color: black;">♣</span>'
+        return '<span style="color: black;">♣</span>'
     } else if (signChar == 'H') {
-      return     '<span style="color: red;">♥</span>'
+        return '<span style="color: red;">♥</span>'
     } else {
         return '🚫';
     }
@@ -382,12 +381,12 @@ function goToSeat(roomNo, seatNo) {
                 else { $("#playButton").attr("disabled", false); }
 
 
-                 if (data.base0){
-                   $("#team0")[0].innerHTML = data.base0;
-                   $("#team1")[0].innerHTML = data.base1;
-                   $('#gameCount')[0].innerHTML = data.Mc;
+                if (data.base0) {
+                    $("#team0")[0].innerHTML = data.base0;
+                    $("#team1")[0].innerHTML = data.base1;
+                    $('#gameCount')[0].innerHTML = data.Mc;
 
-                 }   // this when reconnect during action item
+                }   // this when reconnect during action item
 
             }
             if (data.event == 'MatchIsDone') {
@@ -395,10 +394,10 @@ function goToSeat(roomNo, seatNo) {
                 $("#team1")[0].innerHTML = data.base1;
                 $('#gameCount')[0].innerHTML = data.Mc;
                 $('div[id="foldSection"]').show();
-                      //myNames=globalData.names;
-                      console.log(globalData.names);
-                      myNames=kunuguLogic(globalData.names,data.KunuguSeat);
-                      populateNames(myNames);
+                //myNames=globalData.names;
+                console.log(globalData.names);
+                myNames = kunuguLogic(globalData.names, data.KunuguSeat);
+                populateNames(myNames);
 
             }
 
@@ -443,15 +442,14 @@ function goToSeat(roomNo, seatNo) {
             if (data.event == 'HeCalled') {
                 if (data.Villi != "P") {
                     //console.log(data.dude);
-                  //  console.log(data.dudeTeam);
-                    $("#trumpSection")[0].innerHTML = "Bid " + convertToSign(data.Villi.substring(0, 1)) + data.Villi.substring(1) + " "+data.dude.substring(0,12);
+                    //  console.log(data.dudeTeam);
+                    $("#trumpSection")[0].innerHTML = "Bid " + convertToSign(data.Villi.substring(0, 1)) + data.Villi.substring(1) + " " + data.dude.substring(0, 12);
 
-                    if (data.dudeTeam == 'Team1')
-                    {
-                          $("#trumpSection")[0].style.color="red";
+                    if (data.dudeTeam == 'Team1') {
+                        $("#trumpSection")[0].style.color = "red";
                     }
-                    else{
-                                  $("#trumpSection")[0].style.color="black";  // coloring stuff added by st
+                    else {
+                        $("#trumpSection")[0].style.color = "black";  // coloring stuff added by st
                     }
 
                 }
@@ -474,10 +472,10 @@ function goToSeat(roomNo, seatNo) {
             } // fold
 
             if (data.event == 'Reconnect') {
-            //  console.log("Reconnect");
-              $("#team0")[0].innerHTML = data.base0;
-              $("#team1")[0].innerHTML = data.base1;
-              $('#gameCount')[0].innerHTML = data.Mc;
+                //  console.log("Reconnect");
+                $("#team0")[0].innerHTML = data.base0;
+                $("#team1")[0].innerHTML = data.base1;
+                $('#gameCount')[0].innerHTML = data.Mc;
 
             } // end of Reconnect
 
@@ -510,10 +508,10 @@ function questionEvent(data) {
     //$("#playSection").hide();
     $("#playButton").attr("disabled", true);
 
-    if (data.base0){
-      $("#team0")[0].innerHTML = data.base0;
-      $("#team1")[0].innerHTML = data.base1;
-      $('#gameCount')[0].innerHTML = data.Mc;
+    if (data.base0) {
+        $("#team0")[0].innerHTML = data.base0;
+        $("#team1")[0].innerHTML = data.base1;
+        $('#gameCount')[0].innerHTML = data.Mc;
 
     }  // Reconect during question event
 
@@ -624,6 +622,13 @@ jQuery(document).ready(function ($) {
         params[pair[0]] = decodeURIComponent(pair[1]);
     }
     user = params["user"];
+    if (!user) {
+        try {
+            user = document.cookie.split("=")[1];
+        } catch (err) {
+
+        }
+    }
     roomNo = params["roomNo"];
     seatNo = params["seatNo"];                 //http://127.0.0.1:5000/table?user=joe&roomNo=1&seatNo=1
     goToSeat(roomNo, seatNo);
@@ -634,3 +639,45 @@ jQuery(document).ready(function ($) {
         $(this).addClass('active');
     });
 });
+
+function sendChat() {
+    var chatText = $("#chatText").val();
+    $("#chatText").val("");
+    $("#chat")[0].value += "\r\n" + user + ": " + chatText;
+    document.getElementById("chat").scrollTop = document.getElementById("chat").scrollHeight;
+    //notifyMe();
+}
+
+function notifyMe() {
+    // Let's check if the browser supports notifications
+    if (!("Notification" in window)) {
+        alert("This browser does not support desktop notification");
+    }
+
+    // Let's check whether notification permissions have already been granted
+    else if (Notification.permission === "granted") {
+        // If it's okay let's create a notification
+        var notification = new Notification("Hi there!");
+    }
+
+    // Otherwise, we need to ask the user for permission
+    else if (Notification.permission !== "denied") {
+        Notification.requestPermission().then(function (permission) {
+            // If the user accepts, let's create a notification
+            if (permission === "granted") {
+                var notification = new Notification("Hi there!");
+            }
+        });
+    }
+
+    // At last, if the user has denied notifications, and you 
+    // want to be respectful there is no need to bother them any more.
+}
+
+function openForm() {
+    document.getElementById("myForm").style.display = "block";
+}
+
+function closeForm() {
+    document.getElementById("myForm").style.display = "none";
+} 

@@ -1,14 +1,14 @@
 @media only screen and (min-width: 768px) {
-img.card {
-	width: 60px;
-	margin: 0;
-	padding: 0;
-	border: 0;
-	vertical-align: initial;
-	box-sizing: initial;
-	display: inline;
-	background-color: transparent;
-}
+	img.card {
+		width: 60px;
+		margin: 0;
+		padding: 0;
+		border: 0;
+		vertical-align: initial;
+		box-sizing: initial;
+		display: inline;
+		background-color: transparent;
+	}
 }
 
 @media only screen and (max-width: 768px) {
@@ -21,36 +21,40 @@ img.card {
 		box-sizing: initial;
 		display: inline;
 		background-color: transparent;
-
 	}
-	}
+}
 
 /*
  * A hand is a div containing cards.
  */
+
 .hand {
 	padding: 0;
 	margin: 0;
 }
-.active-hand img.card { 
+
+.active-hand img.card {
 	cursor: pointer;
 }
 
 /*
  * A horizontal hand, class="hand hhand".  The enitire card is visible.
  */
+
 .hhand {
-	display: inline-block; 
+	display: inline-block;
 }
-.hhand img.card { 
+
+.hhand img.card {
 	padding-top: 20px;
 }
-.hhand.active-hand img.card:hover { 
+
+.hhand.active-hand img.card:hover {
 	padding-top: 20px;
 	padding-bottom: 0px;
 }
 
-.hhand.active-hand img.card.selectedCard { 
+.hhand.active-hand img.card.selectedCard {
 	padding-top: 0px;
 	padding-bottom: 00px;
 	border-bottom: 20px;
@@ -58,18 +62,19 @@ img.card {
 	border-bottom-color: transparent;
 }
 
-
-
 /*
  * A vertical hand, class="hand vhand".  The enitire card is visible.
  */
+
 .vhand {
-	display: block; 
+	display: block;
 }
-.vhand img.card { 
+
+.vhand img.card {
 	padding-right: 10px;
 }
-.vhand.active-hand img.card:hover { 
+
+.vhand.active-hand img.card:hover {
 	padding-right: 0px;
 	padding-left: 10px;
 }
@@ -77,45 +82,49 @@ img.card {
 /*
  * A compact horizontal hand.  Only the last card is entirely visible.
  */
-.hhand-compact { 
-	display: inline-block; 
+
+.hhand-compact {
+	display: inline-block;
 }
-.hhand-compact img.card:first-child { 
+
+.hhand-compact img.card:first-child {
 	margin-left: 0px;
 	padding-top: 10px;
 }
-.hhand-compact img.card { 
+
+.hhand-compact img.card {
 	margin-left: -52px;
 	padding-top: 10px;
 }
-.hhand-compact.active-hand img.card:hover { 
+
+.hhand-compact.active-hand img.card:hover {
 	padding-top: 0px;
 	padding-bottom: 10px;
 }
 
-
-
 /*
  * A compact vertical hand.  Only the last card is entirely visible.
  */
+
 .vhand-compact {
 	display: inline-block;
 	vertical-align: top;
 }
-.vhand-compact img.card:first-child { 
-	display: block; 
+
+.vhand-compact img.card:first-child {
+	display: block;
 	margin-top: 0px;
 	padding-right: 10px;
 }
-.vhand-compact img.card 
-{
-	display: block; 
+
+.vhand-compact img.card {
+	display: block;
 	margin-top: -80px;
 	padding-right: 10px;
 }
-.vhand-compact.active-hand img.card:hover,
-.active-hand .vhand-compact img.card:hover { 
-	display: block; 
+
+.vhand-compact.active-hand img.card:hover, .active-hand .vhand-compact img.card:hover {
+	display: block;
 	padding-right: 0px;
 	padding-left: 10px;
 }
@@ -123,31 +132,217 @@ img.card {
 /*
  * A fanned hand.  Only the last card is entirely visible.
  */
+
 .fan {
 	display: inline-block;
 	vertical-align: top;
 	position: relative;
 	padding-bottom: 1em;
 }
-.fan img.card { 
+
+.fan img.card {
 	position: absolute;
 	width: 90px;
 }
 
-.playingTable{
+.playingTable {
 	opacity: 1;
 }
-ul li { display:block; float:left; }
+
+ul li {
+	display: block;
+	float: left;
+}
 
 .active {
-	background:transparent;
+	background: transparent;
 	padding-top: 2px;
 	padding-bottom: 2px;
 	border: solid;
 }
+
 .inactive {
 	padding-top: 8px;
 	padding-bottom: 8px;
 	border: #1e7e34;
 }
 
+@media only screen and (max-width: 768px) {
+	/* Button used to open the chat form - fixed at the bottom of the page */
+	.open-button {
+		background-color: #555;
+		color: white;
+		border: none;
+		cursor: pointer;
+		opacity: 0.8;
+		position: fixed;
+		bottom: 0px;
+		right: 0px;
+		width: 131px;
+	}
+	/* The popup chat - hidden by default */
+	.chat-popup {
+		display: none;
+		position: fixed;
+		bottom: 0;
+		right: 0px;
+		border: 3px solid #f1f1f1;
+		z-index: 9;
+		height: 75%;
+	}
+	/* Add styles to the form container */
+	.form-container {
+		max-width: 131px;
+		background-color: white;
+		height: 100%;
+	}
+	/* Full-width textarea */
+	.form-container textarea {
+		width: 100%;
+		margin: 5px 0 22px 0;
+		border: none;
+		background: #f1f1f1;
+		resize: none;
+		min-height: 185px;
+		height: 63%;
+
+	}
+	/* When the textarea gets focus, do something */
+	.form-container textarea:focus {
+		background-color: #ddd;
+		outline: none;
+	}
+	/* Set a style for the submit/login button */
+	.form-container .btn {
+		background-color: #4CAF50;
+		color: white;
+		border: none;
+		cursor: pointer;
+		width: 100%;
+		margin-bottom: 0px;
+		opacity: 0.8;
+	}
+	.chat-text {
+		background-color:white;
+		color: black;
+		border: solid;
+		cursor: pointer;
+		opacity: 0.8;
+		position: fixed;
+		bottom: 53px;
+		right: 0px;
+		width: 131px;
+	}
+
+	.send-button {
+		background-color:#4CAF50;
+		color: white;
+		border: none;
+		cursor: pointer;
+		opacity: 0.8;
+		position: fixed;
+		bottom: 26px;
+		right: 0px;
+		width: 131px;
+	}
+	/* Add a red background color to the cancel button */
+	.form-container .cancel {
+		background-color: red;
+	}
+	/* Add some hover effects to buttons */
+	.form-container .btn:hover, .open-button:hover {
+		opacity: 1;
+	}
+}
+
+@media only screen and (min-width: 768px) {
+	/* Button used to open the chat form - fixed at the bottom of the page */
+	.open-button {
+		background-color: #555;
+		color: white;
+		border: none;
+		cursor: pointer;
+		opacity: 0.8;
+		position: fixed;
+		bottom: 0px;
+		right: 0px;
+		width: 280px;
+		
+
+	}
+	.send-button {
+		background-color:#4CAF50;
+		color: white;
+		border: none;
+		cursor: pointer;
+		opacity: 0.8;
+		position: absolute;
+		bottom: 26px;
+		right: 0px;
+		width: 280px;
+
+	}
+
+	.chat-text {
+		background-color:white;
+		color: black;
+		border: solid;
+		cursor: pointer;
+		opacity: 0.8;
+		position: absolute;
+		bottom: 53px;
+		right: 0px;
+		width: 280px;
+	}
+	/* The popup chat - hidden by default */
+	.chat-popup {
+		display: none;
+		position: fixed;
+		bottom: 0;
+		right: 0px;
+		border: 3px solid #f1f1f1;
+		z-index: 9;
+		width: 280px;
+		height: 500px;
+	}
+	/* Add styles to the form container */
+	.form-container {
+		max-width: 280px;
+		background-color: white;
+		height: 100%;
+		
+	}
+	/* Full-width textarea */
+	.form-container textarea {
+		width: 100%;
+		border: none;
+		background: #f1f1f1;
+		resize: none;
+		height:76%;
+		min-height: 400px;
+
+	}
+	/* When the textarea gets focus, do something */
+	.form-container textarea:focus {
+		background-color: #ddd;
+		outline: none;
+	}
+	/* Set a style for the submit/login button */
+	.form-container .btn {
+		background-color: #4CAF50;
+		color: white;
+		border: none;
+		cursor: pointer;
+		width: 100%;
+		margin-bottom: 0px;
+		opacity: 0.8;
+	}
+	/* Add a red background color to the cancel button */
+	.form-container .cancel {
+		background-color: red;
+	}
+	/* Add some hover effects to buttons */
+	.form-container .btn:hover, .open-button:hover {
+		opacity: 1;
+	}
+}
