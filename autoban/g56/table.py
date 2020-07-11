@@ -16,6 +16,8 @@ class Table(object):
         self.orderofPlay = [self.P1, self.P2, self.P3, self.P4, self.P5, self.P6]
         self.listOfKunugu = []
         self.KunugSetAt=-1
+        self.lastKunugTeam=""
+
 
     def getPlayerName(self,P):
         #print ( self.__dict__[P].name)
@@ -37,7 +39,7 @@ class Table(object):
             self.t1base = self.t1base + 1
             self.t0base = self.t0base - 1
 
-        if self.KunugSetAt+1==self.gameCount:
+        if self.KunugSetAt+1==self.gameCount and self.lastKunugTeam=="team1":
             print ("Used in first chance Team1, so removing all ")
             self.listOfKunugu.remove(self.P2.seatNo)
             self.listOfKunugu.remove(self.P4.seatNo)
@@ -72,7 +74,7 @@ class Table(object):
             self.t1base = self.t1base - 1
             self.t0base = self.t0base + 1
 
-        if self.KunugSetAt+1==self.gameCount:
+        if self.KunugSetAt+1==self.gameCount  and self.lastKunugTeam=="team0":
                 print ("Used in first chance Team0, so removing all ")
                 self.listOfKunugu.remove(self.P1.seatNo)
                 self.listOfKunugu.remove(self.P3.seatNo)
@@ -106,9 +108,10 @@ class Table(object):
             self.listOfKunugu.append(self.P2.seatNo)
             self.listOfKunugu.append(self.P4.seatNo)
             self.listOfKunugu.append(self.P6.seatNo)
+            self.lastKunugTeam="team1"
             return True
         if self.t0base < 0:
-            print("kunugu for team1 ")
+            print("kunugu for team0 ")
             print(self.gameCount)
             self.t1base = 5
             self.t0base = 5
@@ -116,6 +119,7 @@ class Table(object):
             self.listOfKunugu.append(self.P1.seatNo)
             self.listOfKunugu.append(self.P3.seatNo)
             self.listOfKunugu.append(self.P5.seatNo)
+            self.lastKunugTeam="team0"
             return True
         return False
 

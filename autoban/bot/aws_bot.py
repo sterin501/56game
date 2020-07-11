@@ -75,7 +75,7 @@ if __name__ == '__main__':
     factory.protocol = MyClientProtocol
     loop = asyncio.get_event_loop()
     async def main():
-        coro = loop.create_connection(factory, "3.17.191.219", 6789)
+        coro = loop.create_connection(factory, "3.128.89.158", 6789)
         print("running {}".format(coro))
         transport, proto = await coro
         print("proto {}".format(proto))

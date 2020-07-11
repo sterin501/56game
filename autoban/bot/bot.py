@@ -92,8 +92,8 @@ if __name__ == '__main__':
 # ./bot.py "ws://127.0.0.1:6789/game?id=bot6&Room=1&SeatNo=6"
 
 #./bot.py "ws://3.17.191.219:6789/game?id=bot1&Room=1&SeatNo=1"
-# ./bot.py "ws://3.17.191.219:6789/game?id=bot2&Room=1&SeatNo=2"
-# ./bot.py "ws://3.17.191.219:6789/game?id=bot3&Room=1&SeatNo=3"
-# ./bot.py "ws://3.17.191.219:6789/game?id=bot4&Room=1&SeatNo=4"
-# ./bot.py "ws://3.17.191.219:6789/game?id=bot5&Room=1&SeatNo=5"
+# ./bot.py "ws://3.128.89.158:6789/game?id=bot2&Room=1&SeatNo=2"
+# ./bot.py "ws://3.128.89.158:6789/game?id=bot3&Room=1&SeatNo=3"
+# ./bot.py "ws://3.128.89.158:6789/game?id=bot4&Room=1&SeatNo=4"
+# ./bot.py "ws://3.128.89.158:6789/game?id=bot5&Room=1&SeatNo=5"
 # ./bot.py "ws://3.17.191.219:6789/game?id=bot6&Room=1&SeatNo=6"

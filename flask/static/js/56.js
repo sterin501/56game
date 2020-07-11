@@ -49,33 +49,63 @@ function refreshHand(data) {
         showVili(data.VSF);
     }
 
-    if (data.names) {
-        if (data.KunuguSeat) {
-            populateNames(data.names, data.KunuguSeat);
-        } else {
+    if(data.names){
+        if (data.KunuguSeat){
+
+
+              populateNames(kunuguLogic(data.names,data.KunuguSeat));
+
+        }
+        else{
+
             populateNames(data.names);
         }
+
     }  // end of name check
+
 
 }
 
-function populateNames(names, kunuguSeat) {
-    //if there is no kunuguSeat
-    if (typeof kunuguSeat === "undefined") {
-        for(let i=1; i<=6; i++) {
-            let tempSpan = "span[name=\"N"+ i + "\"]"
-            $(tempSpan)[0].innerHTML = names["SN" + i];
-        }
-    } else { // add kunugu icon next to name.
-        for(let i=1; i<=6; i++) {
-            let tempSpan = "span[name=\"N"+ i + "\"]"
-            if(kunuguSeat.includes(i)) {
-                $(tempSpan)[0].innerHTML = names["SN" + i] + "🤡";
-            } else {
-                $(tempSpan)[0].innerHTML = names["SN" + i];
-            }
-        }
-    }
+function kunuguLogic(myNames,KunuguSeat){
+    //console.log(KunuguSeat);
+
+                              if (typeof KunuguSeat ===  "undefined")
+                                     return myNames;
+                // Removing current one to extra 🃏
+
+                for (var j=1;j<7;j++)
+                {
+                           myNames["SN"+j]=myNames["SN"+j].replace("☔","");   // ☔ ,
+                         console.log(myNames["SN"+j]);
+                }
+
+
+                for (var i = 0; i <KunuguSeat.length; i++) {
+                              if (KunuguSeat[i] == 1)
+                                    myNames["SN1"] = myNames["SN1"] +"☔"; // Need to replace with actual kunugu
+                            else if     (KunuguSeat[i] == 2)
+                                    myNames["SN2"] = myNames["SN2"] +"☔";
+                            else if     (KunuguSeat[i] == 3)
+                                    myNames["SN3"] = myNames["SN3"] +"☔";
+                            else if     (KunuguSeat[i] == 4)
+                                    myNames["SN4"] = myNames["SN4"] +"☔";
+                            else if     (KunuguSeat[i] == 5)
+                                    myNames["SN5"] = myNames["SN5"] +"☔";
+                            else if     (KunuguSeat[i] == 6)
+                                   myNames["SN6"] = myNames["SN6"] +"☔";
+                }
+              //  console.log(myNames);
+                    return (myNames);
+}
+
+
+function populateNames(names) {
+    $('span[name="N1"]')[0].innerHTML = names["SN1"];
+    $('span[name="N2"]')[0].innerHTML = names["SN2"];
+    $('span[name="N3"]')[0].innerHTML = names["SN3"];
+    $('span[name="N4"]')[0].innerHTML = names["SN4"];
+    $('span[name="N5"]')[0].innerHTML = names["SN5"];
+    $('span[name="N6"]')[0].innerHTML = names["SN6"];
     // backgorund color
      $('span[name="N1"]')[0].style.backgroundColor="black";
      $('span[name="N2"]')[0].style.backgroundColor="red";
@@ -84,8 +114,9 @@ function populateNames(names, kunuguSeat) {
      $('span[name="N5"]')[0].style.backgroundColor="black";
      $('span[name="N6"]')[0].style.backgroundColor="red";
      globalData.names=names;
-}
 
+
+}
 function showVili(VSF) {
     if (VSF) {
         resetVSF();
@@ -366,8 +397,8 @@ function goToSeat(roomNo, seatNo) {
                 $('div[id="foldSection"]').show();
                       //myNames=globalData.names;
                       console.log(globalData.names);
-                      //myNames=kunuguLogic(globalData.names,data.KunuguSeat);
-                      populateNames(globalData.names, data.KunuguSeat);
+                      myNames=kunuguLogic(globalData.names,data.KunuguSeat);
+                      populateNames(myNames);
 
             }
 
@@ -413,7 +444,7 @@ function goToSeat(roomNo, seatNo) {
                 if (data.Villi != "P") {
                     //console.log(data.dude);
                   //  console.log(data.dudeTeam);
-                    $("#trumpSection")[0].innerHTML = "Bid : " + convertToSign(data.Villi.substring(0, 1)) + data.Villi.substring(1) + "  by "+data.dude;
+                    $("#trumpSection")[0].innerHTML = "Bid " + convertToSign(data.Villi.substring(0, 1)) + data.Villi.substring(1) + " "+data.dude.substring(0,12);
 
                     if (data.dudeTeam == 'Team1')
                     {
