@@ -8,6 +8,7 @@ class Player(object):
         self.websocket = websocket
         self.team = team
         self.seatNo = (seatNo + 1)
+        self.vacant=False
 
     def doTheDeal(self, hand):
         self.hand = hand

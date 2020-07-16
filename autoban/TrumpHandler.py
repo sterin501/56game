@@ -41,3 +41,19 @@ class TrumpHandler(object):
         self.P4.hand = ss.p4
         self.P5.hand = ss.p5
         self.P6.hand = ss.p6
+
+    def getPlayerBySeat(self,seatNo):
+        if seatNo == 0 and self.P1.vacant:
+            return self.P1
+        elif seatNo == 1 and self.P2.vacant:
+            return self.P2
+        elif seatNo == 2 and self.P3.vacant:
+            return self.P3
+        elif seatNo == 3 and self.P4.vacant:
+            return self.P4
+        elif seatNo == 4 and self.P5.vacant:
+            return self.P5
+        elif seatNo == 5 and self.P6.vacant:
+            return self.P6
+        else:
+            print ("No vacant seat ")

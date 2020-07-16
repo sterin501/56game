@@ -50,8 +50,6 @@ class UserList(object):
             roomNO = -6
             seatNo = -6
             for kk in self.UL:
-                print(kk.seatNo)
-            for kk in self.UL:
                 if (kk.websocket == ws):
                     roomNO = kk.room
                     seatNo = kk.seatNo

@@ -19,7 +19,6 @@ class ChatProtocol(WebSocketServerProtocol):
 
             #st = (request.path.split("/")[1])
             st = self.http_request_uri.split("?")[0]
-            print (st)
             if st == "/game":
               #key = st.split("&")[0].split("=")[1]
               key=self.http_request_params['id'][0]
@@ -44,20 +43,24 @@ class ChatProtocol(WebSocketServerProtocol):
             print("An exception occurred, will not be registered ")
 
     def onOpen(self):
-        #print(self.http_headers)
-        #print (self.http_request_uri)
-        #print (self.http_request_params)
-        st = self.http_request_uri.split("?")[0]
-        print (st)
-        if st == "/game":
-          if rocky.IsthereTrumpSession(websocket=self):
-            print(" Reconect ")
-          else:
-            rocky.canWeStart(websocket=self)
-        elif  st == "/lobby":
+        try:
+         st = self.http_request_uri.split("?")[0]
+         if st == "/game":
+             room = int(self.http_request_params['Room'][0])  ## starts with zero only
+             seat = int(self.http_request_params['SeatNo'][0])
+             room = room - 1
+             seat = seat - 1
+             if rocky.IsthereTrumpSession(self,room,seat):
+                 print(" Reconect ")
+             else:
+                rocky.canWeStart(self,room,seat)
+         elif  st == "/lobby":
             key=self.http_request_params['id']
             Lb.lobbyMessage(websocket=self)
 
+        except Exception as ex:
+             print(ex)
+             print("Open  Exception  ")
 
     def onMessage(self, payload, is_binary):
         try:
@@ -91,6 +94,17 @@ class ChatProtocol(WebSocketServerProtocol):
                         kk['status'] = "DONE"
                         rocky.listOfF.remove(kk)
                         rocky.startNextMatch(kk["r"], True)
+
+            elif 'resetID' in object:
+                rocky.resetBase(object["usr"],int (object["r"])-1, int (object["SN"])-1)
+            elif 'chatID' in object:
+                print ("will do the chat Logic")
+                Lb.chatLogic(object)
+
+            elif   'gotoLobbyID' in object:
+                rocky.gotoLobby(object["usr"],int (object["r"])-1, int (object["SN"])-1)
+
+
         except Exception as ex:
             print(ex)
             print("An exception occurred, try again ")
@@ -101,8 +115,12 @@ class ChatProtocol(WebSocketServerProtocol):
         print("closed")
         st = self.http_request_uri.split("?")[0]
         if st == "/game":
-           if   rocky.USERS.removeFromRoom(self):
-                Lb.sendRoomDetails()
+           key=self.http_request_params['id'][0]
+           room = int(self.http_request_params['Room'][0])  ## starts with zero only
+           seat = int(self.http_request_params['SeatNo'][0])
+           room = room - 1
+           rocky.unregister(self,room,seat)
+           Lb.sendRoomDetails()
 
         elif st =="/lobby":
             Lb.lobbyUnregister(self)

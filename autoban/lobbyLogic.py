@@ -62,3 +62,15 @@ class lobbyManager(object):
             roomAs[roomst]=playerList
             c=c+1
         return (roomAs)
+
+
+    def chatLogic(self,chatObject):
+        r=int (chatObject["r"])-1
+        usr=chatObject["usr"]
+        text=chatObject["text"]
+        payload = json.dumps({"event": "chatSend", "r": r,"usr":usr,"text":text}).encode('utf8')
+        print (self.rocky.USERS.listOfRooms[r])
+        for kk in self.rocky.USERS.listOfRooms[r]:
+            if kk is None:
+                continue
+            self.mySendMessage(kk.websocket,payload)

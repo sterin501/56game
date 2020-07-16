@@ -348,9 +348,13 @@ function goToSeat(roomNo, seatNo) {
         if (message.data) {
             //$('div[id="foldSection"]').hide();
             let data = JSON.parse(message.data);
-            globalData.playsofar = data.playsofar;
-            globalData.VSF = data.VSF;
-            globalData.hand = data.hand;
+            if (data.playsofar)
+               globalData.playsofar = data.playsofar;
+            if (data.VSF)
+               globalData.VSF = data.VSF;
+            if (data.hand)
+               globalData.hand = data.hand;   // 3 ifs make sure that global data will not  saved and if any other events happens , it wont effect the game flow
+
             if (data.event == 'question') {
                 resetPlayedCards();
                 questionData = data;
@@ -398,6 +402,10 @@ function goToSeat(roomNo, seatNo) {
                 console.log(globalData.names);
                 myNames = kunuguLogic(globalData.names, data.KunuguSeat);
                 populateNames(myNames);
+
+
+                $("#chat")[0].value += "\r\n" +"system" + ": " + data.dialoge;
+                document.getElementById("chat").scrollTop = document.getElementById("chat").scrollHeight;
 
             }
 
@@ -478,6 +486,14 @@ function goToSeat(roomNo, seatNo) {
                 $('#gameCount')[0].innerHTML = data.Mc;
 
             } // end of Reconnect
+
+            if (data.event =='chatSend'){
+
+              $("#chat")[0].value += "\r\n" + data.usr + ": " + data.text;
+              document.getElementById("chat").scrollTop = document.getElementById("chat").scrollHeight;
+              openForm();
+
+            } // end of chat
 
 
         }  // end of event
@@ -638,15 +654,47 @@ jQuery(document).ready(function ($) {
         $(this).removeClass('inactive');
         $(this).addClass('active');
     });
-});
+}); // end of Jquery Ready
+
+function doBaseReset(){
+var resetRequest = {};
+resetRequest.resetID="RestRequest";
+resetRequest.usr=user;
+resetRequest.r=roomNo;
+resetRequest.SN=seatNo;
+if (confirm("Do you want to Reset the base? One player form other team needs to do the same")) {
+   webSocket.send(JSON.stringify(resetRequest));
+}
+
+}
+
 
 function sendChat() {
     var chatText = $("#chatText").val();
     $("#chatText").val("");
-    $("#chat")[0].value += "\r\n" + user + ": " + chatText;
-    document.getElementById("chat").scrollTop = document.getElementById("chat").scrollHeight;
+
+    var chatObject={};
+    chatObject.usr=user;
+    chatObject.text=chatText;
+    chatObject.chatID="";
+    chatObject.r=roomNo;
+    webSocket.send(JSON.stringify(chatObject));
     //notifyMe();
 }
+
+function goTolobby() {
+  var resetRequest = {};
+  resetRequest.gotoLobbyID="GotoLooby";
+  resetRequest.usr=user;
+  resetRequest.r=roomNo;
+  resetRequest.SN=seatNo;
+  webSocket.send(JSON.stringify(resetRequest));
+
+    document.location.href = "http://"+window.location.hostname+"/lobby";
+
+
+}
+
 
 function notifyMe() {
     // Let's check if the browser supports notifications
@@ -670,7 +718,7 @@ function notifyMe() {
         });
     }
 
-    // At last, if the user has denied notifications, and you 
+    // At last, if the user has denied notifications, and you
     // want to be respectful there is no need to bother them any more.
 }
 
@@ -680,4 +728,4 @@ function openForm() {
 
 function closeForm() {
     document.getElementById("myForm").style.display = "none";
-} 
+}
