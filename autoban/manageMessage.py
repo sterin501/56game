@@ -430,4 +430,5 @@ class rocky(object):
                         th.P5.vacant=True
                 elif th.P6.seatNo==seatNo+1:
                         th.P6.vacant=True
+        self.USERS.listOfRooms[room][seatNo]=None                
         print ("send to lobby")
