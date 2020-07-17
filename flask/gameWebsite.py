@@ -4,7 +4,7 @@ from flask import Flask, redirect, url_for, session , render_template , make_res
 from datetime import datetime,timedelta
 from authlib.integrations.flask_client import OAuth
 from configparser import ConfigParser
-import sqlite3,os
+import sqlite3,os,subprocess
 
 # decorator for routes that should be accessible only by logged in users
 from auth_decorator import login_required
@@ -117,6 +117,20 @@ def logout():
 def redirectForPoonachi():
            return redirect('http://ec2-3-128-89-158.us-east-2.compute.amazonaws.com/login')
 
+
+@app.route('/restart')
+def Restart():
+    id = request.cookies.get('id')
+    print (id)
+    if not id:
+        return redirect('/login')
+    if id in configur.get('APP','AdminList'):
+        print ("admin user will restart the server " + id)
+        cmd="cd ../autoban; nohup ./server.py > log.txt  ; netstat -anp | grep 6789"
+        proc=subprocess.Popen(cmd, shell=True,stdout=subprocess.PIPE)
+        print('Status ', proc.stdout.read().strip())
+        return 'Server will be resttarted'
+    return 'You are not admin, <a href="http://127.0.0.1:5000/login">Login </a>'
 
 
 def inserttoID(id,email,name):

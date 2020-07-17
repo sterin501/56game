@@ -10,5 +10,5 @@ def login_required(f):
         # the other data for that user/check if they exist
         if user:
             return f(*args, **kwargs)
-        return 'You aint logged in, <a href="http://127.0.0.1:5000/login">Login </a>'
+        return 'You aint logged in, <a href="http://ec2-3-128-89-158.us-east-2.compute.amazonaws.com/login">Login </a>'
     return decorated_function

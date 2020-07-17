@@ -52,5 +52,7 @@ jQuery(document).ready(function ($) {
 });
 
 function goToSeat(roomNo, seatNo) {
+
+
   document.location.href = document.location.href.replace("lobby", "table") + "?roomNo=" + roomNo + "&seatNo=" + seatNo;
 }

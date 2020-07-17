@@ -178,10 +178,8 @@ class rocky(object):
             {"fid": message["fid"], "status": "Asked", "usr": message["usr"], "r": message["r"], "SN": message["SN"]})
         print("Card  Asked "+message["usr"])
 
-    def canWeStart(self, websocket,room,seatNo):
-        #roomUsers = (self.USERS.getRoomDetails(websocket))
-        #print(roomUsers)
-        Room=self.USERS.listOfRooms[room]
+    def canWeStart(self, websocket,roomNo,seatNo):
+        Room=self.USERS.listOfRooms[roomNo]
         PV.roomInfo(Room,False)
         if not Room:
             print("ERROR:2002 Issue while registring room and users__")
@@ -189,25 +187,27 @@ class rocky(object):
             return False
 
         if not None in Room:  ## Need to change to Room logic .
-
+            if roomNo in self.TrumpObjects:
+                print ("Game started already wont restart this time ")
+                return "Game already"
             th = TrumpHandler.TrumpHandler(Room)
             th.doTheDeal()
             th.tt.getOrderOfPlayers()
-            self.TrumpObjects[room] = th
+            self.TrumpObjects[roomNo] = th
             PV.MatchIsDone({"won": "", "base0": 5, "base1": 5, "dialoge": " starting ..", "Mc": 0, "KunuguSeat": []},
                              Room)
             PV.sendCard(th)
-            quNO = "R" + str(room) + str(0)
+            quNO = "R" + str(roomNo) + str(0)
             P0 = th.tt.orderofPlay[0]
             villiSoFar = [{"S" + str(P0.seatNo): ""}]
-            message = {"event": "question", "usr": P0.name, "SN": P0.seatNo, "t": "Team0", "quNo": quNO, "c": 0, "r": room,
+            message = {"event": "question", "usr": P0.name, "SN": P0.seatNo, "t": "Team0", "quNo": quNO, "c": 0, "r": roomNo,
                        "VSF": villiSoFar, "loopStart": 28}
             self.askQustion(message, P0)
             PV.whoIsSpinner(th.tt.orderofPlay, P0)
 
         else:
 
-            PV.boradCast("Room: " + str(room) + " need " + str(Room.count(None)),
+            PV.boradCast("Room: " + str(roomNo) + " need " + str(Room.count(None)),
                            Room)
 
     def getAnswerOfOldquestion(self, AnsNo):

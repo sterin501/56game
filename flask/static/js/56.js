@@ -365,9 +365,6 @@ function goToSeat(roomNo, seatNo) {
 
 
             }
-            if (data.VSF) {
-                globalData.VSF = data.VSF;
-            }
             refreshHand(data);
             //$("#toastMessage")[0].innerHTML = data.message;
             //$("#myToast").toast('show');
@@ -461,6 +458,7 @@ function goToSeat(roomNo, seatNo) {
                     }
 
                 }
+                showVili(data.VSF);
             }
 
             if (data.event == 'spinner') {
@@ -690,7 +688,11 @@ function goTolobby() {
   resetRequest.SN=seatNo;
   webSocket.send(JSON.stringify(resetRequest));
 
-    document.location.href = "http://"+window.location.hostname+"/lobby";
+    const url = new URL( document.location.href);
+
+    myURL="http://"+url.hostname+":"+url.port+"/lobby";
+
+    document.location.href = myURL;
 
 
 }
