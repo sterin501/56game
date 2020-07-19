@@ -763,8 +763,11 @@ function toggleAutoPass() {
 }
 
 function showSystemPopOver(message){
+    if(message == 'starting ..'){
+        return;
+    }
     let popOverNode = $("#gameValue");
-    popOverNode.popover({"content": message, "placement": "right"});
+    popOverNode.popover({"content": message, "placement": "right", delay: { "show": 4000, "hide": 4000 }});
     setTimeout(function () { popOverNode.popover("hide"); }, 4000);
     popOverNode.popover("show");
 }
