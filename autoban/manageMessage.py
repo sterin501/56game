@@ -309,7 +309,7 @@ class rocky(object):
         print('Team1  ' + str(t1P))
         if rules.t1GetPoint:
             if rules.villi <= t1P:
-                dialoge = str(t0P)+"/"+str(t1P)+(" Red won  Villichu Jayichu so Just one base")
+                dialoge = str(t0P)+"/"+str(t1P)+(" Red won with one base")
                 tt.t1VillichuWon(rules.villi, rules.dudeSeatNo)
                 message = {"won": "Team1", "base0": tt.t0base, "base1": tt.t1base, "dialoge": dialoge,
                            "Mc": tt.gameCount, "KunuguSeat": tt.listOfKunugu}
@@ -317,7 +317,7 @@ class rocky(object):
 
                 return True
             if (56 - rules.villi) < t0P:
-                dialoge =  str(t0P)+"/"+str(t1P)+(" Black won by Defending---- Give me two base")
+                dialoge =  str(t0P)+"/"+str(t1P)+(" Black won with two base")
                 tt.t1VillichuLoss(rules.villi)
                 message = {"won": "Team0", "base0": tt.t0base, "base1": tt.t1base, "dialoge": dialoge,
                            "Mc": tt.gameCount, "KunuguSeat": tt.listOfKunugu}
@@ -325,14 +325,14 @@ class rocky(object):
                 return True
         else:
             if rules.villi <= t0P:
-                dialoge = str(t0P)+"/"+str(t1P)+(" Black won Villichu Jayichu so Just one base ")
+                dialoge = str(t0P)+"/"+str(t1P)+(" Black won with one base ")
                 tt.t0VillichuWon(rules.villi, rules.dudeSeatNo)
                 message = {"won": "Team0", "base0": tt.t0base, "base1": tt.t1base, "dialoge": dialoge,
                            "Mc": tt.gameCount, "KunuguSeat": tt.listOfKunugu}
                 PV.MatchIsDone(message, tt.orderofPlay)
                 return True
             if (56 - rules.villi) < t1P:
-                dialoge = str(t0P)+"/"+str(t1P)+(" Red won by Defending---- Give me two base")
+                dialoge = str(t0P)+"/"+str(t1P)+(" Red won with two base")
                 tt.t0VillichuLoss(rules.villi)
                 message = {"won": "Team1", "base0": tt.t0base, "base1": tt.t1base, "dialoge": dialoge,
                            "Mc": tt.gameCount, "KunuguSeat": tt.listOfKunugu}
@@ -369,7 +369,7 @@ class rocky(object):
                 PV.whoIsSpinner(TT.orderofPlay, TT.orderofPlay[0])
                 return True
         else:
-            RR.villi = int(lastVilli["ans"][1:])
+            RR.villi = int(lastVilli["ans"][1:3])  ## Fixed for thirikail  marakail  , +1 +2 etc
             RR.trump = lastVilli["ans"][0]
             RR.dude = lastVilli["usr"]
             RR.dudeSeatNo = lastVilli["SN"]
@@ -400,6 +400,7 @@ class rocky(object):
                       TT.listOfKunugu = []
                       TT.KunugSetAt=-1
                       TT.lastKunugTeam=""
+                      self.startNextMatch(room,True)
                       PV.MatchIsDone({"won": "", "base0": 5, "base1": 5, "dialoge": "did Reset by " + str (kk[room])+"_"+ str(seatNo), "Mc": 0, "KunuguSeat": []},
                             Room)
                       self.resetList.remove(kk)
@@ -430,5 +431,5 @@ class rocky(object):
                         th.P5.vacant=True
                 elif th.P6.seatNo==seatNo+1:
                         th.P6.vacant=True
-        self.USERS.listOfRooms[room][seatNo]=None                
+        self.USERS.listOfRooms[room][seatNo]=None
         print ("send to lobby")
