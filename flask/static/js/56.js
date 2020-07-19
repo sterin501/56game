@@ -349,11 +349,11 @@ function goToSeat(roomNo, seatNo) {
             //$('div[id="foldSection"]').hide();
             let data = JSON.parse(message.data);
             if (data.playsofar)
-               globalData.playsofar = data.playsofar;
+                globalData.playsofar = data.playsofar;
             if (data.VSF)
-               globalData.VSF = data.VSF;
+                globalData.VSF = data.VSF;
             if (data.hand)
-               globalData.hand = data.hand;   // 3 ifs make sure that global data will not  saved and if any other events happens , it wont effect the game flow
+                globalData.hand = data.hand;   // 3 ifs make sure that global data will not  saved and if any other events happens , it wont effect the game flow
 
             if (data.event == 'question') {
                 resetPlayedCards();
@@ -401,7 +401,7 @@ function goToSeat(roomNo, seatNo) {
                 populateNames(myNames);
 
 
-                $("#chat")[0].value += "\r\n" +"system" + ": " + data.dialoge;
+                $("#chat")[0].value += "\r\n" + "system" + ": " + data.dialoge;
                 document.getElementById("chat").scrollTop = document.getElementById("chat").scrollHeight;
 
             }
@@ -485,11 +485,16 @@ function goToSeat(roomNo, seatNo) {
 
             } // end of Reconnect
 
-            if (data.event =='chatSend'){
-
-              $("#chat")[0].value += "\r\n" + data.usr + ": " + data.text;
-              document.getElementById("chat").scrollTop = document.getElementById("chat").scrollHeight;
-              openForm();
+            if (data.event == 'chatSend') {
+                let chatUser = data.usr;
+                //data-content
+                $("span:contains(" + chatUser + ")").attr("data-content", data.text);
+                $("span:contains(" + chatUser + ")").popover(true, false, "sunu", 5000, false, "left");
+                setTimeout(function(){  $("span:contains(" + chatUser + ")").popover("hide");}, 4000);
+                $("span:contains(" + chatUser + ")").popover("show");
+                $("#chat")[0].value += "\r\n" + data.usr + ": " + data.text;
+                document.getElementById("chat").scrollTop = document.getElementById("chat").scrollHeight;
+                //openForm();
 
             } // end of chat
 
@@ -654,15 +659,15 @@ jQuery(document).ready(function ($) {
     });
 }); // end of Jquery Ready
 
-function doBaseReset(){
-var resetRequest = {};
-resetRequest.resetID="RestRequest";
-resetRequest.usr=user;
-resetRequest.r=roomNo;
-resetRequest.SN=seatNo;
-if (confirm("Do you want to Reset the base? One player form other team needs to do the same")) {
-   webSocket.send(JSON.stringify(resetRequest));
-}
+function doBaseReset() {
+    var resetRequest = {};
+    resetRequest.resetID = "RestRequest";
+    resetRequest.usr = user;
+    resetRequest.r = roomNo;
+    resetRequest.SN = seatNo;
+    if (confirm("Do you want to Reset the base? One player form other team needs to do the same")) {
+        webSocket.send(JSON.stringify(resetRequest));
+    }
 
 }
 
@@ -671,26 +676,26 @@ function sendChat() {
     var chatText = $("#chatText").val();
     $("#chatText").val("");
 
-    var chatObject={};
-    chatObject.usr=user;
-    chatObject.text=chatText;
-    chatObject.chatID="";
-    chatObject.r=roomNo;
+    var chatObject = {};
+    chatObject.usr = user;
+    chatObject.text = chatText;
+    chatObject.chatID = "";
+    chatObject.r = roomNo;
     webSocket.send(JSON.stringify(chatObject));
     //notifyMe();
 }
 
 function goTolobby() {
-  var resetRequest = {};
-  resetRequest.gotoLobbyID="GotoLooby";
-  resetRequest.usr=user;
-  resetRequest.r=roomNo;
-  resetRequest.SN=seatNo;
-  webSocket.send(JSON.stringify(resetRequest));
+    var resetRequest = {};
+    resetRequest.gotoLobbyID = "GotoLooby";
+    resetRequest.usr = user;
+    resetRequest.r = roomNo;
+    resetRequest.SN = seatNo;
+    webSocket.send(JSON.stringify(resetRequest));
 
-    const url = new URL( document.location.href);
+    const url = new URL(document.location.href);
 
-    myURL="http://"+url.hostname+":"+url.port+"/lobby";
+    myURL = "http://" + url.hostname + ":" + url.port + "/lobby";
 
     document.location.href = myURL;
 
