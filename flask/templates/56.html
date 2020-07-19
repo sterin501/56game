@@ -301,9 +301,11 @@
                             <div class="col-sm-2 col-lg-2">
                                 <div class="btn-group-vertical" role="group"
                                     aria-label="Button group with nested dropdown">
-                                    <button type="button" class="btn btn-secondary" style="font-size:0.85rem" onclick="doBaseReset()">X
+                                    <button type="button" class="btn btn-secondary" style="font-size:0.85rem"
+                                        onclick="doBaseReset()">X
                                         Reset Base</button>
-                                  <button type="button" class="btn btn-secondary" style="font-size:0.85rem" onclick="goTolobby()">X
+                                    <button type="button" class="btn btn-secondary" style="font-size:0.85rem"
+                                        onclick="goTolobby()">X
                                         To Lobby</button>
                                 </div>
 
@@ -350,15 +352,22 @@
                                                 <button type="button" class="btn btn-primary" id="button1"
                                                     onclick="passBid()">Pass</button>
                                             </div>
+
                                         </div>
                                     </div>
 
 
 
                                     <div class="col-4 col-sm-5">
+
                                         <span id="playSection" style="text-align: left;">
-                                            <button type="button" class="btn btn-primary " id="playButton"
-                                                onclick="play()" disabled="true">Play</button>
+
+                                            <div>
+                                                <button type="button" class="btn btn-primary " id="toggleAutoPassButton"
+                                                    onclick="toggleAutoPass()" >Pass Off</button>
+                                                <button type="button" class="btn btn-primary " id="playButton"
+                                                    onclick="play()" disabled="true">Play</button>
+                                            </div>
                                         </span>
 
 

@@ -11,6 +11,7 @@ var user;
 var roomNo;
 var seatNo;
 var names;
+var toggleAutoPassState = false;
 console.log(uuid);
 if (!document.cookie) {
     document.cookie = "key=" + uuid + ";max-age=2592000;"
@@ -356,12 +357,16 @@ function goToSeat(roomNo, seatNo) {
                 globalData.hand = data.hand;   // 3 ifs make sure that global data will not  saved and if any other events happens , it wont effect the game flow
 
             if (data.event == 'question') {
+                
                 resetPlayedCards();
                 questionData = data;
                 questionEvent(data);
                 resetSpinner();
                 //  console.log("questio  "+ data.SN)
                 $("#spinnerS0").show();
+                if(toggleAutoPassState){
+                    return passBid();
+                }
 
 
             }
@@ -490,7 +495,7 @@ function goToSeat(roomNo, seatNo) {
                 //data-content
                 $("span:contains(" + chatUser + ")").attr("data-content", data.text);
                 $("span:contains(" + chatUser + ")").popover(true, false, "sunu", 5000, false, "left");
-                setTimeout(function(){  $("span:contains(" + chatUser + ")").popover("hide");}, 4000);
+                setTimeout(function () { $("span:contains(" + chatUser + ")").popover("hide"); }, 4000);
                 $("span:contains(" + chatUser + ")").popover("show");
                 $("#chat")[0].value += "\r\n" + data.usr + ": " + data.text;
                 document.getElementById("chat").scrollTop = document.getElementById("chat").scrollHeight;
@@ -735,4 +740,20 @@ function openForm() {
 
 function closeForm() {
     document.getElementById("myForm").style.display = "none";
+}
+
+function toggleAutoPass() {
+    if (toggleAutoPassState) {
+        toggleAutoPassState = false;
+        $("#toggleAutoPassButton").removeClass("btn-danger");
+        $("#toggleAutoPassButton")[0].innerHTML = "Pass Off";
+        $("#toggleAutoPassButton").addClass("btn-primary");
+
+    } else {
+        toggleAutoPassState = true;
+        $("#toggleAutoPassButton").addClass("btn-danger");
+        $("#toggleAutoPassButton")[0].innerHTML = "Pass On";
+
+        $("#toggleAutoPassButton").removeClass("btn-primary");
+    }
 }
