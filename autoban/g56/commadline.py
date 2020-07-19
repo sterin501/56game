@@ -165,15 +165,13 @@ def didHeWon(rules, tt):
 
 
 if __name__ == "__main__":
-    P1 = Player.Player("p1", "Team0", True)
-    P2 = Player.Player("p2", "Team1", True)
-    P3 = Player.Player("p3", "Team0", True)
-    P4 = Player.Player("p4", "Team1", True)
-    P5 = Player.Player("p5", "Team0", True)
-    P6 = Player.Player("p6", "Team1", False)
+    P1 = Player.Player("p1", "Team0", True,True)
+    P2 = Player.Player("p2", "Team1", True,True)
+    P3 = Player.Player("p3", "Team0", True,True)
+    P4 = Player.Player("p4", "Team1", True,True)
+    P5 = Player.Player("p5", "Team0", True,True)
+    P6 = Player.Player("p6", "Team1", False,True)
     tt = table.Table(P1, P2, P3, P4, P5, P6)
-    P1.sayHello()
-    P6.sayHello()
     print("Starting Table in Califorina")
 
     while True:
