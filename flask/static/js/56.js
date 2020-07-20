@@ -364,7 +364,7 @@ function goToSeat(roomNo, seatNo) {
                 resetSpinner();
                 //  console.log("questio  "+ data.SN)
                 $("#spinnerS0").show();
-                if (toggleAutoPassState) {
+                if(toggleAutoPassState){
                     return passBid();
                 }
 
@@ -405,13 +405,18 @@ function goToSeat(roomNo, seatNo) {
                 myNames = kunuguLogic(globalData.names, data.KunuguSeat);
                 populateNames(myNames);
 
-                showSystemPopOver(data.dialoge);
-               
-                    
-                
 
                 $("#chat")[0].value += "\r\n" + "system" + ": " + data.dialoge;
                 document.getElementById("chat").scrollTop = document.getElementById("chat").scrollHeight;
+                toggleAutoPassState = false;
+                $("#toggleAutoPassButton").show();
+                $("#gameCount").attr("data-content", data.dialoge);
+                $("#gameCount").popover(true, false, "sunu", 5000, false, "left");
+                setTimeout(function () { $("#gameCount").popover("hide"); }, 4000);
+                $("#gameCount").popover("show");
+
+
+
 
             }
 
@@ -452,10 +457,13 @@ function goToSeat(roomNo, seatNo) {
                 $("#viliPlayerS6").html("");
                 $("#viliPlayerS0").html("");
 
+                $("#toggleAutoPassButton").hide();
+
             }
             if (data.event == 'HeCalled') {
                 if (data.Villi != "P") {
-                    
+                    //console.log(data.dude);
+                    //  console.log(data.dudeTeam);
                     $("#trumpSection")[0].innerHTML = "Bid " + convertToSign(data.Villi.substring(0, 1)) + data.Villi.substring(1) + " " + data.dude.substring(0, 12);
 
                     if (data.dudeTeam == 'Team1') {
@@ -495,15 +503,14 @@ function goToSeat(roomNo, seatNo) {
 
             if (data.event == 'chatSend') {
                 let chatUser = data.usr;
-               
-
-                $("span:contains(" + chatUser + ")").popover({"content": data.text});
+                //data-content
+                $("span:contains(" + chatUser + ")").attr("data-content", data.text);
+                $("span:contains(" + chatUser + ")").popover(true, false, "sunu", 5000, false, "left");
                 setTimeout(function () { $("span:contains(" + chatUser + ")").popover("hide"); }, 4000);
                 $("span:contains(" + chatUser + ")").popover("show");
                 $("#chat")[0].value += "\r\n" + data.usr + ": " + data.text;
                 document.getElementById("chat").scrollTop = document.getElementById("chat").scrollHeight;
                 //openForm();
-
 
             } // end of chat
 
@@ -760,14 +767,4 @@ function toggleAutoPass() {
 
         $("#toggleAutoPassButton").removeClass("btn-primary");
     }
-}
-
-function showSystemPopOver(message){
-    if(message == 'starting ..'){
-        return;
-    }
-    let popOverNode = $("#gameValue");
-    popOverNode.popover({"content": message, "placement": "right", delay: { "show": 4000, "hide": 4000 }});
-    setTimeout(function () { popOverNode.popover("hide"); }, 4000);
-    popOverNode.popover("show");
 }
