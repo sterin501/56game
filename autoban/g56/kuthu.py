@@ -23,18 +23,16 @@ class Card(object):
         # order=(random.sample(xrange(0, 32),32)) # 28
         #shuffledDeck = (random.sample(range(0, 48), 48))  # 56
         random.shuffle(deck) ## THis will do shuffle by random class .
-        p1=deck[0:8]
-        self.p1 = sorted(p1, key=self.customSort)
-        p2=deck[8:16]
-        self.p2 = sorted(p2, key=self.customSort)
-        p3=deck[16:24]
-        self.p3 = sorted(p3, key=self.customSort)
-        p4=deck[24:32]
-        self.p4 = sorted(p4, key=self.customSort)
-        p5=deck[32:40]
-        self.p5 = sorted(p5, key=self.customSort)
-        p6=deck[40:48]
-        self.p6 = sorted(p6, key=self.customSort)
 
-    def customSort(self, s):  ## Added by Urmi for Mannan's way for sorting for card value , Rather than English sort
-        return self.order[s]
+        p1=deck[0:8]
+        self.p1 = sorted(p1, key=lambda x: self.order[x], reverse=True)
+        p2=deck[8:16]
+        self.p2 = sorted(p2, key=lambda x: self.order[x], reverse=True)
+        p3=deck[16:24]
+        self.p3 = sorted(p3, key=lambda x: self.order[x], reverse=True)
+        p4=deck[24:32]
+        self.p4 = sorted(p4, key=lambda x: self.order[x], reverse=True)
+        p5=deck[32:40]
+        self.p5 = sorted(p5, key=lambda x: self.order[x], reverse=True)
+        p6=deck[40:48]
+        self.p6 = sorted(p6, key=lambda x: self.order[x], reverse=True)
