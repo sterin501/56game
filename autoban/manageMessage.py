@@ -49,32 +49,33 @@ class rocky(object):
             return True
 
     def unregister(self,websocket,room,seat):
+        print ("Before ")
         if self.USERS.removeFromRoom(websocket):
             if room in self.TrumpObjects:
                 th=self.TrumpObjects[room]
                 if th.P1.seatNo==seat:
-                    th.P1.vacant=True
+                    th.P1=None
                 elif th.P2.seatNo==seat:
-                        print (th.P2.name)
-                        th.P2.vacant=True
+                        th.P2=None
                 elif th.P3.seatNo==seat:
-                        th.P3.vacant=True
+                        th.P3=None
                 elif th.P4.seatNo==seat:
-                        th.P4.vacant=True
+                        th.P4=None
                 elif th.P5.seatNo==seat:
-                        th.P5.vacant=True
+                        th.P5=None
                 elif th.P6.seatNo==seat:
-                        th.P6.vacant=True
+                        th.P6=None
             Room=self.USERS.listOfRooms[room]
             PV.roomInfo(Room,False)
             print (str (room )+ "::" + str (seat) + "  free")
+            print ("free from list  " + str (websocket))
             return True
 
 
 
     def IsthereTrumpSession(self, websocket,room,seat):
         try:
-            print("IsthereTrumpSession??   ")
+            print("IsthereTrumpSession??   "+str(websocket))
             #roomUsers = (self.USERS.getRoomDetails(websocket))
             Room=self.USERS.listOfRooms[room]
             if not Room:
@@ -85,15 +86,24 @@ class rocky(object):
                 if gamer:
                     playerHand = []
                     P0 = self.TrumpObjects[r]
-                    playerInRoom=P0.getPlayerBySeat(seat)
-                    if not playerInRoom:
+                    print (P0.P2)
+                    print (P0.tt.P2.websocket)
+                    playerInRoom=P0.getPlayerBySeat(gamer.userID,websocket,seat)
+                    if playerInRoom =="Not vacant":
                         print ("Still it is NOT vacant  " + str (seat))
                         return False
-                    playerInRoom.name=gamer.userID
-                    playerInRoom.websocket=websocket
-                    playerInRoom.vacant=False
+                    #playerInRoom.name=gamer.userID
+                    #playerInRoom.websocket=websocket
+                    #playerInRoom.seatNo=seat+1
+                    #  if seat%2==0
+                    #     playerInRoom.team="Team0"
+                    # else:
+                    #     playerInRoom.team="Team1"
+                    #playerInRoom.team = 'Team0' if seat%2==0 else 'Team1'
                     playerHand = playerInRoom.showHand()
                     print ("Reconnected  fine  "+ str (playerInRoom.__dict__) )
+                    print (P0.P2.websocket)
+                    print (P0.tt.P2.websocket)
                     PV.roomInfo(Room,gamer)
                     RR = self.TrumpObjects[r].rules
                     d = {}
@@ -191,10 +201,11 @@ class rocky(object):
                 print ("Game started already wont restart this time ")
                 return "Game already"
             th = TrumpHandler.TrumpHandler(Room)
+            self.TrumpObjects[roomNo] = th
             th.doTheDeal()
             th.tt.getOrderOfPlayers()
-            self.TrumpObjects[roomNo] = th
-            PV.MatchIsDone({"won": "", "base0": 5, "base1": 5, "dialoge": " starting ..", "Mc": 0, "KunuguSeat": []},
+
+            PV.MatchIsDone({"won": "", "base0": 5, "base1": 5, "dialoge": "let's start Maggi", "Mc": 0, "KunuguSeat": []},
                              Room)
             PV.sendCard(th)
             quNO = "R" + str(roomNo) + str(0)
@@ -419,17 +430,17 @@ class rocky(object):
         if room in self.TrumpObjects:
                 th=self.TrumpObjects[room]
                 if th.P1.seatNo==seatNo+1:
-                    th.P1.vacant=True
+                    th.P1=None
                 elif th.P2.seatNo==seatNo+1:
                         print (th.P2.name)
-                        th.P2.vacant=True
+                        th.P2=None
                 elif th.P3.seatNo==seatNo+1:
-                        th.P3.vacant=True
+                        th.P3=None
                 elif th.P4.seatNo==seatNo+1:
-                        th.P4.vacant=True
+                        th.P4=None
                 elif th.P5.seatNo==seatNo+1:
-                        th.P5.vacant=True
+                        th.P5=None
                 elif th.P6.seatNo==seatNo+1:
-                        th.P6.vacant=True
+                        th.P6=None
         self.USERS.listOfRooms[room][seatNo]=None
         print ("send to lobby")

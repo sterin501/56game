@@ -43,10 +43,10 @@ class UserList(object):
 
     def removeFromRoom(self, ws):
         try:
-            print(ws)
-            print(self.ws)
+            #print(ws)
+            #print(self.ws)
             self.ws.remove(ws)
-            print("removef from list of ws[]")
+            #print("removef from list of ws[]")
             roomNO = -6
             seatNo = -6
             for kk in self.UL:
@@ -56,6 +56,8 @@ class UserList(object):
                     break
             roomObject = self.listOfRooms[roomNO]
             roomObject[seatNo] = None
+            print ("After removing from ROOMS")
+            print (roomObject)
             return True
         except Exception as ex:
             print(ex)

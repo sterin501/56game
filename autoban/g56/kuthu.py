@@ -8,6 +8,7 @@ class Card(object):
     ## H = Hearts
     ## S = Spades
     ## D = Diamonds
+    ## T is 10 . 9 is  , K is King etc 
 
     def __init__(self):
         self.order = {               ## for custom sort with value of card
@@ -25,7 +26,7 @@ class Card(object):
         random.shuffle(deck) ## THis will do shuffle by random class .
 
         p1=deck[0:8]
-        self.p1 = sorted(p1, key=lambda x: self.order[x], reverse=True)
+        self.p1 = sorted(p1, key=lambda x: self.order[x], reverse=True)  ## Added by smith to custom sort by lambda method to look cool
         p2=deck[8:16]
         self.p2 = sorted(p2, key=lambda x: self.order[x], reverse=True)
         p3=deck[16:24]
