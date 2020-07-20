@@ -25,16 +25,11 @@ class TrumpHandler(object):
 
         st = ""
         st = st + ("Game " + str(self.tt.gameCount))
-        st = st + (" Lets start maggie")
-        st = st + ("Make the deal______________________________________")
-        st = st + ("Frist player (Kallikaran )  is  " + self.tt.orderofPlay[0].name)
+        st = st + ("Frist player is  " + self.tt.orderofPlay[0].name)
         return st
 
-    # self.doTheDeal()
-    # self.setThurpu()   ## Might need to chagne
-
     def doTheDeal(self):
-        self.rules = Points()
+        self.rules = Points() ## WIll reset all points
         self.ShuffledCards = Card()
         self.P1.hand = self.ShuffledCards.p1
         self.P2.hand = self.ShuffledCards.p2

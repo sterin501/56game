@@ -499,6 +499,13 @@ function goToSeat(roomNo, seatNo) {
                 $("#team1")[0].innerHTML = data.base1;
                 $('#gameCount')[0].innerHTML = data.Mc;
 
+                if (data.TrumpIsnotSet)
+                           $("#toggleAutoPassButton").show();
+
+                else
+                           $("#toggleAutoPassButton").hide();
+
+
             } // end of Reconnect
 
             if (data.event == 'chatSend') {

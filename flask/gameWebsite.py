@@ -53,19 +53,17 @@ def indexPage():
 
 
 @app.route('/lobby')
-@login_required
+#@login_required
 def hello_world():
    now =  datetime.now()
    name=""
    email=""
    id = request.cookies.get('id')
-   #if  (id):
-   #   name=searchforID(id)
-
-   return render_template('lobby.html', name=name ,email=id)
+   if  (id):
+      return render_template('lobby.html', name=name ,email=id)
    # res=make_response(render_template('lobby.html', name=name ,email=email))
    # res.set_cookie('id',id)
-   # return res
+   return redirect('/login')
 
 
 @app.route('/table')              ## for secuirty we can add login_required later

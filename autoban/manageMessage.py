@@ -86,24 +86,12 @@ class rocky(object):
                 if gamer:
                     playerHand = []
                     P0 = self.TrumpObjects[r]
-                    print (P0.P2)
-                    print (P0.tt.P2.websocket)
                     playerInRoom=P0.getPlayerBySeat(gamer.userID,websocket,seat)
                     if playerInRoom =="Not vacant":
                         print ("Still it is NOT vacant  " + str (seat))
                         return False
-                    #playerInRoom.name=gamer.userID
-                    #playerInRoom.websocket=websocket
-                    #playerInRoom.seatNo=seat+1
-                    #  if seat%2==0
-                    #     playerInRoom.team="Team0"
-                    # else:
-                    #     playerInRoom.team="Team1"
-                    #playerInRoom.team = 'Team0' if seat%2==0 else 'Team1'
                     playerHand = playerInRoom.showHand()
                     print ("Reconnected  fine  "+ str (playerInRoom.__dict__) )
-                    print (P0.P2.websocket)
-                    print (P0.tt.P2.websocket)
                     PV.roomInfo(Room,gamer)
                     RR = self.TrumpObjects[r].rules
                     d = {}
@@ -116,7 +104,7 @@ class rocky(object):
                                             'dudeTeam': RR.Dudeteam, 'hand': playerHand, 'VSF': [],
                                             "playsofar": P0.thisPlayForSunu,"names":d,"base0":P0.tt.t0base,"base1":P0.tt.t1base,"Mc":P0.tt.gameCount,"KunuguSeat":P0.tt.listOfKunugu}
                     else:
-                        reconnectMessage = {"villi": str(RR.villi), 'trump': RR.trump, 'dude': RR.dude,
+                        reconnectMessage = {"villi": str(RR.villi), 'trump': RR.trump, 'dude': RR.dude,"TrumpIsnotSet":1,
                                             'dudeTeam': RR.Dudeteam, 'hand': playerHand, 'VSF': RR.VSF,
                                             "playsofar": P0.thisPlayForSunu,"names":d,"base0":P0.tt.t0base,"base1":P0.tt.t1base,"Mc":P0.tt.gameCount,"KunuguSeat":P0.tt.listOfKunugu}
 
