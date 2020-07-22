@@ -399,7 +399,7 @@ class rocky(object):
                       TT.listOfKunugu = []
                       TT.KunugSetAt=-1
                       TT.lastKunugTeam=""
-                      self.startNextMatch(room,True)
+                      #self.startNextMatch(room,True)
                       PV.MatchIsDone({"won": "", "base0": 5, "base1": 5, "dialoge": "did Reset by " + str (kk[room])+"_"+ str(seatNo), "Mc": 0, "KunuguSeat": []},
                             Room)
                       self.resetList.remove(kk)
