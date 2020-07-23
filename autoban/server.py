@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 import asyncio
 import logging
-import json
+import json,time
 
 from manageMessage import rocky
 from lobbyLogic import lobbyManager
@@ -58,6 +58,7 @@ class ChatProtocol(WebSocketServerProtocol):
             key=self.http_request_params['id']
             Lb.lobbyMessage(websocket=self)
 
+         self.last_ping_time = int (time.time())
         except Exception as ex:
              print(ex)
              print("Open  Exception  ")
@@ -103,6 +104,9 @@ class ChatProtocol(WebSocketServerProtocol):
 
             elif   'gotoLobbyID' in object:
                 rocky.gotoLobby(object["usr"],int (object["r"])-1, int (object["SN"])-1)
+            elif  'HBID' in   object:
+                Lb.pingPong(self)
+
 
 
         except Exception as ex:
@@ -112,7 +116,6 @@ class ChatProtocol(WebSocketServerProtocol):
         # print (listOfQ)
 
     def onClose(self, was_clean, code, reason):
-        print("closed")
         st = self.http_request_uri.split("?")[0]
         if st == "/game":
            key=self.http_request_params['id'][0]
@@ -124,9 +127,6 @@ class ChatProtocol(WebSocketServerProtocol):
 
         elif st =="/lobby":
             Lb.lobbyUnregister(self)
-
-
-        # rocky.USERS.ws.remove(self)                ## Removed from active Websockets
 
 
 if __name__ == "__main__":

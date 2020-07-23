@@ -20,6 +20,9 @@ class MyClientProtocol(WebSocketClientProtocol):
         message="bot connected"
         payload = json.dumps({"event":"botConnection","message":message}).encode('utf8')
         self.sendMessage(payload)
+        #for kk in  self.ManagePing():
+        #    self.sendMessage(kk)
+
 
     def onMessage(self, payload, isBinary):
         #print (payload)
@@ -60,6 +63,16 @@ class MyClientProtocol(WebSocketClientProtocol):
 
     def onClose(self, wasClean, code, reason):
         print("WebSocket connection closed: {0}".format(reason))
+
+    def onPing(self, payload):
+        print ("Got ping ")
+        self.sendPong(payload=None)
+
+    def ManagePing(self):
+        while True:
+          payload = json.dumps({"HBID":""}).encode('utf8')
+          yield  payload
+          time.sleep(5)
 
 
 

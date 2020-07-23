@@ -91,7 +91,7 @@ class rocky(object):
                         print ("Still it is NOT vacant  " + str (seat))
                         return False
                     playerHand = playerInRoom.showHand()
-                    print ("Reconnected  fine  "+ str (playerInRoom.__dict__) )
+                    print ("Reconnected  fine  "+ str (playerInRoom.__dict__['name']) )
                     PV.roomInfo(Room,gamer)
                     RR = self.TrumpObjects[r].rules
                     d = {}
@@ -400,7 +400,7 @@ class rocky(object):
                       TT.KunugSetAt=-1
                       TT.lastKunugTeam=""
                       #self.startNextMatch(room,True)
-                      PV.MatchIsDone({"won": "", "base0": 5, "base1": 5, "dialoge": "did Reset by " + str (kk[room])+"_"+ str(seatNo), "Mc": 0, "KunuguSeat": []},
+                      PV.MatchIsDone({"won": "", "base0": 5, "base1": 5, "dialoge": "Reset by " + str (kk[room]+1)+"_"+ str(seatNo+1), "Mc": 0, "KunuguSeat": []},
                             Room)
                       self.resetList.remove(kk)
                       return True

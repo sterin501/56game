@@ -73,10 +73,10 @@ function kunuguLogic(myNames, KunuguSeat) {
     if (typeof KunuguSeat === "undefined")
         return myNames;
     // Removing current one to extra 🃏
-
+  //  console.log("Removing Kutta");
     for (var j = 1; j < 7; j++) {
-        myNames["SN" + j] = myNames["SN" + j].replace("☔", "");   // ☔ ,
-        console.log(myNames["SN" + j]);
+        myNames["SN" + j] = myNames["SN" + j].replace(/☔/g, "");   // ☔ ,
+    //    console.log(myNames["SN" + j]);
     }
 
 
@@ -94,7 +94,8 @@ function kunuguLogic(myNames, KunuguSeat) {
         else if (KunuguSeat[i] == 6)
             myNames["SN6"] = myNames["SN6"] + "☔";
     }
-    //  console.log(myNames);
+  //  console.log("After kutta");
+  //  console.log(myNames);
     return (myNames);
 }
 
@@ -342,7 +343,10 @@ function goToSeat(roomNo, seatNo) {
         + document.cookie + "&Room=" + roomNo + "&SeatNo=" + seatNo
     );
 
-    console.log(webSocket);
+  webSocket.onopen = function (event) { heartbeat() };
+
+
+ webSocket.onping = function (event) {console.log("Got ping")};
 
     webSocket.onmessage = function (message) {
         console.log(message);
@@ -401,13 +405,15 @@ function goToSeat(roomNo, seatNo) {
                 $('#gameCount')[0].innerHTML = data.Mc;
                 $('div[id="foldSection"]').show();
                 //myNames=globalData.names;
-                console.log(globalData.names);
+                //console.log("Gloabal Data Names ")
+                //console.log(globalData.names);
                 myNames = kunuguLogic(globalData.names, data.KunuguSeat);
                 populateNames(myNames);
 
 
                 $("#chat")[0].value += "\r\n" + "system" + ": " + data.dialoge;
                 document.getElementById("chat").scrollTop = document.getElementById("chat").scrollHeight;
+
                 toggleAutoPassState = false;
                 $("#toggleAutoPassButton").show();
                 $("#gameCount").attr("data-content", data.dialoge);
@@ -774,4 +780,14 @@ function toggleAutoPass() {
 
         $("#toggleAutoPassButton").removeClass("btn-primary");
     }
+}
+
+function heartbeat() {            // For better connection
+
+  if (!webSocket) return;
+  if (webSocket.readyState !== 1) return;
+  var HeartBeat = {};
+  HeartBeat.HBID=""  // HBID
+  webSocket.send(JSON.stringify(HeartBeat));
+  setTimeout(heartbeat, 10000);  // 10 second , Which will increase to 1 or 2 min 
 }
