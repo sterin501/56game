@@ -20,8 +20,8 @@ class MyClientProtocol(WebSocketClientProtocol):
         message="bot connected"
         payload = json.dumps({"event":"botConnection","message":message}).encode('utf8')
         self.sendMessage(payload)
-        #for kk in  self.ManagePing():
-        #    self.sendMessage(kk)
+        # for kk in  self.ManagePing():
+        #     self.sendMessage(kk)
 
 
     def onMessage(self, payload, isBinary):
@@ -72,7 +72,7 @@ class MyClientProtocol(WebSocketClientProtocol):
         while True:
           payload = json.dumps({"HBID":""}).encode('utf8')
           yield  payload
-          time.sleep(5)
+          time.sleep(30)
 
 
 
@@ -84,7 +84,7 @@ if __name__ == '__main__':
     else:
         print ('pass the url like "ws://127.0.0.1:6789/key=bot1&Room=0&seatN0=2"               it should pass in qute' )
         quit()
-        factory = WebSocketClientFactory("ws://127.0.0.1:6789/key="+sys.argv[1]+"&Room=0")
+
     factory.protocol = MyClientProtocol
     loop = asyncio.get_event_loop()
     async def main():

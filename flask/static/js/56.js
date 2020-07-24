@@ -346,7 +346,6 @@ function goToSeat(roomNo, seatNo) {
   webSocket.onopen = function (event) { heartbeat() };
 
 
- webSocket.onping = function (event) {console.log("Got ping")};
 
     webSocket.onmessage = function (message) {
         console.log(message);
@@ -789,5 +788,5 @@ function heartbeat() {            // For better connection
   var HeartBeat = {};
   HeartBeat.HBID=""  // HBID
   webSocket.send(JSON.stringify(HeartBeat));
-  setTimeout(heartbeat, 10000);  // 10 second , Which will increase to 1 or 2 min 
+  setTimeout(heartbeat, 120000);  // 10 second , Which will increase to 1 or 2 min 
 }

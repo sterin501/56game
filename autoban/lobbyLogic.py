@@ -73,24 +73,20 @@ class lobbyManager(object):
         # print (websocket.http_request_params['Room'][0])
         now = int(time.time())
         websocket.last_ping_time = now
-        print(websocket.last_ping_time)
-        if (now - self.last_cleaningtime > 60):  ## time out value  run every min , it will increase to 5 min = 300 sec
+        #print(websocket.last_ping_time)
+        if (now - self.last_cleaningtime > 180):  ## time out value  run every min , it will increase to 5 min = 300 sec
             self.last_cleaningtime = now
             print("cleaning inactive connection for smith's router")
             for kk in self.rocky.USERS.ws:
                 print(kk)
                 if kk.last_ping_time:
                     print(kk.last_ping_time)
-                    if now - kk.last_ping_time > 30:   ## Will  match this will with js value = 60+5 = 65 second 
+                    if now - kk.last_ping_time > 125:   ## Will  match this will with js value = 60+5 = 65 second
                         print ("No ping in last 30 second "+ kk.http_request_params['id'][0] )
-                        try :
-                            websocket.sendMessage("{'test':'ok'}".encode('utf8'))
-                        except Exception as ex:
-                            print ("Forcefull closure")
-                            room = int(kk.http_request_params['Room'][0])  ## starts with zero only
-                            seat = int(kk.http_request_params['SeatNo'][0])
-                            room = room - 1
-                            self.rocky.unregister(kk,room,seat)
+                        room = int(kk.http_request_params['Room'][0])  ## starts with zero only
+                        seat = int(kk.http_request_params['SeatNo'][0])
+                        room = room - 1
+                        self.rocky.unregister(kk,room,seat)
                     else:
                         print ("Ping works fine " + kk.http_request_params['id'][0])
                 else:

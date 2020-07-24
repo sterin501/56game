@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Bot6</title>
+        <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+<meta content="utf-8" http-equiv="encoding">
+    </head>
+    <body>
+
+
+
+      <input type="text" id="data" name="data" value=""><br>
+      <input type="submit" id="submitB" value="Submit">
+      <input type="submit" id="submitAsJson" value="submitAsJson">
+      <input type="submit" id="Answer" value="Answer">
+      <input type="submit" id="play" disabled value="play">
+      <button id="clear" >Clear Output </button>
+
+<br>
+ <br>
+Bot6
+ </br>
+
+<br>
+<br>
+<br> Server Output </br>
+
+        <script  charset="utf-8">
+
+
+
+        url = new URL(location.href);
+        var ws = new WebSocket("ws://127.0.0.1:6789/game?id=bot6&Room=1&SeatNo=6");
+
+          ws.onopen = function (event) { heartbeat() };
+
+
+            var    messages = document.createElement('ul'),
+                data= document.getElementById("data"),
+                submitB=document.getElementById("submitB"),
+                submitAsJson=document.getElementById("submitAsJson");
+                submitAnswer=document.getElementById("Answer");
+                playButton=document.getElementById("play");
+
+
+                  ws.onmessage = function (event) {
+
+                     var display =  JSON.parse(event.data);
+                                       if (display.hand)
+                                                {
+
+                                                                                   for (var i = 0; i < display.hand.length; i++) {
+
+                                                                                    var sign = convertToSign(display.hand[i][0]);
+                                                                                    var cc = display.hand[i][1];
+                                                                                    display.hand[i]=sign+cc;
+
+                                                                                     }
+                                                 }
+
+                    var messages = document.getElementsByTagName('ul')[0],
+                    message = document.createElement('li'),
+                    content = document.createTextNode(JSON.stringify(display));
+
+                    message.appendChild(content);
+                    messages.appendChild(message);
+                    console.log(event.data);
+                    var obj = JSON.parse(event.data);
+
+                    if( obj.event=="question")
+                      {
+                             wait(1000);
+                             var quNo = obj.quNo;
+                            JsonOb=JSON.stringify({"AnsNo":quNo,"Answer":"P","usr":obj.usr,"t":obj.t});
+                                               ws.send(JsonOb);
+
+
+                      }
+
+
+                           if( obj.event=="fold")
+                             {
+
+                             var fid = obj.fid;
+                            JsonOb=JSON.stringify({"fid":fid,"FR":"P","usr":obj.usr,"t":obj.t});
+                                               ws.send(JsonOb);
+
+
+                              }
+
+                      if (obj.event =="broadcast")
+                      {
+
+                         console.log("BoradCast")
+
+                      }
+
+
+                      if (obj.event =="play")
+                      {
+
+                      wait(1000);
+
+                         var card="";
+                         var pid = obj.pid;
+                         var FirstCard="";
+                         if   (obj.playsofar.length  > 0)
+                              {
+                                            console.log(obj.playsofar);
+                                            console.log(obj.playsofar[0]);
+
+                                            FirstPlay=obj.playsofar[0][Object.keys(obj.playsofar[0])[0]];
+                                           // console.log (FirstPlay) ;
+                                            FirstCard=FirstPlay[0];
+                                            console.log (FirstCard)   ;
+                                            var startsWithCard = obj.hand.filter((mycard) => mycard.startsWith(FirstCard));
+
+                                              if (startsWithCard.length > 0)
+                                                  card=startsWithCard[Math.floor(Math.random() * startsWithCard.length)];// end of  playsofar
+                                              else
+                                                  card=obj.hand[Math.floor(Math.random() * obj.hand.length)];
+
+                               }
+
+
+
+
+                          else
+                            card=obj.hand[Math.floor(Math.random() * obj.hand.length)];
+
+
+                                                JsonOb=JSON.stringify({"pid":pid,"card":card,"usr":obj.usr,"t":obj.t,"c":obj.c});
+                                                console.log(JsonOb);
+                                                ws.send(JsonOb);
+
+                      }
+
+
+
+            };
+
+
+            submitB.onclick = function (event) {
+                            JsonOb=JSON.stringify({action: data.value})
+                            console.log(JsonOb)
+                            ws.send(JsonOb);
+                        };
+            submitAsJson.onclick =    function (event) {
+                                       if (IsJsonString(data.value))
+                                             ws.send(data.value);
+                                      else{
+                                        alert ("Bad JSON")
+                                      }
+                        };
+
+                        clear.onclick = function (event) {
+
+                                      console.log("clear")
+                                    };
+
+
+
+            document.body.appendChild(messages);
+
+            function IsJsonString(str) {
+                                          try {
+                                                   JSON.parse(str);
+                                              } catch (e) {
+                                                     return false;
+                                                          }
+                                                   return true;
+                                         }
+
+               function convertToSign(signChar) {
+
+    if (signChar == 'S') {
+        return '♠'
+    } else if (signChar == 'D') {
+         // console.log('♦');
+         return '♦';
+       // return '<span style="color: red;">♦</span>';
+    } else if (signChar == 'C') {
+        return '♣'
+    } else if (signChar == 'H') {
+        return '♥'
+    } else {
+        return 'NN';
+    }
+}
+
+
+function heartbeat() {            // For better connection
+
+  if (!ws) return;
+  if (ws.readyState !== 1) return;
+  var HeartBeat = {};
+  HeartBeat.HBID=""  // HBID
+  ws.send(JSON.stringify(HeartBeat));
+  setTimeout(heartbeat, 120000);  // 10 second , Which will increase to 1 or 2 min
+}
+function wait(ms){
+   var start = new Date().getTime();
+   var end = start;
+   while(end < start + ms) {
+     end = new Date().getTime();
+  }
+}
+
+        </script>
+
+
+    </body>
+</html>
