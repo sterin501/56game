@@ -105,7 +105,8 @@ class ChatProtocol(WebSocketServerProtocol):
             elif   'gotoLobbyID' in object:
                 rocky.gotoLobby(object["usr"],int (object["r"])-1, int (object["SN"])-1)
             elif  'HBID' in   object:
-                Lb.pingPong(self)
+                #Lb.pingPong(self)
+                pass
 
 
 

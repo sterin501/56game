@@ -52,18 +52,12 @@ function refreshHand(data) {
 
     if (data.names) {
         if (data.KunuguSeat) {
-
-
-            populateNames(kunuguLogic(data.names, data.KunuguSeat));
-
+        populateNames(kunuguLogic(data.names, data.KunuguSeat));
         }
         else {
-
             populateNames(data.names);
-        }
-
-    }  // end of name check
-
+            }
+       }  // end of name check
 
 }
 
@@ -343,10 +337,8 @@ function goToSeat(roomNo, seatNo) {
         + document.cookie + "&Room=" + roomNo + "&SeatNo=" + seatNo
     );
 
-  webSocket.onopen = function (event) { heartbeat() };
-
-
-
+//  webSocket.onopen = function (event) { heartbeat(); };
+//  webSocket.onerror = function(event) {console.log(event);};
     webSocket.onmessage = function (message) {
         console.log(message);
         if (message.data) {
@@ -788,5 +780,6 @@ function heartbeat() {            // For better connection
   var HeartBeat = {};
   HeartBeat.HBID=""  // HBID
   webSocket.send(JSON.stringify(HeartBeat));
-  setTimeout(heartbeat, 120000);  // 10 second , Which will increase to 1 or 2 min 
+  setTimeout(heartbeat, 120000);  // 10 second , Which will increase to 1 or 2 min
+
 }

@@ -69,12 +69,12 @@ class lobbyManager(object):
             self.mySendMessage(kk.websocket, payload)
 
     def pingPong(self, websocket):
-        print(websocket)
+        #print(websocket)
         # print (websocket.http_request_params['Room'][0])
         now = int(time.time())
         websocket.last_ping_time = now
         #print(websocket.last_ping_time)
-        if (now - self.last_cleaningtime > 180):  ## time out value  run every min , it will increase to 5 min = 300 sec
+        if (now - self.last_cleaningtime > 1800):  ## time out value  run every min , it will increase to 5 min = 300 sec
             self.last_cleaningtime = now
             print("cleaning inactive connection for smith's router")
             for kk in self.rocky.USERS.ws:
