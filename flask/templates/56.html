@@ -343,7 +343,24 @@
                                             <input type="image" class="inactive" value="H" src="static/cards/heart.png"
                                                 id="heart" />
                                             <select class="browser-default custom-select" id="bidValue"
-                                                style="width: 25%;">
+                                                style="width: auto;">
+
+                                            </select>
+                                            <select class="browser-default custom-select" id="moreBidDetails"
+                                                style="width:15%;">
+                                                <option value="">...</option>
+                                                <option value="Nere">Nere</option>
+                                                <option value="Thirichu">Thirichu</option>                                          
+                                                <option value="+1Nere">+1Nere</option>
+                                                <option value="+1Thirichu">+1Thirichu</option>
+                                                <option value="+1PoleNere">+1PoleNere</option>
+                                                <option value="+1PoleThirichu">+1PoleThirichu</option>
+                                                <option value="+2Nere">+2Nere</option>
+                                                <option value="+2Thirichu">+2Thirichu</option>
+                                                <option value="+2PoleNere">+2PoleNere</option>
+                                                <option value="+2PoleThirichu">+2PoleThirichu</option>
+                                                <option value="ChavittiThirichu">ChavittiThirichu</option>
+                                                
 
                                             </select>
                                             <div class="btn-group">
@@ -351,26 +368,19 @@
                                                     onclick="sendBid()">Bid</button>
                                                 <button type="button" class="btn btn-primary" id="button1"
                                                     onclick="passBid()">Pass</button>
+                                                <button type="button" class="btn btn-primary " id="toggleAutoPassButton"
+                                                    onclick="toggleAutoPass()">Pass Off</button>
                                             </div>
 
                                         </div>
                                     </div>
-
-
-
-                                    <div class="col-4 col-sm-5">
-
-                                        <span id="playSection" style="text-align: left;">
-
+                                </div>
+                                <div class="row text-center" style="display: none;" id="playSection">
+                                    <div class="col text-center">
                                             <div>
-                                                <button type="button" class="btn btn-primary " id="toggleAutoPassButton"
-                                                    onclick="toggleAutoPass()" >Pass Off</button>
                                                 <button type="button" class="btn btn-primary " id="playButton"
                                                     onclick="play()" disabled="true">Play</button>
                                             </div>
-                                        </span>
-
-
                                     </div>
                                 </div>
 
@@ -399,29 +409,7 @@
                                 </div>
                             </div>
                             <div class="col-sm col-lg">
-                                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
-                                    aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                                                <button type="button" class="close" data-dismiss="modal"
-                                                    aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">
-                                                ...
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary"
-                                                    data-dismiss="modal">Close</button>
-                                                <button type="button" class="btn btn-primary">Save
-                                                    changes</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+
                             </div>
                         </div>
                     </div>

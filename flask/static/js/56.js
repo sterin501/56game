@@ -52,12 +52,12 @@ function refreshHand(data) {
 
     if (data.names) {
         if (data.KunuguSeat) {
-        populateNames(kunuguLogic(data.names, data.KunuguSeat));
+            populateNames(kunuguLogic(data.names, data.KunuguSeat));
         }
         else {
             populateNames(data.names);
-            }
-       }  // end of name check
+        }
+    }  // end of name check
 
 }
 
@@ -67,10 +67,10 @@ function kunuguLogic(myNames, KunuguSeat) {
     if (typeof KunuguSeat === "undefined")
         return myNames;
     // Removing current one to extra 🃏
-  //  console.log("Removing Kutta");
+    //  console.log("Removing Kutta");
     for (var j = 1; j < 7; j++) {
         myNames["SN" + j] = myNames["SN" + j].replace(/☔/g, "");   // ☔ ,
-    //    console.log(myNames["SN" + j]);
+        //    console.log(myNames["SN" + j]);
     }
 
 
@@ -88,8 +88,8 @@ function kunuguLogic(myNames, KunuguSeat) {
         else if (KunuguSeat[i] == 6)
             myNames["SN6"] = myNames["SN6"] + "☔";
     }
-  //  console.log("After kutta");
-  //  console.log(myNames);
+    //  console.log("After kutta");
+    //  console.log(myNames);
     return (myNames);
 }
 
@@ -204,12 +204,13 @@ function passBid() {
 function sendBid() {
     var bidSign = $(".active").val();
     var bidValue = $("#bidValue").val();
+    var moreBidDetails = $("#moreBidDetails").val();
     if (!validateBid(bidSign, bidValue)) {
         return;
     }
     //let data = {};
     questionData.AnsNo = questionData.quNo;
-    questionData.Answer = bidSign + bidValue;
+    questionData.Answer = bidSign + bidValue + moreBidDetails;
     webSocket.send(JSON.stringify(questionData));
     $("#bidSection").hide();
     resetSpinner();
@@ -337,12 +338,10 @@ function goToSeat(roomNo, seatNo) {
         + document.cookie + "&Room=" + roomNo + "&SeatNo=" + seatNo
     );
 
-//  webSocket.onopen = function (event) { heartbeat(); };
-//  webSocket.onerror = function(event) {console.log(event);};
+
     webSocket.onmessage = function (message) {
         console.log(message);
         if (message.data) {
-            //$('div[id="foldSection"]').hide();
             let data = JSON.parse(message.data);
             if (data.playsofar)
                 globalData.playsofar = data.playsofar;
@@ -359,15 +358,14 @@ function goToSeat(roomNo, seatNo) {
                 resetSpinner();
                 //  console.log("questio  "+ data.SN)
                 $("#spinnerS0").show();
-                if(toggleAutoPassState){
+                if (toggleAutoPassState) {
                     return passBid();
                 }
 
 
             }
             refreshHand(data);
-            //$("#toastMessage")[0].innerHTML = data.message;
-            //$("#myToast").toast('show');
+
 
             if (data.event == 'play') {
                 globalData.playsofar = data.playsofar;
@@ -378,8 +376,14 @@ function goToSeat(roomNo, seatNo) {
                 resetSpinner();
                 $("#spinnerS0").show();
                 //console.log(folderButtonStatus);
-                if (folderButtonStatus) { console.log("click on fold "); }
-                else { $("#playButton").attr("disabled", false); }
+                if (folderButtonStatus) {
+                    console.log("click on fold ");
+                }
+                else {
+                    $("#playButton").attr("disabled", false);
+                    $("#playSection").show();
+                }
+
 
 
                 if (data.base0) {
@@ -433,18 +437,17 @@ function goToSeat(roomNo, seatNo) {
                 }
 
             }
-            if (data.event == 'HeGotPidi') {
 
-                //  $('div[name="' + data.message + '"]').show();
+            if (data.event == 'HeGotPidi') {
                 resetSpinner();
                 $("#spinnerS" + data.spinner).show();
                 if (data.who == data.my) {
                     console.log("fold")
                     $("#foldButton").show();
                     folderButtonStatus = true;
-
                 }
             }
+
             if (data.event == 'TrumpIsSet') {
                 $("#viliPlayerS1").html("");
                 $("#viliPlayerS2").html("");
@@ -476,8 +479,6 @@ function goToSeat(roomNo, seatNo) {
 
             if (data.event == 'spinner') {
                 resetSpinner();
-                // console.log("Seat No  "+ data.spinner);
-                //   $("#spinnerS"+((data.spinner+6-data.myseat)%6).toString()).show();
                 $("#spinnerS" + data.spinner).show();
 
             } // spinner
@@ -497,10 +498,10 @@ function goToSeat(roomNo, seatNo) {
                 $('#gameCount')[0].innerHTML = data.Mc;
 
                 if (data.TrumpIsnotSet)
-                           $("#toggleAutoPassButton").show();
+                    $("#toggleAutoPassButton").show();
 
                 else
-                           $("#toggleAutoPassButton").hide();
+                    $("#toggleAutoPassButton").hide();
 
 
             } // end of Reconnect
@@ -544,7 +545,7 @@ function questionEvent(data) {
     }
     $("#bidValue")[0].innerHTML = contents;
     $("#bidSection").show();
-    //$("#playSection").hide();
+    $("#playSection").hide();
     $("#playButton").attr("disabled", true);
 
     if (data.base0) {
@@ -562,6 +563,8 @@ function playEvent() {
         // $('div[id="foldSection"]').show();
     }
     $("#playButton").attr("disabled", false);
+    $("#playSection").show();
+
 
 }
 
@@ -602,6 +605,7 @@ function play() {
     //$("#playSection").hide();
 
     $("#playButton").attr("disabled", true);
+    $("#playSection").hide();
 }
 function validatePlay(card) {
     if (globalData.playsofar) {
@@ -643,6 +647,8 @@ function fold() {
     //showOtherCards(data.playsofar);
     console.log("inside the fold");
     $("#playButton").attr("disabled", false);
+    $("#playSection").show();
+
     $("#foldButton").hide();
     folderButtonStatus = false;
     if (foldData.fid) {
@@ -773,13 +779,15 @@ function toggleAutoPass() {
     }
 }
 
-function heartbeat() {            // For better connection
-
-  if (!webSocket) return;
-  if (webSocket.readyState !== 1) return;
-  var HeartBeat = {};
-  HeartBeat.HBID=""  // HBID
-  webSocket.send(JSON.stringify(HeartBeat));
-  setTimeout(heartbeat, 120000);  // 10 second , Which will increase to 1 or 2 min
+function heartbeat() {
+    // For better connection
+    if (!webSocket) {
+        return;
+    }
+    if (webSocket.readyState !== 1) return;
+    var HeartBeat = {};
+    HeartBeat.HBID = ""  // HBID
+    webSocket.send(JSON.stringify(HeartBeat));
+    setTimeout(heartbeat, 120000);  // 10 second , Which will increase to 1 or 2 min
 
 }
