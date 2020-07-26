@@ -360,11 +360,7 @@ function goToSeat(roomNo, seatNo) {
                 if (toggleAutoPassState) {
                     return passBid();
                 }
-            }
-            refreshHand(data);
-
-
-            if (data.event == 'play') {
+            } else if (data.event == 'play') {
                 globalData.playsofar = data.playsofar;
                 globalData.VSF = data.VSF;
                 globalData.hand = data.hand;
@@ -379,19 +375,13 @@ function goToSeat(roomNo, seatNo) {
                     $("#playButton").attr("disabled", false);
                     $("#playSection").show();
                 }
-
-
-
                 if (data.base0) {
                     $("#team0")[0].innerHTML = data.base0;
                     $("#team1")[0].innerHTML = data.base1;
                     $('#gameCount')[0].innerHTML = data.Mc;
 
                 }   // this when reconnect during action item
-
-            }
-
-            if (data.event == 'MatchIsDone') {
+            } else if (data.event == 'MatchIsDone') {
                 $("#team0")[0].innerHTML = data.base0;
                 $("#team1")[0].innerHTML = data.base1;
                 $('#gameCount')[0].innerHTML = data.Mc;
@@ -409,10 +399,7 @@ function goToSeat(roomNo, seatNo) {
                 $("#gameCount").popover(true, false, "", 5000, false, "left");
                 setTimeout(function () { $("#gameCount").popover("hide"); }, 4000);
                 $("#gameCount").popover("show");
-            }
-
-
-            if (data.event == 'cardSend') {
+            } else if (data.event == 'cardSend') {
                 if (data.hand.length == 8) {
 
                     $("#playedCardS1").attr("src", "static/cards/RED_BACK.jpg");
@@ -425,9 +412,7 @@ function goToSeat(roomNo, seatNo) {
                     $("#trumpSection")[0].innerHTML = "Bid : ";
                 }
 
-            }
-
-            if (data.event == 'HeGotPidi') {
+            } else if (data.event == 'HeGotPidi') {
                 resetSpinner();
                 $("#spinnerS" + data.spinner).show();
                 if (data.who == data.my) {
@@ -435,9 +420,7 @@ function goToSeat(roomNo, seatNo) {
                     $("#foldButton").show();
                     folderButtonStatus = true;
                 }
-            }
-
-            if (data.event == 'TrumpIsSet') {
+            } else if (data.event == 'TrumpIsSet') {
                 $("#viliPlayerS1").html("");
                 $("#viliPlayerS2").html("");
                 $("#viliPlayerS3").html("");
@@ -448,8 +431,7 @@ function goToSeat(roomNo, seatNo) {
 
                 $("#toggleAutoPassButton").hide();
 
-            }
-            if (data.event == 'HeCalled') {
+            } else if (data.event == 'HeCalled') {
                 if (data.Villi != "P") {
                     //console.log(data.dude);
                     //  console.log(data.dudeTeam);
@@ -464,24 +446,17 @@ function goToSeat(roomNo, seatNo) {
 
                 }
                 showVili(data.VSF);
-            }
-
-            if (data.event == 'spinner') {
+            } else if (data.event == 'spinner') {
                 resetSpinner();
                 $("#spinnerS" + data.spinner).show();
 
-            } // spinner
-
-            if (data.event == 'fold') {
+            } else if (data.event == 'fold') {
                 console.log("Real fold");
                 $("#foldButton").show();
                 folderButtonStatus = true;
                 foldData = data;
 
-            } // fold
-
-            if (data.event == 'Reconnect') {
-                //  console.log("Reconnect");
+            } else if (data.event == 'Reconnect') {
                 $("#team0")[0].innerHTML = data.base0;
                 $("#team1")[0].innerHTML = data.base1;
                 $('#gameCount')[0].innerHTML = data.Mc;
@@ -491,11 +466,7 @@ function goToSeat(roomNo, seatNo) {
 
                 else
                     $("#toggleAutoPassButton").hide();
-
-
-            } // end of Reconnect
-
-            if (data.event == 'chatSend') {
+            } else if (data.event == 'chatSend') {
                 let chatUser = data.usr;
                 //data-content
                 $("span:contains(" + chatUser + ")").attr("data-content", data.text);
@@ -507,6 +478,7 @@ function goToSeat(roomNo, seatNo) {
                 //openForm();
 
             } // end of chat
+            refreshHand(data);
 
 
         }  // end of event
