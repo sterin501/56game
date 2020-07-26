@@ -351,7 +351,6 @@ function goToSeat(roomNo, seatNo) {
                 globalData.hand = data.hand;   // 3 ifs make sure that global data will not  saved and if any other events happens , it wont effect the game flow
 
             if (data.event == 'question') {
-
                 resetPlayedCards();
                 questionData = data;
                 questionEvent(data);
@@ -361,8 +360,6 @@ function goToSeat(roomNo, seatNo) {
                 if (toggleAutoPassState) {
                     return passBid();
                 }
-
-
             }
             refreshHand(data);
 
@@ -375,7 +372,6 @@ function goToSeat(roomNo, seatNo) {
 
                 resetSpinner();
                 $("#spinnerS0").show();
-                //console.log(folderButtonStatus);
                 if (folderButtonStatus) {
                     console.log("click on fold ");
                 }
@@ -394,36 +390,29 @@ function goToSeat(roomNo, seatNo) {
                 }   // this when reconnect during action item
 
             }
+
             if (data.event == 'MatchIsDone') {
                 $("#team0")[0].innerHTML = data.base0;
                 $("#team1")[0].innerHTML = data.base1;
                 $('#gameCount')[0].innerHTML = data.Mc;
                 $('div[id="foldSection"]').show();
-                //myNames=globalData.names;
-                //console.log("Gloabal Data Names ")
-                //console.log(globalData.names);
+
                 myNames = kunuguLogic(globalData.names, data.KunuguSeat);
                 populateNames(myNames);
-
 
                 $("#chat")[0].value += "\r\n" + "system" + ": " + data.dialoge;
                 document.getElementById("chat").scrollTop = document.getElementById("chat").scrollHeight;
 
-                toggleAutoPassState = false;
+                turnAutoPassOff();
                 $("#toggleAutoPassButton").show();
                 $("#gameCount").attr("data-content", data.dialoge);
-                $("#gameCount").popover(true, false, "sunu", 5000, false, "left");
+                $("#gameCount").popover(true, false, "", 5000, false, "left");
                 setTimeout(function () { $("#gameCount").popover("hide"); }, 4000);
                 $("#gameCount").popover("show");
-
-
-
-
             }
 
-            if (data.event == 'cardSend') {
 
-                // console.log("card send ");
+            if (data.event == 'cardSend') {
                 if (data.hand.length == 8) {
 
                     $("#playedCardS1").attr("src", "static/cards/RED_BACK.jpg");
@@ -761,6 +750,13 @@ function openForm() {
 
 function closeForm() {
     document.getElementById("myForm").style.display = "none";
+}
+
+function turnAutoPassOff() {
+    toggleAutoPassState = false;
+    $("#toggleAutoPassButton").removeClass("btn-danger");
+    $("#toggleAutoPassButton")[0].innerHTML = "Pass Off";
+    $("#toggleAutoPassButton").addClass("btn-primary");
 }
 
 function toggleAutoPass() {
