@@ -532,16 +532,46 @@ function playEvent() {
 function selectCard(card) {
     $(".card").removeClass("selectedCard");
     $(card).addClass("selectedCard");
-    let name = ($(card).attr("name"));
+    let name = ($(card).attr("name"));    // Added by Urmi
+
+    console.log(globalData.hand);
+
     if (name.startsWith("H")) {
         selectSuit($("#heart"));
+        nereOrThirichu("H");
+
+
     } else if (name.startsWith("C")) {
         selectSuit($("#club"));
+        nereOrThirichu("C");
     } else if (name.startsWith("D")) {
         selectSuit($("#diamond"));
+        nereOrThirichu("D");
     } else {
         selectSuit($("#spade"));
+        nereOrThirichu("S");
     }
+
+} // end of selectCard
+
+function nereOrThirichu(name){
+        var startsWithCard = globalData.hand.filter((mycard) => mycard.startsWith(name));
+        var found=false;
+      //  console.log(startsWithCard);
+        for (var i = 0; i < startsWithCard.length; i++) {
+                 if (startsWithCard[i][1] == "J")
+                    { console.log("Jack ");
+
+                      found=true;
+                      break;
+                    }
+        }
+
+     if (found)
+     $("#moreBidDetails").val("⇧");
+     else
+     $("#moreBidDetails").val("↺");
+
 }
 
 function selectSuit(suit) {
