@@ -19,6 +19,7 @@ class Table(object):
         self.lastKunugTeam=""
 
 
+
     def getPlayerName(self,P):
         #print ( self.__dict__[P].name)
         return (self.__dict__[P].name)

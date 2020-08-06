@@ -65,7 +65,7 @@ class ChatProtocol(WebSocketServerProtocol):
 
     def onMessage(self, payload, is_binary):
         try:
-            print(payload)
+            #print(payload)
             object = json.loads(payload)
             # (rocky.listOfQ)
             ##  {"pid":pid,"card":data.value,"usr":obj.usr,"t":obj.t}  for Card Play
@@ -74,16 +74,17 @@ class ChatProtocol(WebSocketServerProtocol):
                 AnsNo = object['AnsNo']
                 for kk in rocky.listOfQ:
                     if kk['quNo'] == AnsNo:
-                        print("inside AnsNo iffff")
+                        #print("inside AnsNo iffff")
                         kk['status'] = 'DONE'
                         kk['ans'] = object['Answer']
                         rocky.manageVilli(AnsNo)
             elif 'pid' in object:
+                print (object)
                 pid = object['pid']
                 for kk in rocky.listOfC:
 
                     if kk['pid'] == pid:
-                        print("Card iffff")
+                        #print("Card iffff")
                         kk['status'] = "DONE"
                         kk['card'] = object['card']
                         rocky.managePlay(pid)
@@ -107,7 +108,8 @@ class ChatProtocol(WebSocketServerProtocol):
             elif  'HBID' in   object:
                 #Lb.pingPong(self)
                 pass
-
+            else:
+                print(payload)
 
 
         except Exception as ex:

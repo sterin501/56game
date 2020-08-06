@@ -35,6 +35,7 @@ class rocky(object):
             else:
                 print("we will re assign the socket with new one ")
                 gamerObject.websocket = websocket
+                gamerObject.seatNo=seatNo
                 self.USERS.addGameroRomm(room, seatNo, gamerObject)
                 self.USERS.ws.append(websocket)
                 return True
@@ -53,17 +54,17 @@ class rocky(object):
         if self.USERS.removeFromRoom(websocket):
             if room in self.TrumpObjects:
                 th=self.TrumpObjects[room]
-                if th.P1.seatNo==seat:
+                if th.P1 is not None and th.P1.seatNo==seat:
                     th.P1=None
-                elif th.P2.seatNo==seat:
+                elif th.P2 is not None and th.P2.seatNo==seat:
                         th.P2=None
-                elif th.P3.seatNo==seat:
+                elif th.P3 is not None and th.P3.seatNo==seat:
                         th.P3=None
-                elif th.P4.seatNo==seat:
+                elif th.P4 is not None and th.P4.seatNo==seat:
                         th.P4=None
-                elif th.P5.seatNo==seat:
+                elif th.P5 is not None and th.P5.seatNo==seat:
                         th.P5=None
-                elif th.P6.seatNo==seat:
+                elif th.P6 is not None and th.P6.seatNo==seat:
                         th.P6=None
             Room=self.USERS.listOfRooms[room]
             PV.roomInfo(Room,False)
@@ -91,7 +92,7 @@ class rocky(object):
                         print ("Still it is NOT vacant  " + str (seat))
                         return False
                     playerHand = playerInRoom.showHand()
-                    print ("Reconnected  fine  "+ str (playerInRoom.__dict__['name']) )
+                    print ("Reconnected  fine  "+ str (playerInRoom.__dict__['name'])+" "+ str (playerInRoom.__dict__['seatNo']) )
                     PV.roomInfo(Room,gamer)
                     RR = self.TrumpObjects[r].rules
                     d = {}
@@ -116,6 +117,7 @@ class rocky(object):
                             self.listOfQ.remove(kk)
                             message.update(reconnectMessage)
                             self.askQustion(message, gamer)
+                            #PV.whoIsSpinner(P0.tt.orderofPlay, gamer)
                             return True
 
                     for kk in (self.listOfC):
@@ -136,7 +138,7 @@ class rocky(object):
                             self.askFold(message, gamer)
                             return True
 
-                    reconnectMessage.update({"event": "Reconnect"})
+                    reconnectMessage.update({"event": "Reconnect","spinner":(P0.spinner + 6 - playerInRoom.seatNo) % 6})
                     payload = json.dumps(reconnectMessage).encode('utf8')
                     PV.mySendMessage(websocket, payload)
 
@@ -203,6 +205,7 @@ class rocky(object):
                        "VSF": villiSoFar, "loopStart": 28}
             self.askQustion(message, P0)
             PV.whoIsSpinner(th.tt.orderofPlay, P0)
+            th.spinner=P0.seatNo
 
         else:
 
@@ -281,6 +284,7 @@ class rocky(object):
                    "playsofar": self.TrumpObjects[r].thisPlayForSunu, "c": (c + 1) % 6, "r": r, "SN": TTO.seatNo}
         self.askCard(message, TTO)
         PV.whoIsSpinner(TT.orderofPlay, TTO)
+        self.TrumpObjects[r].spinner=TTO.seatNo
 
     def startNextMatch(self, r, okFromUI):
         if okFromUI:
@@ -298,6 +302,7 @@ class rocky(object):
                        "VSF": [], "loopStart": 28}
             self.askQustion(message, self.TrumpObjects[r].tt.orderofPlay[0])
             PV.whoIsSpinner(self.TrumpObjects[r].tt.orderofPlay, self.TrumpObjects[r].tt.orderofPlay[0])
+            self.TrumpObjects[r].spinner=P0.seatNo
         else:
             print("Need to wait for ok from UI ")
 
@@ -366,6 +371,7 @@ class rocky(object):
                            "pid": pid, "t": "Team0", "playsofar": [], "c": 0, "r": r, "SN": TT.orderofPlay[0].seatNo}
                 self.askCard(message, TT.orderofPlay[0])
                 PV.whoIsSpinner(TT.orderofPlay, TT.orderofPlay[0])
+                self.TrumpObjects[r].spinner= TT.orderofPlay[0].seatNo
                 return True
         else:
             RR.villi = int(lastVilli["ans"][1:3])  ## Fixed for thirikail  marakail  , +1 +2 etc
@@ -381,6 +387,7 @@ class rocky(object):
                    "SN": TTO.seatNo, "VSF": RR.VSF, "loopStart": RR.villi + 1}
         self.askQustion(message, TTO)
         PV.whoIsSpinner(TT.orderofPlay, TTO)
+        self.TrumpObjects[r].spinner= TTO.seatNo
 
 
     def resetBase(self,usr,room,seatNo):

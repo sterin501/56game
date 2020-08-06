@@ -19,6 +19,7 @@ class TrumpHandler(object):
         self.thisPlayForSunu = []  ## This is for javascript logic
         print("Starting Table in Califorina")  ## Will replaced by Room 1
         self.ShuffledCards=""
+        self.spinner=1
 
     def publicTextBeforeEveryMatch(self):
         # while True:

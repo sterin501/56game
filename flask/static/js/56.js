@@ -460,12 +460,16 @@ function goToSeat(roomNo, seatNo) {
                 $("#team0")[0].innerHTML = data.base0;
                 $("#team1")[0].innerHTML = data.base1;
                 $('#gameCount')[0].innerHTML = data.Mc;
+                resetSpinner();
+                $("#spinnerS" + data.spinner).show();
+
 
                 if (data.TrumpIsnotSet)
                     $("#toggleAutoPassButton").show();
 
                 else
                     $("#toggleAutoPassButton").hide();
+
             } else if (data.event == 'chatSend') {
                 let chatUser = data.usr;
                 //data-content
@@ -494,7 +498,42 @@ function goToSeat(roomNo, seatNo) {
 
 function questionEvent(data) {
 
-    var higest = (data.loopStart);
+   var higest = (data.loopStart);
+    if (data.VSF.length >6)
+    {
+         console.log("will check for Pass&40");
+         array_last_six = data.VSF.slice(-6);
+         console.log(array_last_six);
+         for (var i=5;i>0;i--)
+          {
+             //console.log(array_last_six[i]);
+             var key = (Object.keys(array_last_six[i]));
+
+             if (array_last_six[i][key] !="P")
+                {
+                  // console.log(array_last_six[i][Object.keys(array_last_six[0][0]]);
+                   console.log(array_last_six[i]);
+                   SN=((key[0][1]));
+                   console.log(SN);
+                   console.log(data.SN);
+                  if ( (data.SN-SN)%2 ==0)
+                       {
+                         console.log("Same team");
+                         $("#gameCount").attr("data-content", "Second Round & Same team --> call 40");
+                         $("#gameCount").popover(true, false, "", 5000, false, "left");
+                         setTimeout(function () { $("#gameCount").popover("hide"); }, 4000);
+                         $("#gameCount").popover("show");
+                      }
+                  else
+                       console.log("differnt  team");
+
+                  break;
+                }
+
+          }
+    }// end of  checking condition for second round 
+
+
     var contents;
     for (i = higest; i < 57; i++) {
         if (i == 28) {
