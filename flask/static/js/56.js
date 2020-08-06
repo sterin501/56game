@@ -499,7 +499,8 @@ function goToSeat(roomNo, seatNo) {
 function questionEvent(data) {
 
    var higest = (data.loopStart);
-    if (data.VSF.length >6)
+
+    if (data.VSF.length >6 && data.loopStart < 40)
     {
          console.log("will check for Pass&40");
          array_last_six = data.VSF.slice(-6);
@@ -531,7 +532,7 @@ function questionEvent(data) {
                 }
 
           }
-    }// end of  checking condition for second round 
+    }// end of  checking condition for second round
 
 
     var contents;
