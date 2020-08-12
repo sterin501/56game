@@ -12,6 +12,7 @@ class Table(object):
         self.t0base = 5
         self.t1base = 5
         self.gameCount = 1
+        self.RealGC=1
         self.opener = 0
         self.orderofPlay = [self.P1, self.P2, self.P3, self.P4, self.P5, self.P6]
         self.listOfKunugu = []
@@ -26,7 +27,8 @@ class Table(object):
 
     def setNextGame(self):
         self.gameCount = self.gameCount + 1
-        self.opener = (self.gameCount - 1) % 6
+        self.RealGC = self.RealGC+1
+        self.opener = (self.RealGC - 1) % 6
         self.orderofPlay = [self.P1, self.P2, self.P3, self.P4, self.P5, self.P6]
 
     def t1VillichuWon(self, villi, seatNo):
@@ -102,7 +104,7 @@ class Table(object):
     def checkForKunuk(self):
         if self.t1base < 0:
             print("kunugu for team1 ")
-            print(self.gameCount)
+            #print(self.gameCount)
             self.t1base = 5
             self.t0base = 5
             self.KunugSetAt=self.gameCount
@@ -113,7 +115,7 @@ class Table(object):
             return True
         if self.t0base < 0:
             print("kunugu for team0 ")
-            print(self.gameCount)
+            #print(self.gameCount)
             self.t1base = 5
             self.t0base = 5
             self.KunugSetAt=self.gameCount

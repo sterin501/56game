@@ -71,6 +71,7 @@ class ChatProtocol(WebSocketServerProtocol):
             ##  {"pid":pid,"card":data.value,"usr":obj.usr,"t":obj.t}  for Card Play
             ##  {"AnsNo":4,"Answer":"P","usr":"P1","t":"Team0"}'       for Villi Logic
             if 'AnsNo' in object:
+                print (object)
                 AnsNo = object['AnsNo']
                 for kk in rocky.listOfQ:
                     if kk['quNo'] == AnsNo:

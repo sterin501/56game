@@ -1,9 +1,7 @@
 #!/bin/python3
 import json
 
-#import TrumpHandler
-#from user import Gamer
-#from user import UserList
+
 
 
 class Parava(object):
@@ -27,22 +25,24 @@ class Parava(object):
                 if c.websocket:
                     self.mySendMessage(c.websocket, payload)
 
-    def roomInfo(self, gamers,skip):
+    def roomInfo(self, gamers,skip,kunugulist):
                         d = {}
                         seatNo=0
                         for kk in gamers:
                             seatNo=seatNo+1
+
                             if kk is None:
                                 d["SN" + str(seatNo)] = "Empty"   ## Sending  Empty to avoid undefined
                                 continue
                             d["SN" + str(seatNo)] = kk.userID
 
+
                         for kk in gamers:
                             if kk is None:
                                 continue
                             if kk == skip:
-                                continue    
-                            payload = json.dumps({"event": "seatInfo", "names": d}).encode('utf8')
+                                continue
+                            payload = json.dumps({"event": "seatInfo", "names": d,"KunuguSeat":kunugulist}).encode('utf8')
                             if kk.websocket:
                                 self.mySendMessage(kk.websocket, payload)
 

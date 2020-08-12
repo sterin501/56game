@@ -399,6 +399,15 @@ function goToSeat(roomNo, seatNo) {
                 $("#gameCount").popover(true, false, "", 5000, false, "left");
                 setTimeout(function () { $("#gameCount").popover("hide"); }, 4000);
                 $("#gameCount").popover("show");
+                              // To Mange Rest qame . Need to remove the question event
+                if (data.dialoge.startsWith("Reset"))
+                {
+                        console.log("Will remove question");
+                        $("#bidSection").hide();
+                        $("#playButton").attr("disabled", true);
+                        $("#foldButton").hide();
+                }
+
             } else if (data.event == 'cardSend') {
                 if (data.hand.length == 8) {
 
@@ -500,7 +509,7 @@ function questionEvent(data) {
 
    var higest = (data.loopStart);
 
-    if (data.VSF.length >6 && data.loopStart < 40)
+    if (data.VSF.length >5 && data.loopStart < 40)
     {
          console.log("will check for Pass&40");
          array_last_six = data.VSF.slice(-6);

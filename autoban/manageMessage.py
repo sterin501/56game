@@ -36,6 +36,7 @@ class rocky(object):
                 print("we will re assign the socket with new one ")
                 gamerObject.websocket = websocket
                 gamerObject.seatNo=seatNo
+                gamerObject.room=room   ## Need this for swaping seat and Room
                 self.USERS.addGameroRomm(room, seatNo, gamerObject)
                 self.USERS.ws.append(websocket)
                 return True
@@ -67,7 +68,7 @@ class rocky(object):
                 elif th.P6 is not None and th.P6.seatNo==seat:
                         th.P6=None
             Room=self.USERS.listOfRooms[room]
-            PV.roomInfo(Room,False)
+            PV.roomInfo(Room,False,kunugulist=th.tt.listOfKunugu)
             print (str (room )+ "::" + str (seat) + "  free")
             print ("free from list  " + str (websocket))
             return True
@@ -93,7 +94,7 @@ class rocky(object):
                         return False
                     playerHand = playerInRoom.showHand()
                     print ("Reconnected  fine  "+ str (playerInRoom.__dict__['name'])+" "+ str (playerInRoom.__dict__['seatNo']) )
-                    PV.roomInfo(Room,gamer)
+                    PV.roomInfo(Room,gamer,kunugulist=P0.tt.listOfKunugu)
                     RR = self.TrumpObjects[r].rules
                     d = {}
                     for we  in range(1,7):
@@ -180,7 +181,7 @@ class rocky(object):
 
     def canWeStart(self, websocket,roomNo,seatNo):
         Room=self.USERS.listOfRooms[roomNo]
-        PV.roomInfo(Room,False)
+        PV.roomInfo(Room,False,kunugulist=[])
         if not Room:
             print("ERROR:2002 Issue while registring room and users__")
             websocket.sendMessage("{'message':'Can't find room '}".encode('utf8'), False)
@@ -402,13 +403,21 @@ class rocky(object):
                       TT = self.TrumpObjects[room].tt
                       TT.t0base=5
                       TT.t1base=5
-                      TT.gameCount = 1
+                      TT.gameCount = 0
                       TT.listOfKunugu = []
                       TT.KunugSetAt=-1
                       TT.lastKunugTeam=""
-                      #self.startNextMatch(room,True)
+                      for yo in self.listOfQ:
+                          if int (yo['r']) == room:
+                              print ("Removing # QUESTION:  due to Reset")
+                              self.listOfQ.remove(yo)
+                      for yo in self.listOfC:
+                                  if int (yo['r']) == room:
+                                      print ("Removing # card list  due to Reset")
+                                      self.listOfC.remove(yo)
                       PV.MatchIsDone({"won": "", "base0": 5, "base1": 5, "dialoge": "Reset by " + str (kk[room]+1)+"_"+ str(seatNo+1), "Mc": 0, "KunuguSeat": []},
                             Room)
+                      self.startNextMatch(room,True)
                       self.resetList.remove(kk)
                       return True
         print (" Reset request for " + str (room) + "  "+ str(seatNo))
