@@ -332,12 +332,19 @@ function goToSeat(roomNo, seatNo) {
 
 
     $("#seatSelection").hide();
-    //document.cookie = seatNo;
-    console.log(document.cookie);
+         // http://127.0.0.1:5000/table?roomNo=1&seatNo=1&role=watcher
+
+    if (window.location.toString().includes("role=watcher")){
+      webSocket = new WebSocket("ws://" + window.location.hostname + ":6789/watch?"
+          + document.cookie + "&Room=" + roomNo + "&SeatNo=1"
+             );
+
+    }
+     else{
     webSocket = new WebSocket("ws://" + window.location.hostname + ":6789/game?"
         + document.cookie + "&Room=" + roomNo + "&SeatNo=" + seatNo
-    );
-
+           );
+        }
 
     webSocket.onmessage = function (message) {
         console.log(message);

@@ -67,6 +67,8 @@ class lobbyManager(object):
             if kk is None:
                 continue
             self.mySendMessage(kk.websocket, payload)
+        for kk in self.rocky.TrumpObjects[r].watchlist:
+                self.mySendMessage(kk, payload)
 
     def pingPong(self, websocket):
         #print(websocket)

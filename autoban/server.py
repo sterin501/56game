@@ -58,6 +58,12 @@ class ChatProtocol(WebSocketServerProtocol):
             key=self.http_request_params['id']
             Lb.lobbyMessage(websocket=self)
 
+         elif st =="/watch":
+              key=self.http_request_params['id'][0]
+              room = int(self.http_request_params['Room'][0])
+              room = room - 1
+              rocky.addToWatchlist(self,room)
+
          self.last_ping_time = int (time.time())
         except Exception as ex:
              print(ex)
@@ -71,7 +77,7 @@ class ChatProtocol(WebSocketServerProtocol):
             ##  {"pid":pid,"card":data.value,"usr":obj.usr,"t":obj.t}  for Card Play
             ##  {"AnsNo":4,"Answer":"P","usr":"P1","t":"Team0"}'       for Villi Logic
             if 'AnsNo' in object:
-                print (object)
+                #print (object)
                 AnsNo = object['AnsNo']
                 for kk in rocky.listOfQ:
                     if kk['quNo'] == AnsNo:
@@ -131,6 +137,11 @@ class ChatProtocol(WebSocketServerProtocol):
 
         elif st =="/lobby":
             Lb.lobbyUnregister(self)
+        elif st =="/watch":
+             key=self.http_request_params['id']
+             room = int(self.http_request_params['Room'][0])
+             room = room - 1
+             rocky.removeToWatchlist(self,room)
 
 
 if __name__ == "__main__":

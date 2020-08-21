@@ -20,6 +20,7 @@ class TrumpHandler(object):
         print("Starting Table in Califorina")  ## Will replaced by Room 1
         self.ShuffledCards=""
         self.spinner=1
+        self.watchlist=[]
 
     def publicTextBeforeEveryMatch(self):
         # while True:

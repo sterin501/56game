@@ -68,7 +68,7 @@ class rocky(object):
                 elif th.P6 is not None and th.P6.seatNo==seat:
                         th.P6=None
             Room=self.USERS.listOfRooms[room]
-            PV.roomInfo(Room,False,kunugulist=th.tt.listOfKunugu)
+            PV.roomInfo(Room,False,th.tt.listOfKunugu,self.TrumpObjects[room].watchlist)
             print (str (room )+ "::" + str (seat) + "  free")
             print ("free from list  " + str (websocket))
             return True
@@ -94,7 +94,7 @@ class rocky(object):
                         return False
                     playerHand = playerInRoom.showHand()
                     print ("Reconnected  fine  "+ str (playerInRoom.__dict__['name'])+" "+ str (playerInRoom.__dict__['seatNo']) )
-                    PV.roomInfo(Room,gamer,kunugulist=P0.tt.listOfKunugu)
+                    PV.roomInfo(Room,gamer,P0.tt.listOfKunugu,P0.watchlist)
                     RR = self.TrumpObjects[r].rules
                     d = {}
                     for we  in range(1,7):
@@ -118,7 +118,6 @@ class rocky(object):
                             self.listOfQ.remove(kk)
                             message.update(reconnectMessage)
                             self.askQustion(message, gamer)
-                            #PV.whoIsSpinner(P0.tt.orderofPlay, gamer)
                             return True
 
                     for kk in (self.listOfC):
@@ -181,7 +180,8 @@ class rocky(object):
 
     def canWeStart(self, websocket,roomNo,seatNo):
         Room=self.USERS.listOfRooms[roomNo]
-        PV.roomInfo(Room,False,kunugulist=[])
+
+        PV.roomInfo(Room,False,[],[])
         if not Room:
             print("ERROR:2002 Issue while registring room and users__")
             websocket.sendMessage("{'message':'Can't find room '}".encode('utf8'), False)
@@ -197,7 +197,7 @@ class rocky(object):
             th.tt.getOrderOfPlayers()
 
             PV.MatchIsDone({"won": "", "base0": 5, "base1": 5, "dialoge": "let's start Maggi", "Mc": 0, "KunuguSeat": []},
-                             Room)
+                             Room,[])
             PV.sendCard(th)
             quNO = "R" + str(roomNo) + str(0)
             P0 = th.tt.orderofPlay[0]
@@ -205,7 +205,7 @@ class rocky(object):
             message = {"event": "question", "usr": P0.name, "SN": P0.seatNo, "t": "Team0", "quNo": quNO, "c": 0, "r": roomNo,
                        "VSF": villiSoFar, "loopStart": 28}
             self.askQustion(message, P0)
-            PV.whoIsSpinner(th.tt.orderofPlay, P0)
+            PV.whoIsSpinner(th.tt.orderofPlay, P0,th.watchlist)
             th.spinner=P0.seatNo
 
         else:
@@ -243,7 +243,7 @@ class rocky(object):
         PlaySoFar = self.TrumpObjects[r].thisPlay
         c = lastCard["c"]  ## --> Order of Index
         TT.orderofPlay[c].removeCard(lastCard["card"])
-        PV.playSoFar({"playsofar": self.TrumpObjects[r].thisPlayForSunu}, self.TrumpObjects[r])
+        PV.playSoFar({"playsofar": self.TrumpObjects[r].thisPlayForSunu}, self.TrumpObjects[r],self.TrumpObjects[r].watchlist)
         if len(PlaySoFar) == 6:
             print("Will check who got it ")
             print(PlaySoFar)
@@ -265,11 +265,11 @@ class rocky(object):
             TT.opener = newC
             TT.getOrderOfPlayers()
             PV.heGotPidi(TT.orderofPlay, TT.orderofPlay[
-                (c + 1) % 6])  ## Need to send my seat also & dummy one . it should sending after win or not
+                (c + 1) % 6],self.TrumpObjects[r].watchlist)  ## Need to send my seat also & dummy one . it should sending after win or not
 
             PlaySoFar = []  ### To prevent 6 cards in second play
             TTO = TT.orderofPlay[(c + 1) % 6]
-            if self.didHeWon(RR, TT):
+            if self.didHeWon(RR, TT,self.TrumpObjects[r].watchlist):
                 print("match is over ")
                 TTO = TT.orderofPlay[(c + 1) % 6]
                 # {"fid":message["fid"],"status":"Asked","usr":message["usr"],"r":message["r"],"SN":message["SN"]}
@@ -284,7 +284,7 @@ class rocky(object):
         message = {"event": "play", "hand": TTO.showHand(), "usr": TTO.name, "pid": pid, "t": TTO.team,
                    "playsofar": self.TrumpObjects[r].thisPlayForSunu, "c": (c + 1) % 6, "r": r, "SN": TTO.seatNo}
         self.askCard(message, TTO)
-        PV.whoIsSpinner(TT.orderofPlay, TTO)
+        PV.whoIsSpinner(TT.orderofPlay, TTO,self.TrumpObjects[r].watchlist)
         self.TrumpObjects[r].spinner=TTO.seatNo
 
     def startNextMatch(self, r, okFromUI):
@@ -302,12 +302,12 @@ class rocky(object):
             message = {"event": "question", "usr": P0.name, "t": P0.team, "SN": P0.seatNo, "quNo": quNO, "c": 0, "r": r,
                        "VSF": [], "loopStart": 28}
             self.askQustion(message, self.TrumpObjects[r].tt.orderofPlay[0])
-            PV.whoIsSpinner(self.TrumpObjects[r].tt.orderofPlay, self.TrumpObjects[r].tt.orderofPlay[0])
+            PV.whoIsSpinner(self.TrumpObjects[r].tt.orderofPlay, self.TrumpObjects[r].tt.orderofPlay[0], self.TrumpObjects[r].watchlist)
             self.TrumpObjects[r].spinner=P0.seatNo
         else:
             print("Need to wait for ok from UI ")
 
-    def didHeWon(self, rules, tt):
+    def didHeWon(self, rules, tt,watchlist):
         t0P = rules.getPoints(rules.t0Pidi)
         t1P = rules.getPoints(rules.t1Pidi)
         print('Team0  ' + str(t0P))
@@ -318,7 +318,7 @@ class rocky(object):
                 tt.t1VillichuWon(rules.villi, rules.dudeSeatNo)
                 message = {"won": "Team1", "base0": tt.t0base, "base1": tt.t1base, "dialoge": dialoge,
                            "Mc": tt.gameCount, "KunuguSeat": tt.listOfKunugu}
-                PV.MatchIsDone(message, tt.orderofPlay)
+                PV.MatchIsDone(message, tt.orderofPlay,watchlist)
 
                 return True
             if (56 - rules.villi) < t0P:
@@ -326,7 +326,7 @@ class rocky(object):
                 tt.t1VillichuLoss(rules.villi)
                 message = {"won": "Team0", "base0": tt.t0base, "base1": tt.t1base, "dialoge": dialoge,
                            "Mc": tt.gameCount, "KunuguSeat": tt.listOfKunugu}
-                PV.MatchIsDone(message, tt.orderofPlay)
+                PV.MatchIsDone(message, tt.orderofPlay,watchlist)
                 return True
         else:
             if rules.villi <= t0P:
@@ -334,14 +334,14 @@ class rocky(object):
                 tt.t0VillichuWon(rules.villi, rules.dudeSeatNo)
                 message = {"won": "Team0", "base0": tt.t0base, "base1": tt.t1base, "dialoge": dialoge,
                            "Mc": tt.gameCount, "KunuguSeat": tt.listOfKunugu}
-                PV.MatchIsDone(message, tt.orderofPlay)
+                PV.MatchIsDone(message, tt.orderofPlay,watchlist)
                 return True
             if (56 - rules.villi) < t1P:
                 dialoge = str(t0P)+"/"+str(t1P)+(" Red won with two base")
                 tt.t0VillichuLoss(rules.villi)
                 message = {"won": "Team1", "base0": tt.t0base, "base1": tt.t1base, "dialoge": dialoge,
                            "Mc": tt.gameCount, "KunuguSeat": tt.listOfKunugu}
-                PV.MatchIsDone(message, tt.orderofPlay)
+                PV.MatchIsDone(message, tt.orderofPlay,watchlist)
                 return True
         return False
 
@@ -361,7 +361,7 @@ class rocky(object):
                 print(RR.villi)
                 RR.TrumpSet = True
                 PV.TrumpIsSet({"villi": str(RR.villi), "trump": RR.trump, "dude": RR.dude, "dudeTeam": RR.Dudeteam},
-                                TT.orderofPlay)
+                                TT.orderofPlay,self.TrumpObjects[r].watchlist)
                 if RR.Dudeteam == "Team1":
                     RR.t1GetPoint = True
                 else:
@@ -371,7 +371,7 @@ class rocky(object):
                 message = {"event": "play", "hand": TT.orderofPlay[0].showHand(), "usr": TT.orderofPlay[0].name,
                            "pid": pid, "t": "Team0", "playsofar": [], "c": 0, "r": r, "SN": TT.orderofPlay[0].seatNo}
                 self.askCard(message, TT.orderofPlay[0])
-                PV.whoIsSpinner(TT.orderofPlay, TT.orderofPlay[0])
+                PV.whoIsSpinner(TT.orderofPlay, TT.orderofPlay[0],self.TrumpObjects[r].watchlist)
                 self.TrumpObjects[r].spinner= TT.orderofPlay[0].seatNo
                 return True
         else:
@@ -381,13 +381,13 @@ class rocky(object):
             RR.dudeSeatNo = lastVilli["SN"]
             RR.Dudeteam = lastVilli["t"]
         message = {"seat": seat, "Villi": lastVilli["ans"], "VSF": RR.VSF,"dude": RR.dude, "dudeTeam": RR.Dudeteam}
-        PV.heCalled(message, gamers)
+        PV.heCalled(message, gamers,self.TrumpObjects[r].watchlist)
         quNo = lastVilli["quNo"][:2] + str(int(lastVilli["quNo"][2:]) + 1)
         TTO = TT.orderofPlay[(c + 1) % 6]
         message = {"event": "question", "usr": TTO.name, "t": TTO.team, "quNo": quNo, "c": (c + 1) % 6, "r": r,
                    "SN": TTO.seatNo, "VSF": RR.VSF, "loopStart": RR.villi + 1}
         self.askQustion(message, TTO)
-        PV.whoIsSpinner(TT.orderofPlay, TTO)
+        PV.whoIsSpinner(TT.orderofPlay, TTO,self.TrumpObjects[r].watchlist)
         self.TrumpObjects[r].spinner= TTO.seatNo
 
 
@@ -416,7 +416,7 @@ class rocky(object):
                                       print ("Removing # card list  due to Reset")
                                       self.listOfC.remove(yo)
                       PV.MatchIsDone({"won": "", "base0": 5, "base1": 5, "dialoge": "Reset by " + str (kk[room]+1)+"_"+ str(seatNo+1), "Mc": 0, "KunuguSeat": []},
-                            Room)
+                            Room,self.TrumpObjects[room].watchlist)
                       self.startNextMatch(room,True)
                       self.resetList.remove(kk)
                       return True
@@ -448,3 +448,19 @@ class rocky(object):
                         th.P6=None
         self.USERS.listOfRooms[room][seatNo]=None
         print ("send to lobby")
+
+    def addToWatchlist(self,websocket,room):
+        if room in self.TrumpObjects:
+            print ("Will add in watch list")
+            self.TrumpObjects[room].watchlist.append(websocket)
+            th=self.TrumpObjects[room]
+            Room=self.USERS.listOfRooms[room]
+            PV.roomInfo(Room,False,th.tt.listOfKunugu,th.watchlist)
+        else:
+            print ("invalid room")
+    def removeToWatchlist(self,websocket,room):
+        if room in self.TrumpObjects:
+                if websocket in  self.TrumpObjects[room].watchlist:
+                    self.TrumpObjects[room].watchlist.remove(websocket)
+        else:
+            print ("Not able to remove")

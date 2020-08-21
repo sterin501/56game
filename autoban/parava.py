@@ -25,7 +25,8 @@ class Parava(object):
                 if c.websocket:
                     self.mySendMessage(c.websocket, payload)
 
-    def roomInfo(self, gamers,skip,kunugulist):
+    def roomInfo(self, gamers,skip,kunugulist,watchlist):
+                        print (gamers)
                         d = {}
                         seatNo=0
                         for kk in gamers:
@@ -36,27 +37,30 @@ class Parava(object):
                                 continue
                             d["SN" + str(seatNo)] = kk.userID
 
-
+                        payload = json.dumps({"event": "seatInfo", "names": d,"KunuguSeat":kunugulist}).encode('utf8')
                         for kk in gamers:
                             if kk is None:
                                 continue
                             if kk == skip:
                                 continue
-                            payload = json.dumps({"event": "seatInfo", "names": d,"KunuguSeat":kunugulist}).encode('utf8')
                             if kk.websocket:
                                 self.mySendMessage(kk.websocket, payload)
+                        for kk in   watchlist:
+                            self.mySendMessage(kk,payload)
 
-    def playSoFar(self, message, th):  ## This will change as per Room Logic
+    def playSoFar(self, message, th,watchlist):  ## This will change as per Room Logic
                         payload = json.dumps({"event": "cardPlay", "playsofar": message["playsofar"]}).encode('utf8')
                         for c in th.tt.orderofPlay:
                             if c == None:
                                 continue
                             if c.websocket:
                                 self.mySendMessage(c.websocket, payload)
+                        for kk in   watchlist:
+                                        self.mySendMessage(kk,payload)        
 
 
 
-    def heCalled(self, message, gamers):  ## This will change as per Room Logic
+    def heCalled(self, message, gamers,watchlist):  ## This will change as per Room Logic
                                     payload = json.dumps(
                                         {"event": "HeCalled", "seat": message["seat"], "Villi": message["Villi"], "VSF": message["VSF"],"dude":message["dude"],"dudeTeam":message["dudeTeam"]}).encode(
                                         'utf8')
@@ -65,8 +69,10 @@ class Parava(object):
                                             continue
                                         if c.websocket:
                                             self.mySendMessage(c.websocket, payload)
+                                    for kk in   watchlist:
+                                                                self.mySendMessage(kk,payload)
 
-    def heGotPidi(self, gamers, skip):  ## This will change as per Room Logic
+    def heGotPidi(self, gamers, skip,watchlist):  ## This will change as per Room Logic
                                     for c in gamers:
                                         if c == None:
                                             continue
@@ -75,6 +81,13 @@ class Parava(object):
                                             payload = json.dumps({"event": "HeGotPidi", "who": (skip.seatNo), "my": (c.seatNo),
                                                                   "spinner": (skip.seatNo + 6 - c.seatNo) % 6}).encode('utf8')
                                             self.mySendMessage(c.websocket, payload)
+
+                                    payload = json.dumps({"event": "HeGotPidi", "who": (skip.seatNo), "my": (1),
+                                                          "spinner": (skip.seatNo + 6 - 1) % 6}).encode('utf8')
+                                    for kk in   watchlist:
+                                                        self.mySendMessage(kk,payload)
+
+
     def sendCard(self, th):  ## This will change as per Room Logic
                                     for kk in th.tt.orderofPlay:
                                         if kk == None:
@@ -85,7 +98,7 @@ class Parava(object):
                                             self.mySendMessage(kk.websocket, payload)
 
 
-    def whoIsSpinner(self, gamers, skip):
+    def whoIsSpinner(self, gamers, skip,watchlist):
                                                 for c in gamers:
                                                     if c == None:
                                                         continue
@@ -96,11 +109,13 @@ class Parava(object):
                                                         payload = json.dumps({"event": "spinner", "spinner": (skip.seatNo + 6 - c.seatNo) % 6}).encode('utf8')
                                                         self.mySendMessage(c.websocket, payload)
 
+                                                payload = json.dumps({"event": "spinner", "spinner": (skip.seatNo + 6 - 1) % 6}).encode('utf8')
+                                                for kk in   watchlist:
+                                                            self.mySendMessage(kk,payload)
 
 
 
-    def TrumpIsSet(self, message, gamers):  ## This will change as per Room Logic
-
+    def TrumpIsSet(self, message, gamers,watchlist):
                                                             payload = json.dumps(
                                                                 {"event": "TrumpIsSet", "villi": message["villi"], "trump": message["trump"], "dude": message["dude"],
                                                                  "dudeTeam": message["dudeTeam"]}).encode('utf8')
@@ -109,9 +124,11 @@ class Parava(object):
                                                                     continue
                                                                 if c.websocket:
                                                                     self.mySendMessage(c.websocket, payload)
+                                                            for kk in   watchlist:
+                                                                self.mySendMessage(kk,payload)
 
 
-    def MatchIsDone(self, message, gamers):
+    def MatchIsDone(self, message, gamers,watchlist):
                                                                         payload = json.dumps(
                                                                             {"event": "MatchIsDone", "won": message["won"], "base0": message["base0"], "base1": message["base1"],
                                                                              "dialoge": message["dialoge"], "Mc": message["Mc"], "KunuguSeat": message["KunuguSeat"]}).encode('utf8')
@@ -120,3 +137,6 @@ class Parava(object):
                                                                                 continue
                                                                             if c.websocket:
                                                                                 self.mySendMessage(c.websocket, payload)
+
+                                                                        for kk in   watchlist:
+                                                                                            self.mySendMessage(kk,payload)
