@@ -80,7 +80,7 @@ class ChatProtocol(WebSocketServerProtocol):
                         kk['ans'] = object['Answer']
                         rocky.manageVilli(AnsNo)
             elif 'pid' in object:
-                print (object)
+                #print (object)
                 pid = object['pid']
                 for kk in rocky.listOfC:
 
