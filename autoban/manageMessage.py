@@ -357,7 +357,7 @@ class rocky(object):
         print(RR.VSF)
         if lastVilli["ans"] == "P":
             RR.skipped.add(lastVilli["usr"])
-            if len(RR.skipped) == 6:  ## Need to change for 6
+            if (len(RR.skipped) == 6 and RR.dudeSeatNo == lastVilli["SN"]):  ## Need to change for 6
                 print(RR.villi)
                 RR.TrumpSet = True
                 PV.TrumpIsSet({"villi": str(RR.villi), "trump": RR.trump, "dude": RR.dude, "dudeTeam": RR.Dudeteam},
