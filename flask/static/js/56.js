@@ -62,15 +62,12 @@ function refreshHand(data) {
 }
 
 function kunuguLogic(myNames, KunuguSeat) {
-    //console.log(KunuguSeat);
-
-    if (typeof KunuguSeat === "undefined")
+    if (typeof KunuguSeat === "undefined") {
         return myNames;
-    // Removing current one to extra 🃏
-    //  console.log("Removing Kutta");
+    }
+
     for (var j = 1; j < 7; j++) {
         myNames["SN" + j] = myNames["SN" + j].replace(/☔/g, "");   // ☔ ,
-        //    console.log(myNames["SN" + j]);
     }
 
 
@@ -88,8 +85,7 @@ function kunuguLogic(myNames, KunuguSeat) {
         else if (KunuguSeat[i] == 6)
             myNames["SN6"] = myNames["SN6"] + "☔";
     }
-    //  console.log("After kutta");
-    //  console.log(myNames);
+
     return (myNames);
 }
 
@@ -236,7 +232,6 @@ function getSeatNumber(seatNumber, pos) {
     return (seatNumber + pos === 6) ? 6 : ((seatNumber + pos) % 6)
 };
 function goToSeat(roomNo, seatNo) {
-    //$('#toast').toast('show');
     seatNumber = parseInt(seatNo, 10);
     $("#activePlayer0")[0].innerHTML = "" + seatNo;
     $("#activePlayerName0").attr("name", "N" + seatNo);
@@ -251,7 +246,6 @@ function goToSeat(roomNo, seatNo) {
     $("#viliPlayerS0").attr("name", "S" + seatNo);
     $("#spinnerS0").attr("name", "S" + seatNo);
     $("#foldButton").hide();
-    //console.log(folderButtonStatus);
 
 
     let derivedSeatNumber = getSeatNumber(seatNumber, 1);
@@ -332,19 +326,19 @@ function goToSeat(roomNo, seatNo) {
 
 
     $("#seatSelection").hide();
-         // http://127.0.0.1:5000/table?roomNo=1&seatNo=1&role=watcher
+    // http://127.0.0.1:5000/table?roomNo=1&seatNo=1&role=watcher
 
-    if (window.location.toString().includes("role=watcher")){
-      webSocket = new WebSocket("ws://" + window.location.hostname + ":6789/watch?"
-          + document.cookie + "&Room=" + roomNo + "&SeatNo=1"
-             );
+    if (window.location.toString().includes("role=watcher")) {
+        webSocket = new WebSocket("ws://" + window.location.hostname + ":6789/watch?"
+            + document.cookie + "&Room=" + roomNo + "&SeatNo=1"
+        );
 
     }
-     else{
-    webSocket = new WebSocket("ws://" + window.location.hostname + ":6789/game?"
-        + document.cookie + "&Room=" + roomNo + "&SeatNo=" + seatNo
-           );
-        }
+    else {
+        webSocket = new WebSocket("ws://" + window.location.hostname + ":6789/game?"
+            + document.cookie + "&Room=" + roomNo + "&SeatNo=" + seatNo
+        );
+    }
 
     webSocket.onmessage = function (message) {
         console.log(message);
@@ -406,13 +400,12 @@ function goToSeat(roomNo, seatNo) {
                 $("#gameCount").popover(true, false, "", 5000, false, "left");
                 setTimeout(function () { $("#gameCount").popover("hide"); }, 4000);
                 $("#gameCount").popover("show");
-                              // To Mange Rest qame . Need to remove the question event
-                if (data.dialoge.startsWith("Reset"))
-                {
-                        console.log("Will remove question");
-                        $("#bidSection").hide();
-                        $("#playButton").attr("disabled", true);
-                        $("#foldButton").hide();
+                // To Mange Rest qame . Need to remove the question event
+                if (data.dialoge.startsWith("Reset")) {
+                    console.log("Will remove question");
+                    $("#bidSection").hide();
+                    $("#playButton").attr("disabled", true);
+                    $("#foldButton").hide();
                 }
 
             } else if (data.event == 'cardSend') {
@@ -514,40 +507,36 @@ function goToSeat(roomNo, seatNo) {
 
 function questionEvent(data) {
 
-   var higest = (data.loopStart);
+    var higest = (data.loopStart);
 
-    if (data.VSF.length >5 && data.loopStart < 40)
-    {
-         console.log("will check for Pass&40");
-         array_last_six = data.VSF.slice(-6);
-         console.log(array_last_six);
-         for (var i=5;i>0;i--)
-          {
-             //console.log(array_last_six[i]);
-             var key = (Object.keys(array_last_six[i]));
+    if (data.VSF.length > 5 && data.loopStart < 40) {
+        console.log("will check for Pass&40");
+        array_last_six = data.VSF.slice(-6);
+        console.log(array_last_six);
+        for (var i = 5; i > 0; i--) {
+            //console.log(array_last_six[i]);
+            var key = (Object.keys(array_last_six[i]));
 
-             if (array_last_six[i][key] !="P")
-                {
-                  // console.log(array_last_six[i][Object.keys(array_last_six[0][0]]);
-                   console.log(array_last_six[i]);
-                   SN=((key[0][1]));
-                   console.log(SN);
-                   console.log(data.SN);
-                  if ( (data.SN-SN)%2 ==0)
-                       {
-                         console.log("Same team");
-                         $("#gameCount").attr("data-content", "Second Round & Same team --> call 40");
-                         $("#gameCount").popover(true, false, "", 5000, false, "left");
-                         setTimeout(function () { $("#gameCount").popover("hide"); }, 4000);
-                         $("#gameCount").popover("show");
-                      }
-                  else
-                       console.log("differnt  team");
-
-                  break;
+            if (array_last_six[i][key] != "P") {
+                // console.log(array_last_six[i][Object.keys(array_last_six[0][0]]);
+                console.log(array_last_six[i]);
+                SN = ((key[0][1]));
+                console.log(SN);
+                console.log(data.SN);
+                if ((data.SN - SN) % 2 == 0) {
+                    console.log("Same team");
+                    $("#gameCount").attr("data-content", "Second Round & Same team --> call 40");
+                    $("#gameCount").popover(true, false, "", 5000, false, "left");
+                    setTimeout(function () { $("#gameCount").popover("hide"); }, 4000);
+                    $("#gameCount").popover("show");
                 }
+                else
+                    console.log("differnt  team");
 
-          }
+                break;
+            }
+
+        }
     }// end of  checking condition for second round
 
 
@@ -610,23 +599,23 @@ function selectCard(card) {
 
 } // end of selectCard
 
-function nereOrThirichu(name){
-        var startsWithCard = globalData.hand.filter((mycard) => mycard.startsWith(name));
-        var found=false;
-      //  console.log(startsWithCard);
-        for (var i = 0; i < startsWithCard.length; i++) {
-                 if (startsWithCard[i][1] == "J")
-                    { console.log("Jack ");
+function nereOrThirichu(name) {
+    var startsWithCard = globalData.hand.filter((mycard) => mycard.startsWith(name));
+    var found = false;
+    //  console.log(startsWithCard);
+    for (var i = 0; i < startsWithCard.length; i++) {
+        if (startsWithCard[i][1] == "J") {
+            console.log("Jack ");
 
-                      found=true;
-                      break;
-                    }
+            found = true;
+            break;
         }
+    }
 
-     if (found)
-     $("#moreBidDetails").val("⇧");
-     else
-     $("#moreBidDetails").val("↺");
+    if (found)
+        $("#moreBidDetails").val("⇧");
+    else
+        $("#moreBidDetails").val("↺");
 
 }
 
