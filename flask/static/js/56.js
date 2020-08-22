@@ -10,9 +10,10 @@ var foldData = {};
 var user;
 var roomNo;
 var seatNo;
+var role;
 var names;
 var toggleAutoPassState = false;
-console.log(uuid);
+//console.log(uuid);
 if (!document.cookie) {
     document.cookie = "key=" + uuid + ";max-age=2592000;"
 }
@@ -424,8 +425,7 @@ function goToSeat(roomNo, seatNo) {
             } else if (data.event == 'HeGotPidi') {
                 resetSpinner();
                 $("#spinnerS" + data.spinner).show();
-                if (data.who == data.my) {
-                    console.log("fold")
+                if (data.who == data.my && role != 'watcher') {
                     $("#foldButton").show();
                     folderButtonStatus = true;
                 }
@@ -712,6 +712,7 @@ jQuery(document).ready(function ($) {
     }
     roomNo = params["roomNo"];
     seatNo = params["seatNo"];                 //http://127.0.0.1:5000/table?user=joe&roomNo=1&seatNo=1
+    role = params["role"];
     goToSeat(roomNo, seatNo);
     $('input[type=image]').click(function () {
         $('input[type=image]').removeClass('active');
