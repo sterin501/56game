@@ -36,8 +36,11 @@ class Parava(object):
                                 d["SN" + str(seatNo)] = "Empty"   ## Sending  Empty to avoid undefined
                                 continue
                             d["SN" + str(seatNo)] = kk.userID
+                        wl=[]
+                        for kk in   watchlist:
+                                wl.append (kk.http_request_params['id'][0])
 
-                        payload = json.dumps({"event": "seatInfo", "names": d,"KunuguSeat":kunugulist}).encode('utf8')
+                        payload = json.dumps({"event": "seatInfo", "names": d,"KunuguSeat":kunugulist,"watchlist":wl}).encode('utf8')
                         for kk in gamers:
                             if kk is None:
                                 continue
@@ -56,7 +59,7 @@ class Parava(object):
                             if c.websocket:
                                 self.mySendMessage(c.websocket, payload)
                         for kk in   watchlist:
-                                        self.mySendMessage(kk,payload)        
+                                        self.mySendMessage(kk,payload)
 
 
 

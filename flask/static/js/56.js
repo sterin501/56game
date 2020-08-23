@@ -13,6 +13,7 @@ var seatNo;
 var role;
 var names;
 var toggleAutoPassState = false;
+var watchers;
 //console.log(uuid);
 if (!document.cookie) {
     document.cookie = "key=" + uuid + ";max-age=2592000;"
@@ -55,8 +56,23 @@ function refreshHand(data) {
         if (data.KunuguSeat) {
             populateNames(kunuguLogic(data.names, data.KunuguSeat));
         }
+
+
         else {
             populateNames(data.names);
+        }
+
+        if (data.watchlist){              // watch list logic
+                    if (JSON.stringify(watchers)!=JSON.stringify(data.watchlist) )
+                      {
+
+                      $("#watechers").attr("data-content", data.watchlist);
+                      $("#watechers").popover(true, false, "", 3000, false, "left");
+                      setTimeout(function () { $("#watechers").popover("hide"); }, 4000);
+                      $("#watechers").popover("show");
+                      watchers=data.watchlist;
+                     }
+
         }
     }  // end of name check
 
@@ -488,6 +504,14 @@ function goToSeat(roomNo, seatNo) {
                 $("span:contains(" + chatUser + ")").popover("show");
                 $("#chat")[0].value += "\r\n" + data.usr + ": " + data.text;
                 document.getElementById("chat").scrollTop = document.getElementById("chat").scrollHeight;
+                if (data.role){
+                               $("#watechers").attr("data-content", chatUser+":"+data.text);
+                               $("#watechers").popover(true, false, "", 5000, false, "left");
+                               setTimeout(function () { $("#watechers").popover("hide"); }, 4000);
+                               $("#watechers").popover("show");
+
+                }
+
                 //openForm();
 
             } // end of chat
@@ -744,6 +768,10 @@ function sendChat() {
     chatObject.text = chatText;
     chatObject.chatID = "";
     chatObject.r = roomNo;
+    console.log(role);
+    if(role == "watcher")
+     chatObject.role="w";
+    console.log(chatObject) ;
     webSocket.send(JSON.stringify(chatObject));
     //notifyMe();
 }

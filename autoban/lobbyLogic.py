@@ -61,7 +61,10 @@ class lobbyManager(object):
         r = int(chatObject["r"]) - 1
         usr = chatObject["usr"]
         text = chatObject["text"]
-        payload = json.dumps({"event": "chatSend", "r": r, "usr": usr, "text": text}).encode('utf8')
+        if  "role" in chatObject:
+             payload = json.dumps({"event": "chatSend", "r": r, "usr": usr, "text": text,"role":"w"}).encode('utf8')
+        else:
+             payload = json.dumps({"event": "chatSend", "r": r, "usr": usr, "text": text}).encode('utf8')
         print(self.rocky.USERS.listOfRooms[r])
         for kk in self.rocky.USERS.listOfRooms[r]:
             if kk is None:

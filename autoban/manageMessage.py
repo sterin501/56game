@@ -357,7 +357,7 @@ class rocky(object):
         print(RR.VSF)
         if lastVilli["ans"] == "P":
             RR.skipped.add(lastVilli["usr"])
-            if (len(RR.skipped) == 6 and RR.dudeSeatNo == lastVilli["SN"]):  ## Need to change for 6
+            if (len(RR.skipped) == 6 ):  ## Need to change for 6  and RR.dudeSeatNo == lastVilli["SN"]
                 print(RR.villi)
                 RR.TrumpSet = True
                 PV.TrumpIsSet({"villi": str(RR.villi), "trump": RR.trump, "dude": RR.dude, "dudeTeam": RR.Dudeteam},
@@ -380,6 +380,8 @@ class rocky(object):
             RR.dude = lastVilli["usr"]
             RR.dudeSeatNo = lastVilli["SN"]
             RR.Dudeteam = lastVilli["t"]
+            if lastVilli["usr"] in RR.skipped:
+               RR.skipped.remove(lastVilli["usr"])
         message = {"seat": seat, "Villi": lastVilli["ans"], "VSF": RR.VSF,"dude": RR.dude, "dudeTeam": RR.Dudeteam}
         PV.heCalled(message, gamers,self.TrumpObjects[r].watchlist)
         quNo = lastVilli["quNo"][:2] + str(int(lastVilli["quNo"][2:]) + 1)
