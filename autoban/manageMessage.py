@@ -294,7 +294,7 @@ class rocky(object):
             resendAgain=th.emptySeat(fobject['SN'])
             if resendAgain:
                 self.askFold(fobject,resendAgain)
-                PV.chatSend({"event": "chatSend", "r": r, "usr": "CPU","role":"CPU","text": "One of the seat is Empty ,can't start the game"},th.tt.orderofPlay,th.watchlist)
+                PV.chatSend({"event": "chatSend", "r": r, "usr": "system","role":"CPU","text": "One of the seat is Empty ,can't start the game"},th.tt.orderofPlay,th.watchlist)
                 return False
             RR = th.rules
             TT = th.tt
@@ -426,7 +426,7 @@ class rocky(object):
                                       self.listOfC.remove(yo)
                       PV.MatchIsDone({"won": "", "base0": 5, "base1": 5, "dialoge": "Reset by " + str (kk[room]+1)+"_"+ str(seatNo+1), "Mc": 0, "KunuguSeat": []},
                             Room,self.TrumpObjects[room].watchlist)
-                      self.startNextMatch(room,True)
+                      self.startNextMatch(room,True, {"event": "fold", "usr": TT.orderofPlay[0].name, "fid": -1, "t": TT.orderofPlay[0].team, "r": room,"SN": TT.orderofPlay[0].seatNo})
                       self.resetList.remove(kk)
                       return True
         print (" Reset request for " + str (room) + "  "+ str(seatNo))

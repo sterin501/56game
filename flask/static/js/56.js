@@ -394,7 +394,7 @@ function goToSeat(roomNo, seatNo) {
                     $("#playSection").show();
                     if (globalData.hand.length ==1)
                         {
-                                console.log("will do auto play");  
+                                console.log("will do auto play");
                         }
 
                 }
@@ -513,7 +513,7 @@ function goToSeat(roomNo, seatNo) {
                 if (data.role =="CPU")
                 {
 
-                  $("#trumpSection").attr("data-content","CPU"+ data.text);
+                  $("#trumpSection").attr("data-content","system:"+ data.text);
                   $("#trumpSection").popover(true, false, "", 5000, false, "left");
                   setTimeout(function () { $("#trumpSection").popover("hide"); }, 4000);
                   $("#trumpSection").popover("show");
