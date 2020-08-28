@@ -143,3 +143,15 @@ class Parava(object):
 
                                                                         for kk in   watchlist:
                                                                                             self.mySendMessage(kk,payload)
+
+
+    def  chatSend(self,message,gamers,watchlist):
+        payload = json.dumps(message).encode('utf8')
+        for c in gamers:
+            if c == None:
+                continue
+            if c.websocket:
+                self.mySendMessage(c.websocket, payload)
+
+        for kk in   watchlist:
+                self.mySendMessage(kk,payload)

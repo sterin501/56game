@@ -96,13 +96,14 @@ class ChatProtocol(WebSocketServerProtocol):
                         kk['card'] = object['card']
                         rocky.managePlay(pid)
             elif 'fid' in object:
+                print (object)
                 fid = object['fid']
                 for kk in rocky.listOfF:
                     if kk['fid'] == fid:
                         print("fold in server.py")
                         kk['status'] = "DONE"
                         rocky.listOfF.remove(kk)
-                        rocky.startNextMatch(kk["r"], True)
+                        rocky.startNextMatch(kk["r"], True,object)
 
             elif 'resetID' in object:
                 rocky.resetBase(object["usr"],int (object["r"])-1, int (object["SN"])-1)

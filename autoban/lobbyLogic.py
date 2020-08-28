@@ -2,11 +2,12 @@
 import asyncio
 import json, random, time
 from manageMessage import rocky
+from parava import Parava
 
 from autobahn.asyncio.websocket import (WebSocketServerProtocol, WebSocketServerFactory)
 
 lobbyList = []
-
+PV=Parava()
 
 class lobbyManager(object):
     def __init__(self, rocky):
@@ -21,22 +22,15 @@ class lobbyManager(object):
         # self.sendRoomDetails()
         roomAs = self.getPlayerDetails()
         payload = json.dumps({"event": "lobbyList", "roomDetails": roomAs}).encode('utf8')
-        self.mySendMessage(websocket, payload)
+        PV.mySendMessage(websocket, payload)
 
     def sendRoomDetails(self):
         roomAs = self.getPlayerDetails()
         payload = json.dumps({"event": "lobbyList", "roomDetails": roomAs}).encode('utf8')
         for kk in lobbyList:
-            self.mySendMessage(kk, payload)  ## kk is websocket  here
+            PV.mySendMessage(kk, payload)  ## kk is websocket  here
 
-    def mySendMessage(self, websocket, payload):
-        try:
-            websocket.sendMessage(payload, False)
-            return True
-        except Exception as ex:
-            print(ex)
-            print("CODE:2019 Can't sendMessage to client from lobby")
-        return False
+
 
     def lobbyUnregister(self, websocket):
         lobbyList.remove(websocket)
@@ -62,16 +56,10 @@ class lobbyManager(object):
         usr = chatObject["usr"]
         text = chatObject["text"]
         if  "role" in chatObject:
-             payload = json.dumps({"event": "chatSend", "r": r, "usr": usr, "text": text,"role":"w"}).encode('utf8')
+             message = {"event": "chatSend", "r": r, "usr": usr, "text": text,"role":"w"}
         else:
-             payload = json.dumps({"event": "chatSend", "r": r, "usr": usr, "text": text}).encode('utf8')
-        print(self.rocky.USERS.listOfRooms[r])
-        for kk in self.rocky.USERS.listOfRooms[r]:
-            if kk is None:
-                continue
-            self.mySendMessage(kk.websocket, payload)
-        for kk in self.rocky.TrumpObjects[r].watchlist:
-                self.mySendMessage(kk, payload)
+             message = {"event": "chatSend", "r": r, "usr": usr, "text": text}
+        PV.chatSend(message,self.rocky.USERS.listOfRooms[r], self.rocky.TrumpObjects[r].watchlist)
 
     def pingPong(self, websocket):
         #print(websocket)

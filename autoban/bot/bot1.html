@@ -83,7 +83,9 @@ Bot1
                              {
 
                              var fid = obj.fid;
-                            JsonOb=JSON.stringify({"fid":fid,"FR":"P","usr":obj.usr,"t":obj.t});
+                            JsonOb=JSON.stringify({"fid":fid,"FR":"P","usr":obj.usr,"t":obj.t,"SN":obj.SN});
+                             wait(1000);
+
                                                ws.send(JsonOb);
 
 

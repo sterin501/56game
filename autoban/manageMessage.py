@@ -276,7 +276,7 @@ class rocky(object):
                 message = {"event": "fold", "usr": TTO.name, "fid": lastCard["pid"][:2], "t": TTO.team, "r": r,
                            "SN": TTO.seatNo}
                 self.askFold(message, TTO)
-                self.startNextMatch(r, False)
+                self.startNextMatch(r, False,message)
                 return True
 
         TTO = TT.orderofPlay[(c + 1) % 6]
@@ -287,23 +287,30 @@ class rocky(object):
         PV.whoIsSpinner(TT.orderofPlay, TTO,self.TrumpObjects[r].watchlist)
         self.TrumpObjects[r].spinner=TTO.seatNo
 
-    def startNextMatch(self, r, okFromUI):
+    def startNextMatch(self, r, okFromUI,fobject):
         if okFromUI:
-            RR = self.TrumpObjects[r].rules
-            TT = self.TrumpObjects[r].tt
+            ## Need to add condition to check all 6 players are in table , then only it sends cards and call SetNextGame , getOrder functions
+            th=self.TrumpObjects[r]
+            resendAgain=th.emptySeat(fobject['SN'])
+            if resendAgain:
+                self.askFold(fobject,resendAgain)
+                PV.chatSend({"event": "chatSend", "r": r, "usr": "CPU","role":"CPU","text": "One of the seat is Empty ,can't start the game"},th.tt.orderofPlay,th.watchlist)
+                return False
+            RR = th.rules
+            TT = th.tt
             TT.VSF = [{}]
             RR.TrumpSet = False
             TT.setNextGame()
             TT.getOrderOfPlayers()
-            self.TrumpObjects[r].doTheDeal()
-            PV.sendCard(self.TrumpObjects[r])
+            th.doTheDeal()
+            PV.sendCard(th)
             quNO = "R" + str(r) + str(0)
             P0 = TT.orderofPlay[0]
             message = {"event": "question", "usr": P0.name, "t": P0.team, "SN": P0.seatNo, "quNo": quNO, "c": 0, "r": r,
                        "VSF": [], "loopStart": 28}
             self.askQustion(message, self.TrumpObjects[r].tt.orderofPlay[0])
-            PV.whoIsSpinner(self.TrumpObjects[r].tt.orderofPlay, self.TrumpObjects[r].tt.orderofPlay[0], self.TrumpObjects[r].watchlist)
-            self.TrumpObjects[r].spinner=P0.seatNo
+            PV.whoIsSpinner(TT.orderofPlay, TT.orderofPlay[0], th.watchlist)
+            th.spinner=P0.seatNo
         else:
             print("Need to wait for ok from UI ")
 

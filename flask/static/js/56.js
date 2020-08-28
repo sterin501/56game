@@ -392,7 +392,13 @@ function goToSeat(roomNo, seatNo) {
                 else {
                     $("#playButton").attr("disabled", false);
                     $("#playSection").show();
+                    if (globalData.hand.length ==1)
+                        {
+                                console.log("will do auto play");  
+                        }
+
                 }
+
                 if (data.base0) {
                     $("#team0")[0].innerHTML = data.base0;
                     $("#team1")[0].innerHTML = data.base1;
@@ -504,13 +510,22 @@ function goToSeat(roomNo, seatNo) {
                 $("span:contains(" + chatUser + ")").popover("show");
                 $("#chat")[0].value += "\r\n" + data.usr + ": " + data.text;
                 document.getElementById("chat").scrollTop = document.getElementById("chat").scrollHeight;
-                if (data.role){
+                if (data.role =="CPU")
+                {
+
+                  $("#trumpSection").attr("data-content","CPU"+ data.text);
+                  $("#trumpSection").popover(true, false, "", 5000, false, "left");
+                  setTimeout(function () { $("#trumpSection").popover("hide"); }, 4000);
+                  $("#trumpSection").popover("show");
+                }
+                else if (data.role =="w"){
                                $("#watechers").attr("data-content", chatUser+":"+data.text);
                                $("#watechers").popover(true, false, "", 5000, false, "left");
                                setTimeout(function () { $("#watechers").popover("hide"); }, 4000);
                                $("#watechers").popover("show");
 
                 }
+
 
                 //openForm();
 
@@ -533,6 +548,12 @@ function questionEvent(data) {
 
     var higest = (data.loopStart);
 
+    if (data.loopStart == 57)  // For thadiyan . Everyone will pass one villi is 56
+    {
+                   return passBid();
+
+    }
+
     if (data.VSF.length > 5 && data.loopStart < 40) {
         console.log("will check for Pass&40");
         array_last_six = data.VSF.slice(-6);
@@ -553,6 +574,7 @@ function questionEvent(data) {
                     $("#gameCount").popover(true, false, "", 5000, false, "left");
                     setTimeout(function () { $("#gameCount").popover("hide"); }, 4000);
                     $("#gameCount").popover("show");
+                    higest=40 // Can be cooment if not ok with
                 }
                 else
                     console.log("differnt  team");

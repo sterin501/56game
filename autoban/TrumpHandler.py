@@ -49,6 +49,35 @@ class TrumpHandler(object):
             c=c+1
         return ("Issue")
 
+    def emptySeat(self,seatNo):
+        if seatNo ==1:
+            player=self.P1
+        elif  seatNo ==2:
+            player=self.P2
+        elif  seatNo ==3:
+            player=self.P3
+        elif  seatNo ==4:
+            player=self.P4
+        elif  seatNo ==5:
+            player=self.P5
+        elif  seatNo ==6:
+            player=self.P6
+        if self.P1 is None:
+            return player
+        elif self.P2 is None:
+            return player
+        elif self.P3 is None:
+            return player
+        elif self.P4 is None:
+            return player
+        elif self.P5 is None:
+            return player
+        elif self.P5 is None:
+            return player
+        else:
+            return False    
+
+
     def getPlayerBySeat(self,userID,websocket,seatNo):
         team = 'Team0' if seatNo%2==0 else 'Team1'
         if seatNo == 0 and self.P1 is None:
