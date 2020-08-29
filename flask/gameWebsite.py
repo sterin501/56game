@@ -113,7 +113,7 @@ def logout():
 
 @app.route('/ok')
 def redirectForPoonachi():
-           return redirect('http://ec2-3-128-89-158.us-east-2.compute.amazonaws.com/login')
+           return redirect('http://www.56forall.com/login')
 
 
 @app.route('/restart')
