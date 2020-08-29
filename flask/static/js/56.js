@@ -395,6 +395,10 @@ function goToSeat(roomNo, seatNo) {
                     if (globalData.hand.length ==1)
                         {
                                 console.log("will do auto play");
+                                playData.card = globalData.hand[0];
+                                webSocket.send(JSON.stringify(playData));
+                                $("#playButton").attr("disabled", true);
+                                $("#playSection").hide();
                         }
 
                 }
