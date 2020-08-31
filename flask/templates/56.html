@@ -341,6 +341,10 @@
                                 <div class="row">
                                     <div class="col">
                                         <div class="btn-group" id="bidSection" style="display: none;">
+                                           <button type="button" class="btn btn-primary" id="button1"
+                                              onclick="passBid()">Pass</button>
+                                           <button type="button" class="btn btn-primary " id="toggleAutoPassButton"
+                                              onclick="toggleAutoPass()">Pass Off</button>
                                             <input type="image" class="inactive" value="N" src="static/cards/nt.png"
                                                 id="nt" />
                                             <input type="image" class="active" value="S" src="static/cards/spade.png"
@@ -359,6 +363,7 @@
                                                 style="width:15%;">
                                                 <option value="">...</option>
                                                 <option value="⇧">⇧</option>
+                                                <option value="+">+</option>
                                                 <option value="↺">↺</option>
                                                 <option value="+1⇧">+1⇧</option>
                                                 <option value="+2⇧">+2⇧</option>
@@ -371,10 +376,7 @@
                                             <div class="btn-group">
                                                 <button type="button" class="btn btn-primary" id="button1"
                                                     onclick="sendBid()">Bid</button>
-                                                <button type="button" class="btn btn-primary" id="button1"
-                                                    onclick="passBid()">Pass</button>
-                                                <button type="button" class="btn btn-primary " id="toggleAutoPassButton"
-                                                    onclick="toggleAutoPass()">Pass Off</button>
+                                            
                                             </div>
 
                                         </div>
