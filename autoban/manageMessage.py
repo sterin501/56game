@@ -176,7 +176,7 @@ class rocky(object):
         PV.mySendMessage(client.websocket, payload)
         self.listOfF.append(
             {"fid": message["fid"], "status": "Asked", "usr": message["usr"], "r": message["r"], "SN": message["SN"]})
-        print("Card  Asked "+message["usr"])
+        print("Fold  Asked "+message["usr"])
 
     def canWeStart(self, websocket,roomNo,seatNo):
         Room=self.USERS.listOfRooms[roomNo]
@@ -311,6 +311,9 @@ class rocky(object):
             self.askQustion(message, self.TrumpObjects[r].tt.orderofPlay[0])
             PV.whoIsSpinner(TT.orderofPlay, TT.orderofPlay[0], th.watchlist)
             th.spinner=P0.seatNo
+            for kk in self.listOfF:
+                if (kk['r'] == r):
+                    self.listOfF.remove(kk) ## This will make sure that no fold is pending , to prevent client issue and unexpected restart 
         else:
             print("Need to wait for ok from UI ")
 

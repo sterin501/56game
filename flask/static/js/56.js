@@ -740,6 +740,7 @@ function fold() {
     if (foldData.fid) {
         foldData.FR = "P";
         webSocket.send(JSON.stringify(foldData));
+        foldData={}; // To make Gloabl FoldData to empty 
 
     }
 }
