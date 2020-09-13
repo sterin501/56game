@@ -33,6 +33,9 @@ class Table(object):
 
     def t1VillichuWon(self, villi, seatNo):
         if villi == 56:
+            self.t1base = self.t1base + 4
+            self.t0base = self.t0base - 4
+        elif villi > 47:
             self.t1base = self.t1base + 3
             self.t0base = self.t0base - 3
         elif villi > 39:
@@ -56,6 +59,9 @@ class Table(object):
 
     def t1VillichuLoss(self, villi):
         if villi == 56:
+            self.t1base = self.t1base - 5
+            self.t0base = self.t0base + 5
+        elif villi > 47:
             self.t1base = self.t1base - 4
             self.t0base = self.t0base + 4
         elif villi > 39:
@@ -68,6 +74,9 @@ class Table(object):
 
     def t0VillichuWon(self, villi, seatNo):
         if villi == 56:
+            self.t1base = self.t1base - 4
+            self.t0base = self.t0base + 4
+        elif villi > 47:
             self.t1base = self.t1base - 3
             self.t0base = self.t0base + 3
         elif villi > 39:
@@ -91,6 +100,9 @@ class Table(object):
 
     def t0VillichuLoss(self, villi):
         if villi == 56:
+            self.t1base = self.t1base + 5
+            self.t0base = self.t0base - 5
+        elif villi > 47:
             self.t1base = self.t1base + 4
             self.t0base = self.t0base - 4
         elif villi > 39:

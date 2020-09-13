@@ -182,14 +182,14 @@ function resetVSF() {
 }
 function convertToSign(signChar) {
     if (signChar == 'S') {
-        return '<span style="color: black;">♠</span>'
+        return '<span style="color: black;font-size: 150%;">♠</span>'
     } else if (signChar == 'D') {
         //  return '♦';
-        return '<span style="color: red;">♦</span>';
+        return '<span style="color: red;font-size: 150%;">♦</span>';
     } else if (signChar == 'C') {
-        return '<span style="color: black;">♣</span>'
+        return '<span style="color: black;font-size: 150%;">♣</span>'
     } else if (signChar == 'H') {
-        return '<span style="color: red;">♥</span>'
+        return '<span style="color: red;font-size: 150%;">♥</span>'
     } else {
         return '🚫';
     }
@@ -559,9 +559,9 @@ function questionEvent(data) {
     }
 
     if (data.VSF.length > 5 && data.loopStart < 40) {
-        console.log("will check for Pass&40");
+        //console.log("will check for Pass&40");
         array_last_six = data.VSF.slice(-6);
-        console.log(array_last_six);
+        //console.log(array_last_six);
         for (var i = 5; i > 0; i--) {
             //console.log(array_last_six[i]);
             var key = (Object.keys(array_last_six[i]));
@@ -578,7 +578,7 @@ function questionEvent(data) {
                     $("#gameCount").popover(true, false, "", 5000, false, "left");
                     setTimeout(function () { $("#gameCount").popover("hide"); }, 4000);
                     $("#gameCount").popover("show");
-                    higest=40 // Can be cooment if not ok with
+                    //higest=40 // Can be cooment if not ok with
                 }
                 else
                     console.log("differnt  team");
@@ -740,7 +740,7 @@ function fold() {
     if (foldData.fid) {
         foldData.FR = "P";
         webSocket.send(JSON.stringify(foldData));
-        foldData={}; // To make Gloabl FoldData to empty 
+        foldData={}; // To make Gloabl FoldData to empty
 
     }
 }
