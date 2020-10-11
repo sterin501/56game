@@ -65,6 +65,9 @@ def hello_world():
    # res.set_cookie('id',id)
    return redirect('/login')
 
+@app.route('/home')
+def home():   
+    return render_template('home.html')   
 
 @app.route('/table')              ## for secuirty we can add login_required later
 def mytable():
