@@ -313,7 +313,7 @@ class rocky(object):
             th.spinner=P0.seatNo
             for kk in self.listOfF:
                 if (kk['r'] == r):
-                    self.listOfF.remove(kk) ## This will make sure that no fold is pending , to prevent client issue and unexpected restart 
+                    self.listOfF.remove(kk) ## This will make sure that no fold is pending , to prevent client issue and unexpected restart
         else:
             print("Need to wait for ok from UI ")
 
@@ -430,7 +430,7 @@ class rocky(object):
                       PV.MatchIsDone({"won": "", "base0": 5, "base1": 5, "dialoge": "Reset by " + str (kk[room]+1)+"_"+ str(seatNo+1), "Mc": 0, "KunuguSeat": []},
                             Room,self.TrumpObjects[room].watchlist)
                       self.startNextMatch(room,True, {"event": "fold", "usr": TT.orderofPlay[0].name, "fid": -1, "t": TT.orderofPlay[0].team, "r": room,"SN": TT.orderofPlay[0].seatNo})
-                      self.resetList.remove(kk)
+                      self.resetList=[]
                       return True
         print (" Reset request for " + str (room) + "  "+ str(seatNo))
         d={}

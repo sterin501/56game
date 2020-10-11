@@ -35,6 +35,15 @@ class Table(object):
         if villi == 56:
             self.t1base = self.t1base + 4
             self.t0base = self.t0base - 4
+            if self.P2.seatNo in self.listOfKunugu:  ## For removing remove Kunuku from every one in the team , if they win by 56
+                self.listOfKunugu.remove(self.P2.seatNo)
+            if self.P4.seatNo in self.listOfKunugu:
+                    self.listOfKunugu.remove(self.P4.seatNo)
+            if self.P6.seatNo in self.listOfKunugu:
+                    self.listOfKunugu.remove(self.P6.seatNo)
+            self.checkForKunuk()
+            return True
+
         elif villi > 47:
             self.t1base = self.t1base + 3
             self.t0base = self.t0base - 3
@@ -76,6 +85,15 @@ class Table(object):
         if villi == 56:
             self.t1base = self.t1base - 4
             self.t0base = self.t0base + 4
+            if self.P1.seatNo in self.listOfKunugu:
+                self.listOfKunugu.remove(self.P1.seatNo)
+            if self.P3.seatNo in self.listOfKunugu:
+                    self.listOfKunugu.remove(self.P3.seatNo)
+            if self.P5.seatNo in self.listOfKunugu:
+                    self.listOfKunugu.remove(self.P5.seatNo)
+            self.checkForKunuk()
+            return True
+
         elif villi > 47:
             self.t1base = self.t1base - 3
             self.t0base = self.t0base + 3
