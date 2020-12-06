@@ -1,5 +1,8 @@
 var webSocket;
 var user;
+var ghostUser;
+var seatNo;
+var groomNo;
 
 jQuery(document).ready(function($) {
     var contents = '';
@@ -15,14 +18,15 @@ jQuery(document).ready(function($) {
 
         if (data.event == "lobbyList") {
 
-            console.log("got room details");
-            console.log(data.roomDetails);
+          //  console.log("got room details");
+          //   console.log(data.roomDetails);
             if (data.roomDetails) {
                 var roomArray = Object.keys(data.roomDetails);
                 var contents = "";
 
                 roomArray.forEach((roomNo, i) => {
                     var seatArr = data.roomDetails[roomNo];
+                  //  console.log(seatArr);
                     contents += '<div style="color:white">' + roomNo;
                     for (var j = 1; j <= 6; j++) {
                         //      console.log(data.roomDetails[roomNo][j-1]);
@@ -37,6 +41,16 @@ jQuery(document).ready(function($) {
                     }
                     contents += '<button type="button" class="btn btn-secondary" onclick="goToWatcherSeat(' + (i + 1) + ',' + 1 + ')\">Watch</button>';
                     contents += ' </div>';
+                    for (var i = 0; i < seatArr.length; i++) {
+
+                                    if (seatArr[i].equals == user)
+                                      {
+                                        ghostUser=true;
+                                        console.log("ghost user");
+                                        seatNo=(i+1);
+                                        groomNo=roomNo+1;
+                                      }
+                    }
 
                 });
 
@@ -59,4 +73,21 @@ function goToWatcherSeat(roomNo, seatNo) {
 
 function goToLobby() {
     document.location.href = document.location.href.replace("home", "lobby");
+}
+
+function logout() {
+             console.log(webSocket);
+             if (ghostUser)
+             {
+               var resetRequest = {};
+               resetRequest.resetID = "RestRequest";
+               resetRequest.usr = user;
+               resetRequest.r = groomNo;
+               resetRequest.SN = seatNo;
+               console.log(resetRequest);
+              // webSocket.send(JSON.stringify(resetRequest));
+
+             }
+
+             document.location.href = document.location.href.replace("lobby", "logout");
 }

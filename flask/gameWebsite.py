@@ -41,6 +41,7 @@ google = oauth.register(
 
 @app.route('/')
 def indexPage():
+   return render_template('home.html')
    now =  datetime.now()
    name=""
    #return render_template('lobby.html', name=name ,email=email)
@@ -66,8 +67,8 @@ def hello_world():
    return redirect('/login')
 
 @app.route('/home')
-def home():   
-    return render_template('home.html')   
+def home():
+    return render_template('home.html')
 
 @app.route('/table')              ## for secuirty we can add login_required later
 def mytable():
@@ -110,9 +111,13 @@ def authorize():
 
 @app.route('/logout')
 def logout():
+       print (session)
        for key in list(session.keys()):
            session.pop(key)
-       return redirect('/')
+       res=make_response( redirect('/'))
+       res.delete_cookie('id')
+       return res
+
 
 @app.route('/ok')
 def redirectForPoonachi():

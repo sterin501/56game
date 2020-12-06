@@ -558,36 +558,36 @@ function questionEvent(data) {
 
     }
 
-    if (data.VSF.length > 5 && data.loopStart < 40) {
-        //console.log("will check for Pass&40");
-        array_last_six = data.VSF.slice(-6);
-        //console.log(array_last_six);
-        for (var i = 5; i > 0; i--) {
-            //console.log(array_last_six[i]);
-            var key = (Object.keys(array_last_six[i]));
-
-            if (array_last_six[i][key] != "P") {
-                // console.log(array_last_six[i][Object.keys(array_last_six[0][0]]);
-                console.log(array_last_six[i]);
-                SN = ((key[0][1]));
-                console.log(SN);
-                console.log(data.SN);
-                if ((data.SN - SN) % 2 == 0) {
-                    console.log("Same team");
-                    $("#gameCount").attr("data-content", "Second Round & Same team --> call 40");
-                    $("#gameCount").popover(true, false, "", 5000, false, "left");
-                    setTimeout(function () { $("#gameCount").popover("hide"); }, 4000);
-                    $("#gameCount").popover("show");
-                    //higest=40 // Can be cooment if not ok with
-                }
-                else
-                    console.log("differnt  team");
-
-                break;
-            }
-
-        }
-    }// end of  checking condition for second round
+    // if (data.VSF.length > 5 && data.loopStart < 40) {
+    //     //console.log("will check for Pass&40");
+    //     array_last_six = data.VSF.slice(-6);
+    //     //console.log(array_last_six);
+    //     for (var i = 5; i > 0; i--) {
+    //         //console.log(array_last_six[i]);
+    //         var key = (Object.keys(array_last_six[i]));
+    //
+    //         if (array_last_six[i][key] != "P") {
+    //             // console.log(array_last_six[i][Object.keys(array_last_six[0][0]]);
+    //             console.log(array_last_six[i]);
+    //             SN = ((key[0][1]));
+    //             // console.log(SN);
+    //             // console.log(data.SN);
+    //             // if ((data.SN - SN) % 2 == 0) {
+    //             //     console.log("Same team");
+    //             //     $("#gameCount").attr("data-content", "Second Round & Same team --> call 40");
+    //             //     $("#gameCount").popover(true, false, "", 5000, false, "left");
+    //             //     setTimeout(function () { $("#gameCount").popover("hide"); }, 4000);
+    //             //     $("#gameCount").popover("show");
+    //             //     //higest=40 // Can be cooment if not ok with
+    //             // }
+    //             // else
+    //             //     console.log("differnt  team");
+    //
+    //             break;
+    //         }
+    //
+    //     }
+    // }// end of  checking condition for second round
 
 
     var contents;
@@ -765,12 +765,20 @@ jQuery(document).ready(function ($) {
     seatNo = params["seatNo"];                 //http://127.0.0.1:5000/table?user=joe&roomNo=1&seatNo=1
     role = params["role"];
     goToSeat(roomNo, seatNo);
+//  Disabling reset base
+      if ( (seatNo == 5) || (seatNo == 6) || (seatNo == 4) || (seatNo == 3) ) // Only seat 1 &2 power to reset the game
+             $("#resetButton").attr("disabled", true);
+
+
+
     $('input[type=image]').click(function () {
         $('input[type=image]').removeClass('active');
         $('input[type=image]').addClass('inactive');
         $(this).removeClass('inactive');
         $(this).addClass('active');
     });
+
+
 }); // end of Jquery Ready
 
 function doBaseReset() {
