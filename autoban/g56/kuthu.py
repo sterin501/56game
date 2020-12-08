@@ -23,11 +23,11 @@ class Card(object):
                 "HK", "HA", "S9", "ST", "SJ", "SQ", "SK", "SA", "D9", "DT", "DJ", "DQ", "DK", "DA"]
         # order=(random.sample(xrange(0, 32),32)) # 28
         #shuffledDeck = (random.sample(range(0, 48), 48))  # 56
-        while True:
-            random.shuffle(deck) ## THis will do shuffle by random class .
-            if self.condidtionCheck(deck):
-                break
-
+        #while True:
+        #     ## THis will do shuffle by random class .
+        #    if self.condidtionCheck(deck):
+        #        break
+        random.shuffle(deck)
         p1=deck[0:4]+deck[24:28]   ## Ganesh need this way to shuffle the card . Like offline play
         self.p1 = sorted(p1, key=lambda x: self.order[x], reverse=True)  ## Added by smith to custom sort by lambda method to look cool
         p2=deck[4:8]+deck[28:32]
@@ -53,7 +53,7 @@ class Card(object):
         # self.p5 = sorted(p5, key=lambda x: self.order[x], reverse=True)
         # p6=deck[40:48]
         # self.p6 = sorted(p6, key=lambda x: self.order[x], reverse=True)
-    def condidtionCheck(self,cards):
+    def condidtionCheck(self,cards):  ## Not using now .. Serial 56er Poona has not called 56 after that 
        p1=cards[0:4]+cards[24:28]
        p2=cards[4:8]+cards[28:32]
        p3=cards[8:12]+cards[32:36]

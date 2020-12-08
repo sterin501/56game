@@ -49,6 +49,7 @@ jQuery(document).ready(function($) {
                                         console.log("ghost user");
                                         seatNo=(i+1);
                                         groomNo=roomNo+1;
+                                        removeGhostUser();
                                       }
                     }
 
@@ -79,15 +80,20 @@ function logout() {
              console.log(webSocket);
              if (ghostUser)
              {
-               var resetRequest = {};
-               resetRequest.resetID = "RestRequest";
-               resetRequest.usr = user;
-               resetRequest.r = groomNo;
-               resetRequest.SN = seatNo;
-               console.log(resetRequest);
-              // webSocket.send(JSON.stringify(resetRequest));
-
+                         removeGhostUser();
              }
 
              document.location.href = document.location.href.replace("lobby", "logout");
+}
+
+
+function removeGhostUser() {
+  var resetRequest = {};
+  resetRequest.resetID = "RestRequest";
+  resetRequest.usr = user;
+  resetRequest.r = groomNo;
+  resetRequest.SN = seatNo;
+  console.log(resetRequest);
+  webSocket.send(JSON.stringify(resetRequest));
+
 }
